@@ -2,11 +2,11 @@
 # Introduction
 
 Bing Maps Fleet Tracker is a fleet management solution based on the Bing Maps APIs. It offers functionalities that
-enable tracking and managing a fleet of vehicles in real time. For more details, read this [blog post](https://TOBEUPDATED.COM).
+enable tracking and managing a fleet of vehicles in real time. For more details, read this [blog post](https://aka.ms/bingmapsfleettrackerblog).
 
 # How to deploy
 
-To use this project, the easiest way is to use the [Bing Maps Fleet Tracker Deployment Portal](https://TOBEUPDATED.COM).
+To use this project, the easiest way is to use the [Bing Maps Fleet Tracker Deployment Portal](https://aka.ms/bingmapsfleettracker).
 The portal will automatically read your Azure Subscriptions and prompt you to enter the required details 
 e.g. your Bing Maps Subscription Key. A deployment would then be made to your Azure Subscription.
 
