@@ -1,0 +1,29 @@
+<mat-toolbar color="primary">
+  <span>Devices</span>
+  <span class="toolbar-spacer"></span>
+  <a mat-icon-button mat-tooltip="Add New Device" [routerLink]="['/devices/new']">
+    <mat-icon>add_circle</mat-icon>
+  </a>
+  <button mat-icon-button>
+    <mat-icon>info</mat-icon>
+  </button>
+</mat-toolbar>
+
+<mat-input-container>
+  <input matInput placeholder="Search ..." [(ngModel)]="filter" name="filter">
+</mat-input-container>
+
+<mat-list>
+  <mat-list-item *ngFor="let device of devices | async | filterList:filter" [class.active]="device == selectedDevice && isDeviceListSelected()">
+    <h3 mat-line (click)="showDevice(device)">{{device.name}}</h3>
+    <span mat-line class="subtle" (click)="showDevice(device)">asset: {{device.assetId}}</span>
+    <a [appRoleLimiter]="Roles.Administrator" mat-icon-button mat-tooltip="Edit" [routerLink]="['/devices', device.id]">
+      <mat-icon>mode_edit</mat-icon>
+    </a>
+    <button mat-icon-button mat-tooltip='Points' (click)="showPoints(device)" [class.active]="device == selectedDevice && isDevicePointSelected()">
+              <mat-icon>gps_fixed</mat-icon>
+           </button>
+  </mat-list-item>
+</mat-list>
+
+<app-time-filter *ngIf="isDevicePointSelected()" (change)="timeFilterChange($event)"></app-time-filter>

@@ -1,0 +1,27 @@
+ul {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+}
+
+ul li {
+    margin: 0 5px 20px;
+}
+
+mat-icon {
+    font-size: 2em;
+    width: 100%;
+}
+
+a {
+    color: #000;
+}
+
+a.active, a.toggle:hover {
+    color: #56A6B6;
+}
+
+a.toggle {
+    font-size: 1.8em;
+    cursor: pointer;
+}

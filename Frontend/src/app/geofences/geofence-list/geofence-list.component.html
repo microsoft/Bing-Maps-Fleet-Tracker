@@ -1,0 +1,27 @@
+<mat-toolbar color="primary">
+  <span>Geofences</span>
+  <span class="toolbar-spacer"></span>
+  <a mat-icon-button mat-tooltip="Add New Geofence" [routerLink]="['/geofences/new']">
+    <mat-icon>add_circle</mat-icon>
+  </a>
+  <button mat-icon-button>
+      <mat-icon>info</mat-icon>
+    </button>
+</mat-toolbar>
+
+<mat-input-container>
+  <input matInput placeholder="Search ..." [(ngModel)]="filter" name="filter">
+</mat-input-container>
+
+<mat-list>
+  <mat-list-item *ngFor="let geofence of geofences | async | filterList:filter" [class.active]="geofence == selectedGeofence" (click)="showGeofence(geofence)">
+    <h3 mat-line>{{geofence.name}}</h3>
+    <span mat-line class="subtle">Type: {{FenceType[geofence.fenceType]}}</span>
+    <button mat-icon-button mat-tooltip="Delete" (click)="deleteGeofence(geofence)">
+        <mat-icon>delete_forever</mat-icon>
+     </button>
+    <a mat-icon-button mat-tooltip="Edit" [routerLink]="['/geofences', geofence.id]">
+      <mat-icon>mode_edit</mat-icon>
+    </a>
+  </mat-list-item>
+</mat-list>

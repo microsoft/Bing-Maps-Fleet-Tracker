@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Home</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+
+  <ion-fab top right>
+    <button ion-fab mini><ion-icon name="map"></ion-icon></button>
+    <ion-fab-list>
+      <button ion-fab (click)="showLocation()"><ion-icon name="locate"></ion-icon></button>
+      <button ion-fab (click)="togglePins()"><ion-icon name="pin"></ion-icon></button>
+    </ion-fab-list>
+  </ion-fab>
+  
+
+  <div #map id="map" [hidden]="!isOnline"></div>
+  <div [hidden]="isOnline"><p>Offline!</p></div>
+
+</ion-content>

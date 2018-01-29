@@ -1,0 +1,27 @@
+<mat-toolbar color="primary">
+  <span>Users</span>
+  <span class="toolbar-spacer"></span>
+  <button mat-icon-button mat-tooltip="Add New User" [routerLink]="['/users/new']">
+    <mat-icon>add_circle</mat-icon>
+  </button>
+  <button mat-icon-button>
+    <mat-icon>info</mat-icon>
+  </button>
+</mat-toolbar>
+
+<mat-input-container>
+  <input matInput placeholder="Search ..." [(ngModel)]="filter" name="filter">
+</mat-input-container>
+
+<mat-list>
+  <mat-list-item *ngFor="let user of users | async | filterList:filter">
+    <h3 mat-line>{{user.name}}</h3>
+    <span mat-line class="subtle">{{user.role.name}}</span>
+      <button *ngIf="user.role.name !== 'Owner'" mat-icon-button mat-tooltip="Delete" (click)="deleteUser(user)">
+        <mat-icon>delete_forever</mat-icon>
+     </button>
+    <a mat-icon-button mat-tooltip="Edit" [routerLink]="['/users', user.id]">
+      <mat-icon>mode_edit</mat-icon>
+    </a>
+</mat-list-item>
+</mat-list>

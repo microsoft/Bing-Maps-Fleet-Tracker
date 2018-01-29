@@ -1,0 +1,45 @@
+section {
+  padding: 10px;
+}
+
+form {
+  width: 100%;
+}
+
+.partial-input {
+  float:left;
+  width:65%;
+}
+
+.sub-list {
+  padding: 0 10px;
+  display: block;
+}
+
+mat-input-container {
+  margin: 0;
+}
+
+h1 {
+  font-size: 0.9em;
+  color: #56A6B6;
+}
+
+.additional-options {
+  padding: 0 0 20px 0;
+}
+
+.active {
+  color: #56A6B6;
+  background-color: #ffffff;
+}
+
+.select-with-padding {
+  padding: 20px 0 0 0;
+}
+
+.mat-radio-button {
+  width: 100%;
+  height: 28px;
+  padding: 10px 16px;
+}

@@ -1,0 +1,18 @@
+section {
+  padding: 10px;
+}
+
+form {
+  width: 100%;
+}
+
+.partial-input {
+  float:left;
+  width:65%;
+}
+
+.partial-button {
+  margin-left: 10px;
+  float:left;
+  cursor: pointer;
+}

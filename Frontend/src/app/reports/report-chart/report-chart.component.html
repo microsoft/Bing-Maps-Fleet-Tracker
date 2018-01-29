@@ -1,0 +1,15 @@
+<div class="report-chart">
+  <h2>{{barChartOptions.chartTitle}}</h2>
+
+  <div>
+    <canvas baseChart
+            [datasets]="barChartOptions.chartData"
+            [labels]="barChartOptions.chartLabels"
+            [options]="barChartOptions.options"
+            [legend]="barChartOptions.chartLegendToggle"
+            [chartType]="barChartOptions.chartType"
+            [colors]="barChartOptions.chartColors"
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)"></canvas>
+  </div>
+</div>

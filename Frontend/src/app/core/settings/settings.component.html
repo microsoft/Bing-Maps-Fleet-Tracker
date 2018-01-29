@@ -1,0 +1,45 @@
+<mat-toolbar color="primary">
+  <span>Settings</span>
+</mat-toolbar>
+
+<section>
+  <h3 class="section-header">Subscription Keys</h3>
+  <mat-list>
+    <mat-list-item *ngFor="let subkey of subkeys | async">
+      <h3 mat-line>{{subkey.id}}</h3>
+      <span mat-line class="subtle">{{subkey.keyValue}}</span>
+    </mat-list-item>
+  </mat-list>
+</section>
+
+<section>
+  <h3 class="section-header">Version Information</h3>
+  <mat-list>
+    <mat-list-item>
+      <h3 mat-line>Current Version:</h3>
+      <span mat-line class="subtle">{{versionInfo.currentVersionName}}</span>
+    </mat-list-item>
+    <mat-list-item>
+      <h3 mat-line>Latest Available Version:</h3>
+      <span mat-line class="subtle">{{versionInfo.latestVersionName}}</span>
+    </mat-list-item>
+  </mat-list>
+
+  <div class="pull-right" *ngIf="versionInfo.updateRequired">
+    <a mat-raised-button [href]="versionInfo.updateUrl">Update</a>
+  </div>
+  <div class="pull-right-clearfix"></div>
+</section>
+
+<section>
+  <h3 class="section-header">Deployment Settings</h3>
+  <mat-list>
+    <mat-list-item *ngIf="instrumentationState!=null">
+      <h3 mat-line>Error & Usage Instrumentation</h3>
+      <span mat-line class="subtle">{{ instrumentationState ? 'Active' : 'Blocked' }}</span>
+      <a mat-icon-button mat-tooltip="Edit" (click)="toggleInstrumentation()">
+        <mat-icon>{{ !instrumentationState ? 'play_arrow' : 'pause' }}</mat-icon>
+      </a>
+    </mat-list-item>
+  </mat-list>
+</section>

@@ -1,0 +1,21 @@
+<mat-toolbar>
+  <span>Add Location</span>
+</mat-toolbar>
+
+<mat-input-container>
+  <input matInput placeholder="Search ..." [(ngModel)]="filter" name="filter">
+</mat-input-container>
+
+<div class="scrollable-list">
+  <mat-list>
+    <mat-list-item *ngFor="let location of locations | filterList:filter" 
+                  (click)="onSelected(location)" 
+                  [class.active]="location == selectedLocation">
+      <span mat-line> {{getLocationName(location)}}</span>
+    </mat-list-item>
+  </mat-list>
+</div>
+
+<div class="pull-right">
+  <button mat-raised-button class="dispatch-button" (click)="onButtonClicked()">Done</button>
+</div>

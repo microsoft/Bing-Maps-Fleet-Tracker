@@ -1,0 +1,50 @@
+<nav>
+  <ul>
+    <li>
+      <a (click)="onToggle()" class="toggle">
+        <span *ngIf="opened">&#171;</span>
+        <span *ngIf="!opened">&#187;</span>
+      </a>
+    </li>
+    <li>
+      <a [appRoleLimiter]="Roles.Viewer" [routerLink]="['/assets']" routerLinkActive="active">
+        <mat-icon>directions_car</mat-icon>
+      </a>
+    </li>
+    <li>
+      <a [appRoleLimiter]="Roles.Viewer" [routerLink]="['/devices']" routerLinkActive="active">
+        <mat-icon>smartphone</mat-icon>
+      </a>
+    </li>
+    <li>
+      <a [appRoleLimiter]="Roles.Administrator" [routerLink]="['/geofences']" routerLinkActive="active">
+        <mat-icon>border_outer</mat-icon>
+      </a>
+    </li>
+    <li>
+      <a [appRoleLimiter]="Roles.Administrator" [routerLink]="['/locations']" routerLinkActive="active">
+        <mat-icon>pin_drop</mat-icon>
+      </a>
+    </li>
+    <li>
+      <a [appRoleLimiter]="Roles.Administrator" [routerLink]="['/dispatching']" routerLinkActive="active">
+        <mat-icon>navigation</mat-icon>
+      </a>
+    </li>
+    <li>
+      <a [appRoleLimiter]="Roles.Viewer" [routerLink]="['/reports']" routerLinkActive="active">
+        <mat-icon>poll</mat-icon>
+      </a>
+    </li>
+    <li>
+      <a [appRoleLimiter]="Roles.Owner" [routerLink]="['/settings']" routerLinkActive="active">
+        <mat-icon>settings</mat-icon>
+      </a>
+    </li>
+    <li>
+      <a [appRoleLimiter]="Roles.Administrator" [routerLink]="['/users']" routerLinkActive="active">
+        <mat-icon>group</mat-icon>
+      </a>
+    </li>
+  </ul>
+</nav>

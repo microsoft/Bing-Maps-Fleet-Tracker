@@ -1,0 +1,32 @@
+ul {
+    list-style: none;
+    padding: 0 0 0 16px;
+}
+
+ul li {
+    display: inline-block;
+    margin: 5px 5px 5px 0;
+}
+
+ul li a {
+    background-color: #e0e0e0;
+    border-radius: 24px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 0.9em;
+    padding: 8px 12px;
+}
+
+ul li a:hover {
+    background-color: #bfbfbf;
+}
+
+ul li a.active {
+    background-color: #56A6B6;
+    color: #fff;
+}
+
+my-date-range-picker {
+    display: block;
+    margin: 0 0 10px 16px;
+}

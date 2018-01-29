@@ -1,0 +1,25 @@
+<header>
+  <h1>Bing Maps Fleet Tracker</h1>
+  <img [hidden]="!spinnerService.spinning" class="spinner" src="/assets/images/loading.gif">
+  <div class='login-container'>
+    <app-login></app-login>
+  </div>
+</header>
+
+<section class="sidebar" [appRoleLimiter]="Roles.Viewer">
+  <app-nav (toggle)="sidenav.toggle()"></app-nav>
+</section>
+
+<mat-sidenav-container>
+  <mat-sidenav #sidenav mode="side" opened="true" disableClose="true" [appRoleLimiter]="Roles.Viewer">
+    <section class="side-content">
+      <router-outlet></router-outlet>
+    </section>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+    <app-report-chart *ngIf="isReport()"></app-report-chart>
+    <app-maps *ngIf="!isReport()"></app-maps>
+  </mat-sidenav-content>
+</mat-sidenav-container>

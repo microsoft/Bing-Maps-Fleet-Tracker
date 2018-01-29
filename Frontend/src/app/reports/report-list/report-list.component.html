@@ -1,0 +1,18 @@
+<mat-toolbar color="primary">
+  <span>Reports</span>
+  <span class="toolbar-spacer"></span>
+  <button mat-icon-button>
+    <mat-icon>info</mat-icon>
+  </button>
+</mat-toolbar>
+
+<mat-input-container>
+  <input matInput placeholder="Search ..." [(ngModel)]="filter" name="filter">
+</mat-input-container>
+
+<mat-list>
+  <mat-list-item *ngFor="let metric of metrics | async | filterList:filter" (click)="selectMetric(metric)" [class.active]="metric == selectedMetric">
+    <h3 mat-line>{{metric.name}}</h3>
+    <span mat-line class="subtle">Aggregated by: {{metric.aggregatedBy}}</span>
+</mat-list-item>
+</mat-list>

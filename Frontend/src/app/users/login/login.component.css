@@ -1,0 +1,13 @@
+section {
+    font-size: 0.8em;
+    margin-top: 3px;
+}
+
+a {
+    color: #fff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}

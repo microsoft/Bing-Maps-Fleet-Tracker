@@ -1,0 +1,34 @@
+<!--
+  Generated template for the LocationDetails page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Location Details</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <ion-list>
+
+    <ion-item *ngIf="loc.locationId">locationId: {{ loc.locationId }}</ion-item>
+    <ion-item *ngIf="loc.provider">provider: {{ loc.provider }}</ion-item>
+    <ion-item *ngIf="loc.locationProvider">locationProvider: {{ loc.locationProvider }}</ion-item>
+    <ion-item *ngIf="loc.debug">debug: {{ loc.debug }}</ion-item>
+    <ion-item *ngIf="loc.time">time: {{ loc.time | date:'short'}}</ion-item>
+    <ion-item *ngIf="loc.latitude">latitude: {{ loc.latitude }}</ion-item>
+    <ion-item *ngIf="loc.longitude">longitude: {{ loc.longitude }}</ion-item>
+    <ion-item *ngIf="loc.accuracy">accuracy: {{ loc.accuracy }}</ion-item>
+    <ion-item *ngIf="loc.speed">speed: {{ loc.speed }}</ion-item>
+    <ion-item *ngIf="loc.altitude">altitude: {{ loc.altitude }}</ion-item>
+    <ion-item *ngIf="loc.bearing">bearing: {{ loc.bearing }}</ion-item>
+
+  </ion-list>
+
+</ion-content>

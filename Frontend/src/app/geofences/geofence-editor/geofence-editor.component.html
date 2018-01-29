@@ -1,0 +1,41 @@
+<mat-toolbar color="primary">
+  <span>Add Geofence:</span>
+</mat-toolbar>
+
+<section>
+  <form (submit)="submit()">
+    <mat-input-container>
+      <input matInput placeholder="Name" [(ngModel)]="geofence.name" name="name" required>
+    </mat-input-container>
+    <mat-input-container>
+      <input matInput placeholder="Emails To Notify" [(ngModel)]="joinedEmails" name="email">
+    </mat-input-container>
+    <mat-input-container>
+      <input matInput placeholder="Cooldown in Minutes" [(ngModel)]="geofence.cooldown" name="cooldown" type="number" min="0" required>
+    </mat-input-container>
+    <mat-input-container>
+      <input matInput class="partial-input" placeholder="Fence Point Count" [(ngModel)]="geofence.fencePolygon.length" name="fencePolygon"
+        disabled>
+      <a class="partial-button" (click)="clearPoints()">Clear Points</a>
+    </mat-input-container>
+
+    <mat-input-container>
+      <mat-select placeholder="Fence Type" [(ngModel)]="geofence.fenceType" name="fenceType" required>
+        <mat-option [value]="FenceType.Inbound">Inbound</mat-option>
+        <mat-option [value]="FenceType.Outbound">Outbound</mat-option>
+      </mat-select>
+    </mat-input-container>
+
+    <h3>Available Assets:</h3>
+    <mat-list>
+      <mat-list-item *ngFor="let asset of assets">
+        <mat-checkbox (change)="onCheckChanged($event)" [checked]="asset.checked" [name]="asset.id">{{asset.id}}</mat-checkbox>
+      </mat-list-item>
+    </mat-list>
+
+    <div class="pull-right" style="margin:15px 0">
+      <a mat-raised-button [routerLink]="['/geofences']">Back</a>
+      <button mat-raised-button class="dispatch-button " type="submit">Submit</button>
+    </div>
+  </form>
+</section>

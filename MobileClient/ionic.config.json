@@ -1,0 +1,8 @@
+{
+  "name": "Bing Maps Fleet Tracker",
+  "app_id": "",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}

@@ -1,0 +1,271 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A6B23FF3-82F4-4F29-960C-60C2F09ECCAD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Trackable.EntityFramework</RootNamespace>
+    <AssemblyName>Trackable.EntityFramework</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>$(SolutionDir)\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>$(SolutionDir)\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Http.Abstractions, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>$(SolutionDir)\packages\Microsoft.AspNetCore.Http.Abstractions.1.1.1\lib\net451\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Http.Features, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>$(SolutionDir)\packages\Microsoft.AspNetCore.Http.Features.1.1.1\lib\net451\Microsoft.AspNetCore.Http.Features.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>$(SolutionDir)\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.1.1\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Primitives, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>$(SolutionDir)\packages\Microsoft.Extensions.Primitives.1.1.1\lib\netstandard1.0\Microsoft.Extensions.Primitives.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>$(SolutionDir)\packages\Microsoft.SqlServer.Types.14.0.314.76\lib\net40\Microsoft.SqlServer.Types.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>$(SolutionDir)\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DeploymentIdData.cs" />
+    <Compile Include="AssetData.cs" />
+    <Compile Include="AssetPropertiesData.cs" />
+    <Compile Include="DbContextBulkOperations.cs" />
+    <Compile Include="ConfigurationData.cs" />
+    <Compile Include="EntityBase.cs" />
+    <Compile Include="EntityFrameworkExtensions.cs" />
+    <Compile Include="Loader.cs" />
+    <Compile Include="Migrations\201705010937090_AddGeoFencesAndNotificationUpdates.cs" />
+    <Compile Include="Migrations\201705010937090_AddGeoFencesAndNotificationUpdates.Designer.cs">
+      <DependentUpon>201705010937090_AddGeoFencesAndNotificationUpdates.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705010947149_AddAssetIdsToGeoFence.cs" />
+    <Compile Include="Migrations\201705010947149_AddAssetIdsToGeoFence.Designer.cs">
+      <DependentUpon>201705010947149_AddAssetIdsToGeoFence.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705021036277_AddNameToGeoFenceMakeNonNull.cs" />
+    <Compile Include="Migrations\201705021036277_AddNameToGeoFenceMakeNonNull.Designer.cs">
+      <DependentUpon>201705021036277_AddNameToGeoFenceMakeNonNull.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705031253065_ModifyGeoFenceAddThroughTable.cs" />
+    <Compile Include="Migrations\201705031253065_ModifyGeoFenceAddThroughTable.Designer.cs">
+      <DependentUpon>201705031253065_ModifyGeoFenceAddThroughTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GeoFenceUpdateData.cs" />
+    <Compile Include="Migrations\201701181247597_Initial.cs" />
+    <Compile Include="Migrations\201701181247597_Initial.Designer.cs">
+      <DependentUpon>201701181247597_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701190945492_ChangeTrackingPointDeviceTimeToStamp.cs" />
+    <Compile Include="Migrations\201701190945492_ChangeTrackingPointDeviceTimeToStamp.Designer.cs">
+      <DependentUpon>201701190945492_ChangeTrackingPointDeviceTimeToStamp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701191420312_AddTrackingDeviceOperatingSystemAndVersion.cs" />
+    <Compile Include="Migrations\201701191420312_AddTrackingDeviceOperatingSystemAndVersion.Designer.cs">
+      <DependentUpon>201701191420312_AddTrackingDeviceOperatingSystemAndVersion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702091023341_AddTripsDestinationConfigs.cs" />
+    <Compile Include="Migrations\201702091023341_AddTripsDestinationConfigs.Designer.cs">
+      <DependentUpon>201702091023341_AddTripsDestinationConfigs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702120952233_RenameDestinationToLocation.cs" />
+    <Compile Include="Migrations\201702120952233_RenameDestinationToLocation.Designer.cs">
+      <DependentUpon>201702120952233_RenameDestinationToLocation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702121151433_CompositeKeyEntityBase.cs" />
+    <Compile Include="Migrations\201702121151433_CompositeKeyEntityBase.Designer.cs">
+      <DependentUpon>201702121151433_CompositeKeyEntityBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702121521460_RenameDateTimes.cs" />
+    <Compile Include="Migrations\201702121521460_RenameDateTimes.Designer.cs">
+      <DependentUpon>201702121521460_RenameDateTimes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702150750048_FixTrackingPointDataTypes.cs" />
+    <Compile Include="Migrations\201702150750048_FixTrackingPointDataTypes.Designer.cs">
+      <DependentUpon>201702150750048_FixTrackingPointDataTypes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703061411479_AddDescriptionToConfiguration.cs" />
+    <Compile Include="Migrations\201703061411479_AddDescriptionToConfiguration.Designer.cs">
+      <DependentUpon>201703061411479_AddDescriptionToConfiguration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704091456404_AddAuthorization.cs" />
+    <Compile Include="Migrations\201704091456404_AddAuthorization.Designer.cs">
+      <DependentUpon>201704091456404_AddAuthorization.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704091527485_AddRoleNameColumn.cs" />
+    <Compile Include="Migrations\201704091527485_AddRoleNameColumn.Designer.cs">
+      <DependentUpon>201704091527485_AddRoleNameColumn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704131512215_AddConstraintsOnEmailColumn.cs" />
+    <Compile Include="Migrations\201704131512215_AddConstraintsOnEmailColumn.Designer.cs">
+      <DependentUpon>201704131512215_AddConstraintsOnEmailColumn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708191324100_AddAssetsPropertiesTableAndAssetTypeField.cs" />
+    <Compile Include="Migrations\201708191324100_AddAssetsPropertiesTableAndAssetTypeField.Designer.cs">
+      <DependentUpon>201708191324100_AddAssetsPropertiesTableAndAssetTypeField.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711091002497_AddLatestPositionColumns.cs" />
+    <Compile Include="Migrations\201711091002497_AddLatestPositionColumns.Designer.cs">
+      <DependentUpon>201711091002497_AddLatestPositionColumns.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711100955354_AddDeploymentId.cs" />
+    <Compile Include="Migrations\201711100955354_AddDeploymentId.Designer.cs">
+      <DependentUpon>201711100955354_AddDeploymentId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711131016182_CreateTokenTable.cs" />
+    <Compile Include="Migrations\201711131016182_CreateTokenTable.Designer.cs">
+      <DependentUpon>201711131016182_CreateTokenTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqlTypeHelper.cs" />
+    <Compile Include="TrackableDbContext.cs" />
+    <Compile Include="TrackableDbContextFactory.cs" />
+    <Compile Include="TrackingDeviceData.cs" />
+    <Compile Include="TrackingPointData.cs" />
+    <Compile Include="LocationData.cs" />
+    <Compile Include="GeoFenceData.cs" />
+    <Compile Include="TripLegData.cs" />
+    <Compile Include="TripData.cs" />
+    <Compile Include="RoleData.cs" />
+    <Compile Include="TokenData.cs" />
+    <Compile Include="UserData.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201701181247597_Initial.resx">
+      <DependentUpon>201701181247597_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701190945492_ChangeTrackingPointDeviceTimeToStamp.resx">
+      <DependentUpon>201701190945492_ChangeTrackingPointDeviceTimeToStamp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701191420312_AddTrackingDeviceOperatingSystemAndVersion.resx">
+      <DependentUpon>201701191420312_AddTrackingDeviceOperatingSystemAndVersion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702091023341_AddTripsDestinationConfigs.resx">
+      <DependentUpon>201702091023341_AddTripsDestinationConfigs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702120952233_RenameDestinationToLocation.resx">
+      <DependentUpon>201702120952233_RenameDestinationToLocation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702121151433_CompositeKeyEntityBase.resx">
+      <DependentUpon>201702121151433_CompositeKeyEntityBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702121521460_RenameDateTimes.resx">
+      <DependentUpon>201702121521460_RenameDateTimes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702150750048_FixTrackingPointDataTypes.resx">
+      <DependentUpon>201702150750048_FixTrackingPointDataTypes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703061411479_AddDescriptionToConfiguration.resx">
+      <DependentUpon>201703061411479_AddDescriptionToConfiguration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704091456404_AddAuthorization.resx">
+      <DependentUpon>201704091456404_AddAuthorization.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704091527485_AddRoleNameColumn.resx">
+      <DependentUpon>201704091527485_AddRoleNameColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704131512215_AddConstraintsOnEmailColumn.resx">
+      <DependentUpon>201704131512215_AddConstraintsOnEmailColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705010937090_AddGeoFencesAndNotificationUpdates.resx">
+      <DependentUpon>201705010937090_AddGeoFencesAndNotificationUpdates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705010947149_AddAssetIdsToGeoFence.resx">
+      <DependentUpon>201705010947149_AddAssetIdsToGeoFence.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705021036277_AddNameToGeoFenceMakeNonNull.resx">
+      <DependentUpon>201705021036277_AddNameToGeoFenceMakeNonNull.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705031253065_ModifyGeoFenceAddThroughTable.resx">
+      <DependentUpon>201705031253065_ModifyGeoFenceAddThroughTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708191324100_AddAssetsPropertiesTableAndAssetTypeField.resx">
+      <DependentUpon>201708191324100_AddAssetsPropertiesTableAndAssetTypeField.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711091002497_AddLatestPositionColumns.resx">
+      <DependentUpon>201711091002497_AddLatestPositionColumns.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711100955354_AddDeploymentId.resx">
+      <DependentUpon>201711100955354_AddDeploymentId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711131016182_CreateTokenTable.resx">
+      <DependentUpon>201711131016182_CreateTokenTable.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Trackable.Common\Trackable.Common.csproj">
+      <Project>{2c1543f6-cd61-4455-8d6e-bb83721f25ee}</Project>
+      <Name>Trackable.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,33 @@
+<mat-toolbar color="primary">
+  <span>Assets</span>
+  <span class="toolbar-spacer"></span>
+  <a [appRoleLimiter]="Roles.Administrator" mat-icon-button mat-tooltip="Add New Asset" [routerLink]="['/assets/new']">
+    <mat-icon>add_circle</mat-icon>
+  </a>
+  <button mat-icon-button>
+      <mat-icon>info</mat-icon>
+    </button>
+</mat-toolbar>
+
+<mat-input-container>
+  <input matInput placeholder="Search ..." [(ngModel)]="filter" name="filter">
+</mat-input-container>
+
+<mat-list>
+  <mat-list-item *ngFor="let asset of assets | async | filterList:filter" [class.active]="asset == selectedAsset && isAssetListSeleceted()">
+    <h3 mat-line (click)="showAsset(asset)">{{asset.id}}</h3>
+    <span mat-line class="subtle" (click)="showAsset(asset)">device: {{asset.trackingDeviceName}}</span>
+    <button mat-icon-button mat-tooltip='Trips' (click)="showTrips(asset)" [class.active]="asset == selectedAsset && isAssetTripsSelected()">
+          <mat-icon>trending_up</mat-icon>
+      </button>
+    <button mat-icon-button mat-tooltip='Points' (click)="showPoints(asset)" [class.active]="asset == selectedAsset && isAssetPointsSelected()">
+          <mat-icon>gps_fixed</mat-icon>
+      </button>
+    <!--<a mat-icon-button [routerLink]="['/assets', asset.id]">
+        <mat-icon>mode_edit</mat-icon>
+     </a>-->
+  </mat-list-item>
+</mat-list>
+
+<app-time-filter *ngIf="isAssetPointsSelected() || isAssetTripsSelected()" (change)="timeFilterChange($event)"></app-time-filter>
+<app-trip-list *ngIf="isAssetTripsSelected()" [trips]="trips" (select)="selectTrip($event)"></app-trip-list>

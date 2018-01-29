@@ -1,0 +1,50 @@
+:root {
+  --header-height: 40px;
+}
+
+html, body, material-app, mat-sidenav-container, mat-sidenav-content {
+  margin: 0 0 0 50px;
+  height: 100%;
+}
+
+header {
+  background-color: #56A6B6;
+  color: #fff;
+  height: var(--header-height);
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+}
+
+h1 {
+  font-size: 20px;
+  font-weight: 400;
+  margin: 5px 0 10px 8px;
+  margin-left: 13px;
+  display: inline-block;
+}
+
+.sidebar {
+  background-color: #fff;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  width: 50px;
+}
+
+.side-content {
+  width: 300px;
+}
+
+.login-container {
+  float: right;
+  margin: 5px 20px 10px 8px;
+  font-size: 20px;
+}
+
+.spinner {
+  vertical-align: text-bottom;
+  width: 25px;
+}

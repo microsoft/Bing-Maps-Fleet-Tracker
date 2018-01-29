@@ -1,0 +1,14 @@
+<mat-toolbar color="primary">
+  <span>Filters</span>
+  <span class="toolbar-spacer"></span>
+</mat-toolbar>
+
+<ul class="filters">
+  <li *ngFor="let range of ranges">
+    <a (click)="select(range)" [class.active]="range == selectedRange">
+      {{range.label}}
+    </a>
+  </li>
+</ul>
+
+<my-date-range-picker [options]="myDateRangePickerOptions" [selDateRange]="selectedDateRange" (dateRangeChanged)="onDateRangeChanged($event)"></my-date-range-picker>

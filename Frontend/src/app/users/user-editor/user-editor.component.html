@@ -1,0 +1,38 @@
+<mat-toolbar color="primary">
+  <span *ngIf="isAddingNew">Add New User</span>
+  <span *ngIf="!isAddingNew">Edit User</span>
+</mat-toolbar>
+
+<section>
+  <form (submit)="submit()">
+    <mat-input-container *ngIf="!isAddingNew">
+      <input matInput placeholder="Id" [(ngModel)]="user.id" name="id" disabled>
+    </mat-input-container>
+
+    <mat-input-container>
+      <input matInput placeholder="Email" [(ngModel)]="user.email" name="email" [disabled]="!isAddingNew" [required]="isAddingNew">
+    </mat-input-container>
+
+    <mat-input-container>
+      <input matInput placeholder="Name" [(ngModel)]="user.name" name="name" [disabled]="!isAddingNew" [required]="isAddingNew">
+    </mat-input-container>
+
+    <mat-input-container *ngIf="!isAddingNew">
+      <input matInput class="partial-input" placeholder="User Token" [(ngModel)]="userToken" name="token" disabled>
+      <a class="partial-button" (click)="regenerateToken()">Regenerate</a>
+    </mat-input-container>
+
+    <mat-input-container [hidden]="user.role.name === 'Owner'"> 
+      <mat-select placeholder="Role" [(ngModel)]="user.role.name" name="role" [required]="isAddingNew">
+        <mat-option *ngFor="let role of roles" [value]="role.name">
+          {{role.name}}
+        </mat-option>
+      </mat-select>
+    </mat-input-container>
+
+    <div class="pull-right">
+      <a mat-raised-button [routerLink]="['/users']">Back</a>
+      <button *ngIf="user.role.name !== 'Owner'" class="dispatch-button" mat-raised-button type="submit">Submit</button>
+    </div>
+  </form>
+</section>

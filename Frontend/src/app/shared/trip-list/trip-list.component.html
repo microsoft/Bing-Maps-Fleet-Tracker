@@ -1,0 +1,14 @@
+<mat-toolbar color="primary" *ngIf="trips && trips.length">
+  <span>Trips</span>
+  <span class="toolbar-spacer"></span>
+  <button mat-icon-button>
+      <mat-icon>info</mat-icon>
+    </button>
+</mat-toolbar>
+
+<mat-nav-list>
+  <mat-list-item *ngFor="let trip of trips" (click)="selectTrip(trip)" [class.active]="trip == selectedTrip">
+    <h3 mat-line>Trip {{trip.id}}: {{trip.durationInMinutes | number : '1.2-2'}} minutes</h3>
+    <p mat-line class="subtle">On {{trip.startTimeUtc}}</p>
+  </mat-list-item>
+</mat-nav-list>

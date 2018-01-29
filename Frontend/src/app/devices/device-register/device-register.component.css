@@ -1,0 +1,10 @@
+.qrcode {
+  margin: 0;
+  padding: 10px;
+  padding-bottom: 40px;
+  text-align: center;
+}
+
+p, h2, h3, h4 {
+  margin: 0;
+}

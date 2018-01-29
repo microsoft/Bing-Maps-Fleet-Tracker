@@ -1,0 +1,29 @@
+<mat-toolbar color="primary">
+  <span *ngIf="!isEditable">Add New location </span>
+  <span *ngIf="isEditable">Edit Location</span>
+</mat-toolbar>
+
+<section>
+  <form (submit)="submit()">
+    <mat-input-container>
+      <input matInput placeholder="Name" [(ngModel)]="location.name" name="name" required>
+    </mat-input-container>
+
+    <mat-input-container>
+      <input matInput placeholder="Address" [(ngModel)]="location.address" (change)="changeAddress()" name="address">
+    </mat-input-container>
+
+    <mat-input-container>
+      <input matInput placeholder="Location Pin" [(ngModel)]="locationString" name="locationPin" disabled required>
+    </mat-input-container>
+
+    <mat-input-container *ngIf="isEditable">
+      <input matInput placeholder="Location Type" [(ngModel)]="locationTypeString" name="interestLevel" disabled>
+    </mat-input-container>
+
+    <div class="pull-right">
+      <a mat-raised-button [routerLink]="['/locations']">Back</a>
+      <button mat-raised-button class="dispatch-button " type="submit">Submit</button>
+    </div>
+  </form>
+</section>

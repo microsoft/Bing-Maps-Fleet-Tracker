@@ -1,0 +1,74 @@
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    box-sizing: border-box;
+    font-family: "Segoe UI", "Segoe WP", Tahoma, Arial, sans-serif;
+    padding-top: 40px;
+}
+
+.subtle {
+    font-size: 0.8em;
+    color: gray;
+}
+
+.toast-padded-top-right {
+    margin: 20px;
+    right: 0px;
+}
+
+mat-sidenav mat-toolbar.mat-toolbar.mat-toolbar {
+    min-height: 48px;
+    background-color: #fff;
+    color: #000;
+    border-bottom: 1px solid #e6e9ee;
+}
+
+mat-toolbar .mat-toolbar-row {
+    height: 48px;
+    font-size: 0.8em;
+}
+
+.toolbar-spacer {
+    flex: 1 1 auto;
+}
+
+mat-dialog-container {
+    overflow: hidden !important;
+}
+
+form {
+    width: 400px;
+}
+
+form .mat-form-field {
+    margin: 0 0 20px;
+    width: 100%;
+}
+
+.pull-right {
+    float: right;
+    margin: 0 10px 10px 0;
+}
+
+.pull-right-clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+mat-list-item.active {
+    background-color: #e0e0e0;
+}
+
+.dispatch-button {
+    color: #ffffff;
+    background-color: #56A6B6;
+}
+
+.mat-drawer-content {
+    overflow-y: hidden !important;
+}

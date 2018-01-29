@@ -1,0 +1,49 @@
+<mat-toolbar color="primary">
+  <span *ngIf="!isEditing">Add device</span>
+  <span *ngIf="isEditing">Edit Device</span>
+</mat-toolbar>
+
+<section>
+  <form (submit)="submit()">
+    <mat-input-container>
+      <input matInput placeholder="ID" [(ngModel)]="device.id" name="device" [disabled]="isEditing" required>
+    </mat-input-container>
+
+    <mat-input-container *ngIf="isEditing">
+      <input matInput placeholder="Device Token" [(ngModel)]="deviceToken" name="token" disabled>
+    </mat-input-container>
+
+    <mat-input-container>
+      <input matInput placeholder="Name" [(ngModel)]="device.name" name="name" required>
+    </mat-input-container>
+
+    <mat-input-container>
+      <input matInput placeholder="Phone" [(ngModel)]="device.phone" name="phone">
+    </mat-input-container>
+
+    <mat-input-container>
+      <input matInput placeholder="Model" [(ngModel)]="device.model" name="model">
+    </mat-input-container>
+
+    <mat-input-container>
+      <input matInput placeholder="Operating System" [(ngModel)]="device.operatingSystem" name="operatingSystem">
+    </mat-input-container>
+
+    <mat-input-container>
+      <input matInput placeholder="Version" [(ngModel)]="device.version" name="version">
+    </mat-input-container>
+
+    <mat-input-container>
+      <mat-select placeholder="Linked Asset" [(ngModel)]="device.assetId" name="assetId">
+        <mat-option *ngFor="let asset of assets" [value]="asset.id">
+          {{asset.id}}
+        </mat-option>
+      </mat-select>
+    </mat-input-container>
+
+    <div class="pull-right" style="margin:15px 0;">
+      <a mat-raised-button [routerLink]="['/devices']">Back</a>
+      <button mat-raised-button class="dispatch-button" type="submit">Submit</button>
+    </div>
+  </form>
+</section>

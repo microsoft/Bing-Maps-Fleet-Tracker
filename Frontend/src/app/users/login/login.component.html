@@ -1,0 +1,4 @@
+<section>
+    <span *ngIf='loggedInUser'>{{loggedInUser.name}} ({{loggedInUser.role.name}}) &middot; </span>
+    <a [attr.href]="link">Sign {{loggedInUser ? 'out' : 'in'}}</a>
+</section>

@@ -1,0 +1,69 @@
+<mat-toolbar color="primary">
+  <span>Add asset:</span>
+</mat-toolbar>
+
+<section>
+  <form (submit)="submit()">
+    <mat-input-container>
+      <input matInput placeholder="Asset Name" [(ngModel)]="asset.id" [disabled]="isEditable" name="id" required>
+    </mat-input-container>
+
+    <mat-input-container>
+      <mat-select *ngIf="!isEditable" placeholder="Asset Type" [(ngModel)]="asset.assetType" name="assetType" required>
+        <mat-option [value]="AssetType.Car">Car</mat-option>
+        <mat-option [value]="AssetType.Truck">Truck</mat-option>
+      </mat-select>
+    </mat-input-container>
+
+    <mat-input-container *ngIf="asset.trackingDeviceId">
+      <input matInput placeholder="Tracking Device" [(ngModel)]="asset.trackingDeviceName" name="trackingDevice" disabled>
+    </mat-input-container>
+
+    <div *ngIf="asset.assetType == AssetType.Truck" class="truck-container">
+      <mat-input-container>
+        <input matInput placeholder="Asset Height (m)" [(ngModel)]="assetProperties.assetHeight" name="height" type="number" step="any"
+          min="1.0">
+      </mat-input-container>
+
+      <mat-input-container>
+        <input matInput placeholder="Asset Width (m)" [(ngModel)]="assetProperties.assetWidth" name="width" type="number" step="any"
+          min="1.0">
+      </mat-input-container>
+
+      <mat-input-container>
+        <input matInput placeholder="Asset Length (m)" [(ngModel)]="assetProperties.assetLength" name="length" type="number" step="any"
+          min="1.0">
+      </mat-input-container>
+
+      <mat-input-container>
+        <input matInput placeholder="Asset Weight (kg)" [(ngModel)]="assetProperties.assetWeight" name="weight" type="number" step="any"
+          min="1.0">
+      </mat-input-container>
+
+      <mat-input-container>
+        <input matInput placeholder="Asset Axels" [(ngModel)]="assetProperties.assetAxels" name="axels" type="number" step="1">
+      </mat-input-container>
+
+      <mat-input-container>
+        <input matInput placeholder="Asset Trailers" [(ngModel)]="assetProperties.assetTrailers" name="trailers" type="number" step="1">
+      </mat-input-container>
+
+      <mat-input-container>
+        <input matInput placeholder="Asset Max Gradient (degrees)" [(ngModel)]="assetProperties.assetMaxGradient" name="gradient"
+          type="number" min="0" max="90">
+      </mat-input-container>
+
+      <mat-input-container>
+        <input matInput placeholder="Asset Min Turn Radius (degrees)" [(ngModel)]="assetProperties.assetMinTurnRadius" name="radius"
+          type="number" min="0" max="180">
+      </mat-input-container>
+
+      <mat-checkbox [(ngModel)]="assetProperties.assetSemi" name="semi">Semi-trailer Truck</mat-checkbox>
+    </div>
+
+    <div class="pull-right">
+      <a mat-raised-button [routerLink]="['/assets']">Back</a>
+      <button *ngIf="!isEditable" mat-raised-button class="dispatch-button" type="submit">Submit</button>
+    </div>
+  </form>
+</section>

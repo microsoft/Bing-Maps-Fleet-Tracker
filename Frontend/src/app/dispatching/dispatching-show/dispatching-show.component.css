@@ -1,0 +1,23 @@
+mat-list-item {
+    border-bottom: 1px solid #d9d9d9;  
+}
+
+.mat-list-text h3{
+    font-size: 0.85em;
+    color: #000000;
+}
+
+.mat-list-text span{
+    font-size: 0.8em;
+    color: #999999;
+}
+
+.item-custom {
+    padding: 15px 0 15px 0;
+}
+
+.no-directions-alert {
+    font-style: italic;
+    font-size: 0.9em;
+    padding: 0 0 0 10px;
+}

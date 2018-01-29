@@ -1,0 +1,8 @@
+p, h2, h3, h4 {
+  margin: 0;
+}
+
+.button-primary {
+  background-color:#56A6B6;
+  color:white;
+}

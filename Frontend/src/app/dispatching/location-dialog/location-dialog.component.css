@@ -1,0 +1,21 @@
+mat-toolbar {
+    color: #000000;
+    background-color: #ffffff;
+}
+
+mat-input-container {
+    font-size: 0.95em;
+    margin: 10px 0 0 10px;
+}
+
+.scrollable-list {
+    max-height: 500px;
+    width: 300px;
+    overflow-y: scroll;
+    margin: 10px 10px 10px 10px;
+}
+
+.active {
+    color: #ffffff;
+    background-color: #56A6B6;
+}
