@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Trackable.Models;
 using Trackable.Repositories;
-using Trackable.Repositories.Helpers;
 
 namespace Trackable.Services
 {
@@ -28,11 +27,11 @@ namespace Trackable.Services
             var results = await base.AddAsync(models);
 
             var updatedList = new List<GeoFence>();
-            foreach (var zipped in results.Zip(models, (r,m) => new { result = r, model = m }))
+            foreach (var zipped in results.Zip(models, (r, m) => new { result = r, model = m }))
             {
                 updatedList.Add(await this.repository.UpdateAssetsAsync(zipped.result, zipped.model.AssetIds));
             }
-             
+
             return updatedList;
         }
 
@@ -41,7 +40,7 @@ namespace Trackable.Services
             var result = await base.AddAsync(model);
 
             var updated = await this.repository.UpdateAssetsAsync(result, model.AssetIds);
-            
+
             return updated;
         }
 
@@ -67,25 +66,33 @@ namespace Trackable.Services
 
         public async Task<IEnumerable<int>> HandlePoints(string assetId, params IPoint[] points)
         {
-            var triggeredFences = new List<int>();
-            var fences = await this.repository.GetByAssetIdAsync(assetId);
-            var latestUpdates = await this.geoFenceUpdateRepository.GetLatestAsync(assetId);
+            var notifiedFenceIds = new List<int>();
+            var tasks = new List<Task>();
 
-            foreach (var fence in fences)
+            var fences = await this.repository.GetByAssetIdWithIntersectionAsync(assetId, points);
+            if (!fences.Any())
             {
-                GeoFenceUpdate latestUpdate;
-                var hasUpdate = latestUpdates.TryGetValue(fence.Id, out latestUpdate);
+                return Enumerable.Empty<int>();
+            }
+
+            var updates = await this.geoFenceUpdateRepository.GetByGeofenceIdsAsync(assetId, fences.Select(f => f.Key.Id).ToList());
+
+            foreach (var fence in fences.Keys)
+            {
+                var hasUpdate = updates.TryGetValue(fence.Id, out GeoFenceUpdate latestUpdate);
 
                 // Continue if the cooldown period has yet to expire
-                if (hasUpdate 
+                if (hasUpdate
                     && latestUpdate.UpdatedAt + TimeSpan.FromMinutes(fence.Cooldown) > DateTime.UtcNow
                     && latestUpdate.NotificationStatus == NotificationStatus.Triggered)
                 {
                     continue;
                 }
 
-                var fenceIsTriggered = points.Any(point => fence.IsTriggeredByPoint(point));
-                var fenceStatus = fenceIsTriggered ? NotificationStatus.Triggered : NotificationStatus.NotTriggered;
+                var fenceStatus =
+                    (fence.FenceType == FenceType.Inbound ^ fences[fence])
+                        ? NotificationStatus.NotTriggered
+                        : NotificationStatus.Triggered;
 
                 // Continue if there are no updates to the status of the asset
                 if (hasUpdate && latestUpdate.NotificationStatus == fenceStatus)
@@ -94,12 +101,21 @@ namespace Trackable.Services
                 }
 
                 // Update the status of the asset
-                await this.geoFenceUpdateRepository.AddAsync(new GeoFenceUpdate
+                if (!hasUpdate)
                 {
-                    NotificationStatus = fenceStatus,
-                    GeoFenceId = fence.Id,
-                    AssetId = assetId
-                });
+                    latestUpdate = new GeoFenceUpdate
+                    {
+                        NotificationStatus = fenceStatus,
+                        GeoFenceId = fence.Id,
+                        AssetId = assetId
+                    };
+
+                    tasks.Add(this.geoFenceUpdateRepository.AddAsync(latestUpdate));
+                }
+                else
+                {
+                    tasks.Add(this.geoFenceUpdateRepository.UpdateStatusAsync(latestUpdate.Id, fenceStatus));
+                }
 
                 // Continue if the status has moved from triggered to untriggered 
                 if (fenceStatus != NotificationStatus.Triggered)
@@ -107,19 +123,21 @@ namespace Trackable.Services
                     continue;
                 }
 
-                foreach (var email in fence.EmailsToNotify)
-                {
-                    await notificationService.NotifyViaEmail(
-                        email,
-                        $"{fence.Name} Geofence was triggered by asset {assetId}",
-                        "",
-                        $"<strong>{fence.FenceType.ToString()}</strong> Geofence <strong>{fence.Name}</strong> was triggered by asset  <strong>{assetId}</strong> at  <strong>{DateTime.UtcNow}</strong>");
-                }
+                tasks.AddRange(fence.EmailsToNotify.Select(email => notificationService.NotifyViaEmail(
+                    email,
+                    $"{fence.Name} Geofence was triggered by asset {assetId}",
+                    "",
+                    $"<strong>{fence.FenceType.ToString()}</strong> Geofence <strong>{fence.Name}</strong> was triggered by asset  <strong>{assetId}</strong> at  <strong>{DateTime.UtcNow}</strong>")));
 
-                triggeredFences.Add(fence.Id);
+                notifiedFenceIds.Add(fence.Id);
             }
 
-            return triggeredFences;
+            if (tasks.Any())
+            {
+                await Task.WhenAll(tasks);
+            }
+
+            return notifiedFenceIds;
         }
     }
 }

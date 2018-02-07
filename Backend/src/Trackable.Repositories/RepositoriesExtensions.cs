@@ -13,6 +13,9 @@ namespace Trackable.Repositories
             string dbConnectionString,
             string rootPath)
         {
+            var mapperConfiguration = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
+            mapperConfiguration.CompileMappings();
+
             return services
                 .AddDbContext(dbConnectionString, rootPath)
 
@@ -30,7 +33,7 @@ namespace Trackable.Repositories
                 .AddTransient<IInstrumentationRepository, InstrumentationRepository>()
                 .AddTransient<ITokenRepository, TokenRepository>()
 
-                .AddSingleton<MapperConfiguration>(new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>()))
+                .AddSingleton(mapperConfiguration)
                 
                 .AddScoped<TrackingDeviceAssetResolver>()
                 .AddScoped<TokenTrackingDeviceResolver>()

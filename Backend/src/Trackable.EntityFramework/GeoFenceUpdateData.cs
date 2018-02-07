@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.Spatial;
 
 namespace Trackable.EntityFramework
 {
@@ -10,9 +7,13 @@ namespace Trackable.EntityFramework
     public class GeoFenceUpdateData : EntityBase<int>
     {
         [Required]
+        [Index("IX_GeoFenceDataId")]
+        [Index("GeoFenceAssetUnique", IsUnique = true, Order = 0)]
         public int GeoFenceDataId { get; set; }
 
         [Required]
+        [Index("IX_AssetDataId")]
+        [Index("GeoFenceAssetUnique", IsUnique = true, Order = 1)]
         public string AssetDataId { get; set; }
 
         [Required]

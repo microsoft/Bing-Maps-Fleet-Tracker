@@ -41,7 +41,7 @@ namespace Trackable.EntityFramework
         public DbSet<AssetPropertiesData> AssetProperties { get; set; }
 
         public DbSet<DeploymentIdData> DeploymentId { get; set; }
-        
+
         public DbSet<TokenData> Tokens { get; set; }
 
         public override int SaveChanges()

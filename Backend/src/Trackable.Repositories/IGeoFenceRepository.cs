@@ -10,7 +10,7 @@ namespace Trackable.Repositories
     /// </summary>
     public interface IGeoFenceRepository : IRepository<int, GeoFence>, ICountableRepository
     {
-        Task<IEnumerable<GeoFence>> GetByAssetIdAsync(string assetId);
+        Task<Dictionary<GeoFence, bool>> GetByAssetIdWithIntersectionAsync(string assetId, IPoint[] points);
 
         Task<GeoFence> UpdateAssetsAsync(GeoFence fence, IEnumerable<string> assetIds);
     }

@@ -85,7 +85,6 @@ namespace Trackable.Repositories
             }
 
             var dataModels = models.Select(m => ObjectMapper.Map<TData>(m));
-            var modelIds = dataModels.Select(d => d.Id).ToList();
 
             var resultingData = this.Db.Set<TData>().AddRange(dataModels);
 

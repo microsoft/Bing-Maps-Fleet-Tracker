@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using AutoMapper;
+using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Trackable.EntityFramework;
 using Trackable.Models;
-using System;
-using AutoMapper;
-using System.Linq.Expressions;
+using Trackable.Repositories.Helpers;
 
 namespace Trackable.Repositories
 {
@@ -34,16 +35,18 @@ namespace Trackable.Repositories
             return this.ObjectMapper.Map<GeoFence>(fenceData);
         }
 
-        public async Task<IEnumerable<GeoFence>> GetByAssetIdAsync(string assetId)
-        {
-            var data = await this.FindBy(g => g.AssetDatas.Select(a => a.Id).Contains(assetId))
-                .ToListAsync();
-            return data.Select(d => this.ObjectMapper.Map<GeoFence>(d));
-        }
-
         public async Task<int> GetCountAsync()
         {
             return await this.FindBy(a => true).CountAsync();
+        }
+
+        public async Task<Dictionary<GeoFence, bool>> GetByAssetIdWithIntersectionAsync(string assetId, IPoint[] points)
+        {
+            var pointsGeography = GeographyHelper.CreateDbMultiPoint(points);
+
+            return await this.FindBy(g => g.AssetDatas.Any(a => a.Id == assetId))
+                 .Select(g => new { GeoFence = g, Intersects = g.Polygon.Intersects(pointsGeography) })
+                 .ToDictionaryAsync(r => this.ObjectMapper.Map<GeoFence>(r.GeoFence), r => r.Intersects);
         }
 
         protected override Expression<Func<GeoFenceData, object>>[] Includes => new Expression<Func<GeoFenceData, object>>[]
