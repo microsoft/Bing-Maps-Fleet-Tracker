@@ -1,9 +1,11 @@
 ﻿using System;
+using Trackable.Models.Helpers;
 
 namespace Trackable.Models
 {
     public class GeoFenceUpdate : ModelBase<int>
     {
+        [Mutable]
         public NotificationStatus NotificationStatus { get; set; } = NotificationStatus.Unknown;
 
         public DateTime UpdatedAt { get; set; }

@@ -1,14 +1,14 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Spatial;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Trackable.Common;
 using Trackable.EntityFramework;
 using Trackable.Models;
-using AutoMapper;
-using System.Linq.Expressions;
 
 namespace Trackable.Repositories
 {
@@ -22,6 +22,7 @@ namespace Trackable.Repositories
         public override async Task<TrackingPoint> AddAsync(TrackingPoint model)
         {
             var device = await this.Db.TrackingDevices
+                .Where(d => !d.Deleted)
                 .Include(d => d.Asset)
                 .SingleAsync(d => d.Id == model.TrackingDeviceId);
 
@@ -32,16 +33,7 @@ namespace Trackable.Repositories
 
             model.AssetId = device.Asset.Id;
 
-            var data = this.ObjectMapper.Map<TrackingPointData>(model);
-
-            var addedData = this.Db.Set<TrackingPointData>().Add(data);
-
-            device.LatestPosition = addedData;
-            device.Asset.LatestPosition = addedData;
-
-            await this.Db.SaveChangesAsync();
-
-            return this.ObjectMapper.Map<TrackingPoint>(await this.FindAsync(addedData.Id));
+            return await this.AddAsyncInternal(model, device);
         }
 
         public override async Task<IEnumerable<TrackingPoint>> AddAsync(IEnumerable<TrackingPoint> models)
@@ -54,6 +46,7 @@ namespace Trackable.Repositories
             string deviceId = models.First().TrackingDeviceId;
 
             var device = await this.Db.TrackingDevices
+                .Where(d => !d.Deleted)
                 .Include(d => d.Asset)
                 .SingleAsync(d => d.Id == deviceId);
 
@@ -66,7 +59,7 @@ namespace Trackable.Repositories
 
             var orderedModels = models.OrderBy(p => p.DeviceTimestampUtc);
             var savedModels = (await base.AddAsync(orderedModels.Take(models.Count() - 1))).ToList();
-            var latestPoint = await this.AddAsync(orderedModels.Last());
+            var latestPoint = await this.AddAsyncInternal(orderedModels.Last(), device);
 
             savedModels.Add(latestPoint);
 
@@ -75,7 +68,7 @@ namespace Trackable.Repositories
 
         public async Task<IEnumerable<TrackingPoint>> GetByAssetIdAsync(string assetId)
         {
-            var data =  await this
+            var data = await this
                 .FindBy(a => a.AssetId == assetId)
                 .ToListAsync();
             return data.Select(d => this.ObjectMapper.Map<TrackingPoint>(d));
@@ -86,7 +79,7 @@ namespace Trackable.Repositories
             var data = await this
                 .FindBy(a => a.TrackingDeviceId == deviceId)
                 .ToListAsync();
-            return data.Select(d => this.ObjectMapper.Map<TrackingPoint>(d)); 
+            return data.Select(d => this.ObjectMapper.Map<TrackingPoint>(d));
         }
 
         public async Task<IEnumerable<TrackingPoint>> GetByAssetIdAfterDateAsync(string assetId, DateTime date, bool includeDebug)
@@ -151,5 +144,19 @@ namespace Trackable.Repositories
         {
             data => data.Asset
         };
+
+        private async Task<TrackingPoint> AddAsyncInternal(TrackingPoint trackingPoint, TrackingDeviceData deviceData)
+        {
+            var data = this.ObjectMapper.Map<TrackingPointData>(trackingPoint);
+
+            var addedData = this.Db.Set<TrackingPointData>().Add(data);
+
+            deviceData.LatestPosition = addedData;
+            deviceData.Asset.LatestPosition = addedData;
+
+            await this.Db.SaveChangesAsync();
+
+            return this.ObjectMapper.Map<TrackingPoint>(await this.FindAsync(addedData.Id));
+        }
     }
 }

@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Microsoft.SqlServer.Types;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity.Spatial;
+using System.Data.SqlTypes;
 using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Trackable.Models;
 
 namespace Trackable.Repositories.Helpers
@@ -22,6 +21,18 @@ namespace Trackable.Repositories.Helpers
                 EarthSRID);
         }
 
+        public static DbGeography CreateDbMultiPoint(IPoint[] points)
+        {
+            var distinctPoints = points.Distinct(new PointEqualityComparer());
+            var pointsString = String.Join(", ", distinctPoints.Select(p => string.Format(CultureInfo.InvariantCulture,
+                "({0} {1})", p.Longitude, p.Latitude)));
+
+
+            return DbGeography.MultiPointFromText(
+                string.Format(CultureInfo.InvariantCulture, "MULTIPOINT({0})", pointsString),
+                EarthSRID);
+        }
+
         public static DbGeography CreateDbLine(IEnumerable<IPoint> points)
         {
             var distinctPoints = points.Distinct(new PointEqualityComparer());
@@ -33,18 +44,29 @@ namespace Trackable.Repositories.Helpers
 
         public static DbGeography CreatePolygon(IEnumerable<IPoint> points)
         {
-            var pointsList = points.ToList();
-            var equalityComparer = new PointEqualityComparer();
+            var listPoints = points.ToList();
 
-            if (!equalityComparer.Equals(pointsList.Last(), pointsList.First()))
+            if (!new PointEqualityComparer().Equals(listPoints.Last(), listPoints.First()))
             {
-                pointsList.Add(pointsList.First());
+                listPoints.Add(listPoints.First());
             }
 
-            var pointsString = String.Join(", ", pointsList.Select(p => string.Format(CultureInfo.InvariantCulture,
+            var pointsString = String.Join(", ", listPoints.Select(p => string.Format(CultureInfo.InvariantCulture,
                 "{0} {1}", p.Longitude, p.Latitude)));
 
-            return DbGeography.PolygonFromText($"POLYGON (({pointsString}))", EarthSRID);
+            var wktString = $"POLYGON (({pointsString}))";
+
+            var sqlGeography = SqlGeography.STGeomFromText(new SqlChars(wktString), EarthSRID).MakeValid();
+
+            // SQL Server is left-handed when it comes to polygons
+            // Bing Maps Control is ambidextrous
+            var invertedSqlGeography = sqlGeography.ReorientObject();
+            if (sqlGeography.STArea() > invertedSqlGeography.STArea())
+            {
+                sqlGeography = invertedSqlGeography;
+            }
+
+            return DbSpatialServices.Default.GeographyFromProviderValue(sqlGeography);
         }
 
         public static IEnumerable<Point> FromDbLine(DbGeography line)
@@ -58,25 +80,14 @@ namespace Trackable.Repositories.Helpers
 
         public static IEnumerable<Point> FromPolygon(DbGeography polygon)
         {
-            try
-            {
-                return FromPolygonInternal(polygon);
-            }
-            catch (Exception)
-            {
-                var validPolygon = polygon.MakeValid();
-                return FromPolygonInternal(validPolygon);
-            }
-        }
+            var sqlGeography = SqlGeography.STGeomFromText(new SqlChars(polygon.WellKnownValue.WellKnownText), EarthSRID);
 
-        private static IEnumerable<Point> FromPolygonInternal(DbGeography polygon)
-        {
             var list = new List<Point>();
 
             for (int i = 1; i <= polygon.PointCount; i++)
             {
-                var p = polygon.PointAt(i);
-                list.Add(new Point() { Latitude = p.Latitude.Value, Longitude = p.Longitude.Value });
+                var p = sqlGeography.STPointN(i);
+                list.Add(new Point() { Latitude = p.Lat.Value, Longitude = p.Long.Value });
             }
 
             return list;

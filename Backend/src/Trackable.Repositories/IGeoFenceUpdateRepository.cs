@@ -10,7 +10,9 @@ namespace Trackable.Repositories
     /// </summary>
     public interface IGeoFenceUpdateRepository : IRepository<int, GeoFenceUpdate>
     {
-        Task<IDictionary<int, GeoFenceUpdate>> GetLatestAsync(string assetId);
+        Task<IDictionary<int, GeoFenceUpdate>> GetByGeofenceIdsAsync(string assetId, IEnumerable<int> geofenceIds);
+
+        Task UpdateStatusAsync(int geofenceId, NotificationStatus status);
     }
 
 }

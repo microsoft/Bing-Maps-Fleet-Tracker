@@ -55,10 +55,6 @@ class TrackingPointService : CrudServiceBase<int, TrackingPoint, ITrackingPointR
             results = await base.AddAsync(models);
         }
 
-        var pointsList = results.OrderBy(p => p.DeviceTimestampUtc);
-        var deviceId = pointsList.Last().TrackingDeviceId;
-        var assetId = pointsList.Last().AssetId;
-
         return results;
     }
 }
