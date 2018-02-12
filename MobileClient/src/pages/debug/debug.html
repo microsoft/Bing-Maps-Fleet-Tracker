@@ -1,0 +1,177 @@
+<!--
+  Generated template for the Debug page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Debug</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <div>
+    <ion-list>
+      <ion-item-divider color="light">Device Token</ion-item-divider>
+      <ion-item>
+        <ion-label>{{deviceToken}}</ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <div>
+    <ion-spinner *ngIf="!bgOptions"></ion-spinner>
+    <ion-list *ngIf="bgOptions">
+
+      <ion-item-group>
+
+        <ion-item-divider color="light">All Platforms</ion-item-divider>
+
+        <ion-item>
+          <ion-label>desiredAccuracy</ion-label>
+          <ion-select [ngModel]="bgOptions.desiredAccuracy" (ngModelChange)="bgOptions.desiredAccuracy = toInt($event)">
+            <ion-option>0</ion-option>
+            <ion-option>10</ion-option>
+            <ion-option>100</ion-option>
+            <ion-option>1000</ion-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-list-header>
+          stationaryRadius
+          <ion-badge item-right>{{bgOptions.stationaryRadius}}</ion-badge>
+        </ion-list-header>
+        <ion-item>
+          <ion-range [(ngModel)]="bgOptions.stationaryRadius" min="0" max="100" step="10" snaps="true"></ion-range>
+        </ion-item>
+
+        <ion-list-header>
+          distanceFilter
+          <ion-badge item-right>{{bgOptions.distanceFilter}}</ion-badge>
+        </ion-list-header>
+        <ion-item>
+          <ion-range [(ngModel)]="bgOptions.distanceFilter" min="0" max="100" step="10" snaps="true"></ion-range>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>debug</ion-label>
+          <ion-toggle [(ngModel)]="bgOptions.debug"></ion-toggle>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>stopOnTerminate</ion-label>
+          <ion-toggle [(ngModel)]="bgOptions.stopOnTerminate"></ion-toggle>
+        </ion-item>
+
+      </ion-item-group>
+
+      <ion-item-group *ngIf="showAndroid">
+
+        <ion-item-divider color="light" class="divider-space">Android</ion-item-divider>
+
+        <ion-item>
+          <ion-label>startOnBoot</ion-label>
+          <ion-toggle [(ngModel)]="bgOptions.startOnBoot"></ion-toggle>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>startForeground </ion-label>
+          <ion-toggle [(ngModel)]="bgOptions.startForeground"></ion-toggle>
+        </ion-item>
+
+        <ion-list-header>
+          interval
+          <ion-badge item-right>{{bgOptions.interval}}</ion-badge>
+        </ion-list-header>
+        <ion-item>
+          <ion-range [(ngModel)]="bgOptions.interval" min="0" max="100" step="10" snaps="true"></ion-range>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>locationProvider</ion-label>
+          <ion-select [ngModel]="bgOptions.locationProvider" (ngModelChange)="bgOptions.locationProvider = toInt($event)">
+            <ion-option value="0">ANDROID_DISTANCE_FILTER_PROVIDER</ion-option>
+            <ion-option value="1">ANDROID_ACTIVITY_PROVIDER</ion-option>
+          </ion-select>
+        </ion-item>
+      </ion-item-group>
+
+      <ion-item-group *ngIf="bgOptions.locationProvider === 1">
+
+        <ion-item-divider color="light" class="divider-space">ANDROID_ACTIVITY_PROVIDER</ion-item-divider>
+
+        <ion-list-header>
+          fastestInterval
+          <ion-badge item-right>{{bgOptions.fastestInterval}}</ion-badge>
+        </ion-list-header>
+        <ion-item>
+          <ion-range [(ngModel)]="bgOptions.fastestInterval" min="0" max="100" step="5" snaps="true"></ion-range>
+        </ion-item>
+
+        <ion-list-header>
+          activitiesInterval
+          <ion-badge item-right>{{bgOptions.activitiesInterval}}</ion-badge>
+        </ion-list-header>
+        <ion-item>
+          <ion-range [(ngModel)]="bgOptions.activitiesInterval" min="0" max="100" step="5" snaps="true"></ion-range>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>stopOnStillActivity</ion-label>
+          <ion-toggle [(ngModel)]="bgOptions.stopOnStillActivity"></ion-toggle>
+        </ion-item>
+
+      </ion-item-group>
+
+      <ion-item-group *ngIf="showIos">
+
+        <ion-item-divider color="light" class="divider-space">iOS</ion-item-divider>
+
+        <ion-item>
+          <ion-label>activityType</ion-label>
+          <ion-select [(ngModel)]="bgOptions.activityType">
+            <ion-option>AutomotiveNavigation</ion-option>
+            <ion-option>OtherNavigation</ion-option>
+            <ion-option>Fitness</ion-option>
+            <ion-option>Other</ion-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>pauseLocationUpdates</ion-label>
+          <ion-toggle [(ngModel)]="bgOptions.pauseLocationUpdates"></ion-toggle>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>saveBatteryOnBackground</ion-label>
+          <ion-toggle [(ngModel)]="bgOptions.saveBatteryOnBackground"></ion-toggle>
+        </ion-item>
+
+      </ion-item-group>
+
+      <ion-item>
+        <button ion-button inline-block (click)="save()" [disabled]="shallowCompare(bgInitialOptions, bgOptions)">Save</button>
+        <button ion-button inline-block (click)="reset()" [disabled]="shallowCompare(bgInitialOptions, bgOptions)">Reset</button>
+        <button ion-button inline-block (click)="defaults()">Defaults</button>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <div>
+    <ion-list>
+      <ion-item-divider color="light" class="divider-space">Location history</ion-item-divider>
+      <ion-list>
+        <button ion-item *ngFor="let loc of locations" (click)="showLocationDetails(loc)">
+          {{ loc.latitude }}, {{ loc.longitude }}
+          <ion-icon name="arrow-forward" item-right></ion-icon>
+        </button>
+      </ion-list>
+    </ion-list>
+  </div>
+
+</ion-content>
