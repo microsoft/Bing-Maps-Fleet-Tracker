@@ -6,11 +6,14 @@ The deployment portal will prompt you for login, read your Azure Subscription in
 
 None of the data entered on the deployment portal is stored by Bing Maps Fleet Tracker. It is only used to configure your deployment.
 
+Note: MSDN accounts cannot deploy to the West US region.
+
 ## Creating a New Deployment
 
 1. Go to the [Bing Maps Fleet Tracker Deployment Portal](https://aka.ms/bingmapsfleettracker).
 2. Sign in with the account you have your Azure subscription on.
-    If you have multiple Azure subscriptions you will be able to specify which one to use while deploying.
+
+    If you have multiple Azure subscriptions tied to the same account, you will be able to specify which one to use while deploying.
 3. Enter a name for your deployment in the "Deployment Name" field. Availability of the name will be checked.
 4. You are required to enter a valid "Bing Maps Subscription Key" for usage in the map controls and geocoding. You can obtain a bing maps key by following this [article](https://msdn.microsoft.com/en-us/library/ff428642.aspx).
 5. You will need to create a Microsoft Application which will be used for authentication in your portal.
