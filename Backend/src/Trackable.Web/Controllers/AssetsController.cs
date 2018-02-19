@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Trackable.Common;
 using Trackable.Models;
-using Microsoft.Extensions.Logging;
 using Trackable.Services;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Trackable.Web.Controllers
 {
@@ -21,7 +21,7 @@ namespace Trackable.Web.Controllers
             ITrackingPointService pointService,
             ITripService tripService,
             ILoggerFactory loggerFactory)
-            :base(loggerFactory)
+            : base(loggerFactory)
         {
             this.assetService = assetService.ThrowIfNull(nameof(assetService));
             this.pointService = pointService.ThrowIfNull(nameof(pointService));

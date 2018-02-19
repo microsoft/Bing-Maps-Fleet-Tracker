@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Trackable.Services;
 
 namespace Trackable.Web.Controllers
@@ -15,7 +15,7 @@ namespace Trackable.Web.Controllers
         public DispatchingController(
             ILoggerFactory loggerFactory,
             IDispatchingService dispatchingService,
-            IAssetService assetService) 
+            IAssetService assetService)
             : base(loggerFactory)
         {
             this.dispatchingService = dispatchingService;

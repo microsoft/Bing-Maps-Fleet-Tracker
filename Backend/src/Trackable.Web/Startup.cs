@@ -25,6 +25,7 @@ using Trackable.Common;
 using Trackable.Services;
 using Trackable.TripDetection;
 using Trackable.Web.Auth;
+using Trackable.Web.Filters;
 
 namespace Trackable.Web
 {
@@ -125,7 +126,7 @@ namespace Trackable.Web
                     Configuration.GetConnectionString("DefaultConnection"),
                     this.HostingEnvironment.WebRootPath)
                 .AddTransient<IAuthorizationHandler, RoleRequirementHandler>()
-                .AddScoped<ExceptionHandler>()
+                .AddScoped<ExceptionHandlerFilter>()
                 .AddTripDetection(Configuration["SubscriptionKeys:BingMaps"])
                 .AddSingleton<IHostedService, HostedInstrumentationService>();
 
@@ -149,7 +150,7 @@ namespace Trackable.Web
                 .AddMvc(options =>
                 {
                     // Add Exception Handler
-                    options.Filters.Add(typeof(ExceptionHandler));
+                    options.Filters.Add(typeof(ExceptionHandlerFilter));
 
                     // Add Https require filter if not running locally
                     if (!this.Configuration.GetValue<bool>("Serving:IsDebug"))

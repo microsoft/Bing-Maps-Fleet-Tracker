@@ -8,19 +8,19 @@ using Trackable.Common.Exceptions;
 using Trackable.Services;
 using Trackable.TripDetection.Exceptions;
 
-namespace Trackable.Web
+namespace Trackable.Web.Filters
 {
-    public class ExceptionHandler : ExceptionFilterAttribute
+    public class ExceptionHandlerFilter : ExceptionFilterAttribute
     {
         private readonly ILogger logger;
 
         private readonly IInstrumentationService instrumentationService;
 
-        public ExceptionHandler(
+        public ExceptionHandlerFilter(
             ILoggerFactory loggerFactory,
             IInstrumentationService instrumentationService)
         {
-            this.logger = loggerFactory.CreateLogger<ExceptionHandler>();
+            this.logger = loggerFactory.CreateLogger<ExceptionHandlerFilter>();
             this.instrumentationService = instrumentationService;
         }
 

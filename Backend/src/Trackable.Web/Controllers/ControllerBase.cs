@@ -7,7 +7,7 @@ using Trackable.Web.Filters;
 namespace Trackable.Web
 {
     [ModelBindingValidationFilter]
-    [Authorize(UserRoles.Viewer, AuthenticationSchemes = "Bearer, OpenIdConnect")]
+    [Authorize(UserRoles.Viewer, AuthenticationSchemes = "OpenIdConnect, Bearer")]
     public class ControllerBase : Controller
     {
         protected ILoggerFactory LoggerFactory { get; }
