@@ -10,6 +10,7 @@ namespace Trackable.Models
         /// <summary>
         /// Timestamp of creation of the point.
         /// </summary>
+        [JsonIgnore]
         public DateTime CreatedAtUtc { get; set; }
 
         /// <summary>
