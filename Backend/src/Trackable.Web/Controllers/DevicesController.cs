@@ -95,7 +95,7 @@ namespace Trackable.Web.Controllers
         // POST api/devices/5/points
         [HttpPost("{id}/points")]
         [Authorize(UserRoles.TrackingDevice)]
-        public async Task<IActionResult> PostPoint(string id, [FromBody]TrackingPoint[] points)
+        public async Task<IActionResult> PostPointsToDevice(string id, [FromBody]TrackingPoint[] points)
         {
             var subject = ClaimsReader.ReadSubject(this.User);
             var audience = ClaimsReader.ReadAudience(this.User);
@@ -105,11 +105,31 @@ namespace Trackable.Web.Controllers
                 return Forbid();
             }
 
-            if (points != null)
+            points.ForEach((point) => point.TrackingDeviceId = id);
+            var addedPoints = await this.pointService.AddAsync(points);
+            await this.geoFenceService.HandlePoints(addedPoints.First().AssetId, addedPoints.ToArray());
+
+            return Ok();
+        }
+
+        // POST api/devices/bulk-points
+        [HttpPost("bulk-points")]
+        [Authorize(UserRoles.Viewer)]
+        public async Task<IActionResult> PostPoints([FromBody]TrackingPoint[] points)
+        {
+
+            var pointsWithoutId = points.Where((point) => string.IsNullOrEmpty(point.TrackingDeviceId));
+            if (pointsWithoutId.Any())
             {
-                points.ForEach((point) => point.TrackingDeviceId = id);
-                var addedPoints = await this.pointService.AddAsync(points);
-                await this.geoFenceService.HandlePoints(addedPoints.First().AssetId, addedPoints.ToArray());
+                return BadRequest("Points must include a TrackingDeviceId");
+            }
+
+            var addedPoints = await this.pointService.AddAsync(points);
+            var pointsLookup = addedPoints.ToLookup(a => a.AssetId, a => a);
+
+            foreach (var pl in pointsLookup)
+            {
+                await this.geoFenceService.HandlePoints(pl.Key, pl.ToArray());
             }
 
             return Ok();

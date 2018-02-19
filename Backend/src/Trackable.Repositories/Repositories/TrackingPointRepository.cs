@@ -43,25 +43,31 @@ namespace Trackable.Repositories
                 return new List<TrackingPoint>();
             }
 
-            string deviceId = models.First().TrackingDeviceId;
-
-            var device = await this.Db.TrackingDevices
-                .Where(d => !d.Deleted)
-                .Include(d => d.Asset)
-                .SingleAsync(d => d.Id == deviceId);
-
-            if (device.Asset == null)
+            var devicePointsLookup = models.ToLookup(m => m.TrackingDeviceId);
+            var savedModels = new List<TrackingPoint>();
+            foreach (var dpl in devicePointsLookup)
             {
-                throw new InvalidOperationException("Can't add a tracking point while device not linked to an asset");
+                var device = await this.Db.TrackingDevices
+                   .Where(d => !d.Deleted)
+                   .Include(d => d.Asset)
+                   .SingleAsync(d => d.Id == dpl.Key);
+
+                if (device.Asset == null)
+                {
+                    throw new InvalidOperationException("Can't add a tracking point while device not linked to an asset");
+                }
+
+                // All points should have the asset id they were assigned to
+                dpl.ForEach(model => model.AssetId = device.Asset.Id);
+
+                // Save all the points except the latest
+                var orderedModels = dpl.OrderBy(p => p.DeviceTimestampUtc);
+                savedModels.AddRange(await base.AddAsync(orderedModels.Take(dpl.Count() - 1)));
+
+                // Update the current position using the latest point
+                var latestPoint = await this.AddAsyncInternal(orderedModels.Last(), device);
+                savedModels.Add(latestPoint);
             }
-
-            models.ForEach(model => model.AssetId = device.Asset.Id);
-
-            var orderedModels = models.OrderBy(p => p.DeviceTimestampUtc);
-            var savedModels = (await base.AddAsync(orderedModels.Take(models.Count() - 1))).ToList();
-            var latestPoint = await this.AddAsyncInternal(orderedModels.Last(), device);
-
-            savedModels.Add(latestPoint);
 
             return savedModels;
         }
