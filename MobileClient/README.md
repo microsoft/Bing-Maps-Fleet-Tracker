@@ -55,4 +55,24 @@ ionic cordova run android
 
 ### iOS
 
-This feature is not yet supported. Will be coming soon.
+#### iOS Prerequisites
+
+* XCode 7 or higher
+* iOS 9
+* A free Apple ID or paid Apple Developer account
+
+To download the native plugins and setup the cordova iOS project run:
+
+``` Bash
+ionic cordova platform add ios
+```
+
+#### iOS Build and run
+
+To build application:
+
+``` Bash
+ionic cordova build ios
+```
+
+To run the application on a device or emulator, you will need to set up a provisioning profile, and follow the steps outlined in [the ionic documentation](https://ionicframework.com/docs/intro/deploying/).

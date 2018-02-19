@@ -33,7 +33,7 @@ Note: MSDN accounts cannot deploy to the West US region.
 
 ### Mobile Client
 
-The background tracking mobile application is available for Android as a downloadable APK at [this link](https://github.com/Microsoft/Bing-Maps-Fleet-Tracker/releases). You can also build the mobile application by following these [steps](https://github.com/Microsoft/Bing-Maps-Fleet-Tracker/blob/master/MobileClient/README.md).
+The background tracking mobile client is available for Android as a downloadable APK at [this link](https://github.com/Microsoft/Bing-Maps-Fleet-Tracker/releases). You can also build the mobile client by following these [steps](https://github.com/Microsoft/Bing-Maps-Fleet-Tracker/blob/master/MobileClient/README.md). For the iOS mobile client, you will need to build your own from source by following the aforementioned steps.
 
 ## Updating an Existing Deployment
 
