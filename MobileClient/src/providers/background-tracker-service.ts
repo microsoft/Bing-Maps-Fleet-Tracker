@@ -29,7 +29,7 @@ export class BackgroundTrackerService {
     // iOS only section
     activityType: 'AutomotiveNavigation', //iOS [AutomotiveNavigation, OtherNavigation, Fitness, Other] Presumably, this affects iOS GPS algorithm. @see Apple docs for more information
     pauseLocationUpdates: false, //iOS Pauses location updates when app is paused (default: true)
-    saveBatteryOnBackground: true, //iOS Switch to less accurate significant changes and region monitory when in background (default)
+    saveBatteryOnBackground: false, //iOS Switch to less accurate significant changes and region monitory when in background (default)
     //
     // Android only section
     locationProvider: 0, //Set location provider @see PROVIDERS.md
@@ -88,10 +88,11 @@ export class BackgroundTrackerService {
       if (onDevice) {
         this.platform.ready().then(() => {
           bgOptions.url = `${trackingUrl}/api/devices/${device.uuid}/points`;
+          bgOptions.syncUrl = `${trackingUrl}/api/devices/${device.uuid}/points`;
           bgOptions.httpHeaders = { Authorization: 'Bearer ' + token }
           this.start(bgOptions);
 
-          this.logger.info('start done!');
+          this.logger.info('On device start done!');
           startFinished();
         });
       } else {
@@ -136,6 +137,7 @@ export class BackgroundTrackerService {
     );
 
     backgroundGeolocation.start();
+    backgroundGeolocation.switchMode(backgroundGeolocation.mode.FOREGROUND);
   }
 
   private stop() {

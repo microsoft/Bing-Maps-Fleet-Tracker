@@ -53,7 +53,6 @@ export class MapHostService {
     if (this.isOnline) {
       this.getMapsKey().then(key => {
         this.createMap(key);
-        this.startListening();
       });
     }
     else {
@@ -94,7 +93,6 @@ export class MapHostService {
     if (this.deferMapsCreation) {
       this.getMapsKey().then(key => {
         this.createMap(key);
-        this.startListening();
       });
 
       this.deferMapsCreation = false;
@@ -117,6 +115,7 @@ export class MapHostService {
 
       this.tracksLayer = new Microsoft.Maps.Layer();
       this.map.layers.insert(this.tracksLayer);
+      this.startListening();
     }).catch(() => {
       this.logger.error('map creation request failed');;
     });
