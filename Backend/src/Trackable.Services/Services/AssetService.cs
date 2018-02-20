@@ -26,6 +26,16 @@ namespace Trackable.Services
             return await this.repository.AddAsync(asset);
         }
 
+        public async override Task<IEnumerable<Asset>> AddAsync(IEnumerable<Asset> assets)
+        {
+            if (assets.Any(asset => asset.AssetType == AssetType.Car && asset.AssetProperties != null))
+            {
+                throw new BadArgumentException("AssetType \"Car\" should not contain assetProperties");
+            }
+
+            return await this.repository.AddAsync(assets);
+        }
+
         public async Task<IDictionary<string, TrackingPoint>> GetAssetsLatestPositions()
         {
             return await this.repository.GetAssetsLatestPositions();

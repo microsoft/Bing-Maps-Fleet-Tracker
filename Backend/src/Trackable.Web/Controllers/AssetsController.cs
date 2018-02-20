@@ -70,6 +70,13 @@ namespace Trackable.Web.Controllers
             return await this.assetService.AddAsync(asset);
         }
 
+        // POST api/assets
+        [HttpPost("batch")]
+        public async Task<IEnumerable<Asset>> PostBatch([FromBody]Asset[] assets)
+        {
+            return await this.assetService.AddAsync(assets);
+        }
+
         // DELETE api/assets/5
         [HttpDelete("{id}")]
         [Authorize(UserRoles.Administrator)]

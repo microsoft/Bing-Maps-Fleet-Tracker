@@ -44,8 +44,8 @@ namespace Trackable.Web.Controllers
             return await this.geoFenceService.AddAsync(geoFence);
         }
 
-        // POST api/geofences
-        [HttpPost("batch-geofences")]
+        // POST api/geofences/batch
+        [HttpPost("batch")]
         public async Task<IEnumerable<GeoFence>> PostBatch([FromBody]GeoFence[] geoFences)
         {
             return await this.geoFenceService.AddAsync(geoFences);
