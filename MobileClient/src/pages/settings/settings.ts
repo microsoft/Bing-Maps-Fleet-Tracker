@@ -96,6 +96,8 @@ export class SettingsPage {
   }
 
   clearUrlSettings() {
+    this.backgroundTrackerService.stopTracking();
+    
     Promise.all([
       this.settingsService.remove(Settings.SecurityToken),
       this.settingsService.remove(Settings.BackendUrl)])

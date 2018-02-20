@@ -88,5 +88,7 @@
     <plugin name="cordova-plugin-mauron85-background-geolocation" spec="^2.3.2">
         <variable name="ACCOUNT_TYPE" value="$PACKAGE_NAME.account" />
         <variable name="CONTENT_AUTHORITY" value="$PACKAGE_NAME" />
+        <variable name="ALWAYS_USAGE_DESCRIPTION" value="This app requires background tracking enabled" />
+        <variable name="MOTION_USAGE_DESCRIPTION" value="This app requires motion detection" />
     </plugin>
 </widget>
