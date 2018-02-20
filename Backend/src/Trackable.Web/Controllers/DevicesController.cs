@@ -117,7 +117,6 @@ namespace Trackable.Web.Controllers
         [Authorize(UserRoles.Viewer)]
         public async Task<IActionResult> PostPoints([FromBody]TrackingPoint[] points)
         {
-
             var pointsWithoutId = points.Where((point) => string.IsNullOrEmpty(point.TrackingDeviceId));
             if (pointsWithoutId.Any())
             {
