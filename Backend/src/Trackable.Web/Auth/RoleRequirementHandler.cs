@@ -5,7 +5,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Trackable.Common;
-using Trackable.Repositories;
 using Trackable.Services;
 
 namespace Trackable.Web.Auth
@@ -44,7 +43,7 @@ namespace Trackable.Web.Auth
             else if (audience == JwtAuthConstants.DeviceAudience)
             {
                 userRole = UserRoles.TrackingDevice;
-                
+
                 // Validate jwtToken is not deactivated
                 var jwtToken = await this.tokenService.GetAsync(Guid.Parse(ClaimsReader.ReadTokenId(context.User)));
                 if (!jwtToken.IsActive)

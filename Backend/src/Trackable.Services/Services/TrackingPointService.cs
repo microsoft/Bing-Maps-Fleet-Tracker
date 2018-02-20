@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Trackable.Common;
 using Trackable.Models;
 using Trackable.Repositories;
 using Trackable.Services;
@@ -39,13 +40,16 @@ class TrackingPointService : CrudServiceBase<int, TrackingPoint, ITrackingPointR
     public async override Task<IEnumerable<TrackingPoint>> AddAsync(IEnumerable<TrackingPoint> models)
     {
         IEnumerable<TrackingPoint> results;
-            
+
+        // Ignore tripId field
+        models.ForEach(m => m.TripId = null);
+
         // Do not save points if they are debug points
         if (models.All(p => p.Debug))
         {
             results = models;
             var device = await this.deviceRepository.GetAsync(models.First().TrackingDeviceId);
-            foreach(var point in results)
+            foreach (var point in results)
             {
                 point.AssetId = device?.AssetId;
             }

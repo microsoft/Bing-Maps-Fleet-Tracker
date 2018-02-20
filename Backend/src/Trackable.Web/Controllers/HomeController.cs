@@ -17,7 +17,7 @@ namespace Trackable.Web.Controllers
         {
             // Work around for issue with File and If-Modified-Since
             // https://github.com/aspnet/Mvc/issues/6875
-            this.HttpContext.Request.Headers.Remove("If-Modified-Since"); 
+            this.HttpContext.Request.Headers.Remove("If-Modified-Since");
 
             if (configuration.GetValue<bool>("Serving:ServeFrontend"))
             {

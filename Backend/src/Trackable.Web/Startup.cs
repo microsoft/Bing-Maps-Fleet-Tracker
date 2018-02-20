@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -17,7 +18,6 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +25,7 @@ using Trackable.Common;
 using Trackable.Services;
 using Trackable.TripDetection;
 using Trackable.Web.Auth;
+using Trackable.Web.Filters;
 
 namespace Trackable.Web
 {
@@ -56,8 +57,14 @@ namespace Trackable.Web
             services.AddSingleton(new SigningCredentials(jwtKey, SecurityAlgorithms.HmacSha256));
 
             // Cookie based OpenId Authentication + Jwt Auth for programmatic Apis
+            // Use JwtBearer as default to stop automatic redirect
             services
-                .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddAuthentication(cfg =>
+                {
+                    cfg.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    cfg.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    cfg.DefaultSignOutScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                })
                 .AddCookie(cookieopt =>
                 {
                     cookieopt.Events.OnRedirectToAccessDenied = context =>
@@ -65,11 +72,7 @@ namespace Trackable.Web
                         context.Response.StatusCode = 403;
                         return Task.CompletedTask;
                     };
-                    cookieopt.Events.OnRedirectToLogin = context =>
-                    {
-                        context.Response.StatusCode = 401;
-                        return Task.CompletedTask;
-                    };
+                    cookieopt.Events.OnRedirectToLogin = DoNotRedirectApiCalls;
                 })
                 .AddOpenIdConnect(options =>
                 {
@@ -80,7 +83,9 @@ namespace Trackable.Web
                     options.CallbackPath = "/signin-oidc";
                     options.Events = new OpenIdConnectEvents
                     {
-                        OnRemoteFailure = OnAuthenticationFailed
+                        OnRemoteFailure = OnAuthenticationFailed,
+                        OnRedirectToIdentityProvider = DoNotRedirectApiCalls,
+
                     };
                     options.TokenValidationParameters = new TokenValidationParameters()
                     {
@@ -121,7 +126,7 @@ namespace Trackable.Web
                     Configuration.GetConnectionString("DefaultConnection"),
                     this.HostingEnvironment.WebRootPath)
                 .AddTransient<IAuthorizationHandler, RoleRequirementHandler>()
-                .AddScoped<ExceptionHandler>()
+                .AddScoped<ExceptionHandlerFilter>()
                 .AddTripDetection(Configuration["SubscriptionKeys:BingMaps"])
                 .AddSingleton<IHostedService, HostedInstrumentationService>();
 
@@ -145,7 +150,7 @@ namespace Trackable.Web
                 .AddMvc(options =>
                 {
                     // Add Exception Handler
-                    options.Filters.Add(typeof(ExceptionHandler));
+                    options.Filters.Add(typeof(ExceptionHandlerFilter));
 
                     // Add Https require filter if not running locally
                     if (!this.Configuration.GetValue<bool>("Serving:IsDebug"))
@@ -226,6 +231,17 @@ namespace Trackable.Web
             context.HandleResponse();
             context.Response.Redirect("/api/users/accessdenied");
             return Task.FromResult(0);
+        }
+
+        private Task DoNotRedirectApiCalls<T>(PropertiesContext<T> context) where T : AuthenticationSchemeOptions
+        {
+            if (!context.Request.Path.StartsWithSegments(new PathString("/api/users/login")))
+            {
+                context.Response.Clear();
+                context.Response.StatusCode = 401;
+            }
+
+            return Task.CompletedTask;
         }
     }
 }

@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Trackable.Common;
 using Microsoft.Extensions.Logging;
-using Trackable.Services;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Trackable.Common;
 using Trackable.Models;
-using Microsoft.AspNetCore.Authorization;
-
-// For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+using Trackable.Services;
 
 namespace Trackable.Web.Controllers
 {

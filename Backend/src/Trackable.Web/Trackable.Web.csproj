@@ -63,9 +63,9 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.0.0" />
     <PackageReference Include="Microsoft.SqlServer.Types" Version="14.0.314.76" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="1.1.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="1.1.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="1.1.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="1.2.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="1.2.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="1.2.0" />
     <PackageReference Include="WindowsAzure.Storage" Version="8.1.4" />
   </ItemGroup>
 
