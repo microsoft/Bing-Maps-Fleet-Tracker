@@ -29,14 +29,14 @@ export class BackgroundTrackerService {
     // iOS only section
     activityType: 'AutomotiveNavigation', //iOS [AutomotiveNavigation, OtherNavigation, Fitness, Other] Presumably, this affects iOS GPS algorithm. @see Apple docs for more information
     pauseLocationUpdates: false, //iOS Pauses location updates when app is paused (default: true)
-    saveBatteryOnBackground: false, //iOS Switch to less accurate significant changes and region monitory when in background (default)
+    saveBatteryOnBackground: false, //iOS Switch to less accurate significant changes and region monitory when in background (default: true)
     //
     // Android only section
     locationProvider: 0, //Set location provider @see PROVIDERS.md
     interval: 10, //Android
     fastestInterval: 5, //Android
     activitiesInterval: 10, //Android
-    startForeground: true, //Androind If false location service will not be started in foreground and no notification will be shown. (default true)
+    startForeground: true, //Android If false location service will not be started in foreground and no notification will be shown. (default true)
     startOnBoot: true, //Android Start background service on device boot. (default false)
     stopOnStillActivity: true //Android stop() is forced, when the STILL activity is detected (default is true)
   };
