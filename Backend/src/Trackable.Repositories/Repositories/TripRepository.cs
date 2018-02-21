@@ -1,19 +1,17 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Trackable.Common;
 using Trackable.EntityFramework;
 using Trackable.Models;
-using AutoMapper;
 
 namespace Trackable.Repositories
 {
     internal class TripRepository : DbRepositoryBase<int, TripData, Trip>, ITripRepository
     {
-
         public TripRepository(
             TrackableDbContext db,
             IMapper mapper)

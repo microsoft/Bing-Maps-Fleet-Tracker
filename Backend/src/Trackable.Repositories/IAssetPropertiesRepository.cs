@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Trackable.EntityFramework;
+﻿using System.Threading.Tasks;
 using Trackable.Models;
 
 namespace Trackable.Repositories
 {
-    public interface IAssetPropertiesRepository: IRepository<int, AssetProperties>
+    public interface IAssetPropertiesRepository : IRepository<int, AssetProperties>
     {
-        Task checkValidity(AssetProperties assetProperties);
+        Task CheckValidity(AssetProperties assetProperties);
     }
 }

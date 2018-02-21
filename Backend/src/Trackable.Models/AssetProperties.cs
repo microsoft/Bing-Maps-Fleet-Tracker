@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Trackable.Models.Helpers;
+﻿using Trackable.Models.Helpers;
 
 namespace Trackable.Models
 {
-    public class AssetProperties: ModelBase<int>
+    public class AssetProperties : ModelBase<int>
     {
         [Mutable]
         public double? AssetHeight { get; set; }
