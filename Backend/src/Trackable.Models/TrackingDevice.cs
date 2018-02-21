@@ -1,8 +1,9 @@
-﻿using Trackable.Models.Helpers;
+﻿using System.Collections.Generic;
+using Trackable.Models.Helpers;
 
 namespace Trackable.Models
 {
-    public class TrackingDevice : ModelBase<string>
+    public class TrackingDevice : ModelBase<string>, INamedModel, ITaggedModel
     {
         [Mutable]
         public string Name { get; set; }
@@ -21,5 +22,8 @@ namespace Trackable.Models
 
         [Mutable]
         public string AssetId { get; set; }
+
+        [Mutable]
+        public IEnumerable<string> Tags { get; set; }
     }
 }

@@ -85,6 +85,8 @@
     <Compile Include="ConfigurationData.cs" />
     <Compile Include="EntityBase.cs" />
     <Compile Include="EntityFrameworkExtensions.cs" />
+    <Compile Include="ITaggedEntity.cs" />
+    <Compile Include="INamedEntity.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="Migrations\201705010937090_AddGeoFencesAndNotificationUpdates.cs" />
     <Compile Include="Migrations\201705010937090_AddGeoFencesAndNotificationUpdates.Designer.cs">
@@ -171,9 +173,14 @@
     <Compile Include="Migrations\201802071124064_GeofenceUpdates-UniqueGeofenceId.Designer.cs">
       <DependentUpon>201802071124064_GeofenceUpdates-UniqueGeofenceId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201802201706273_TaggingForResources.cs" />
+    <Compile Include="Migrations\201802201706273_TaggingForResources.Designer.cs">
+      <DependentUpon>201802201706273_TaggingForResources.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlTypeHelper.cs" />
+    <Compile Include="TagData.cs" />
     <Compile Include="TrackableDbContext.cs" />
     <Compile Include="TrackableDbContextFactory.cs" />
     <Compile Include="TrackingDeviceData.cs" />
@@ -255,6 +262,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201802071124064_GeofenceUpdates-UniqueGeofenceId.resx">
       <DependentUpon>201802071124064_GeofenceUpdates-UniqueGeofenceId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802201706273_TaggingForResources.resx">
+      <DependentUpon>201802201706273_TaggingForResources.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

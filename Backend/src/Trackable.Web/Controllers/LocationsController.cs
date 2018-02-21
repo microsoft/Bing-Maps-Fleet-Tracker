@@ -21,9 +21,30 @@ namespace Trackable.Web.Controllers
 
         // GET api/locations
         [HttpGet]
-        public async Task<IEnumerable<Location>> Get()
+        public async Task<IEnumerable<Location>> Get(
+            [FromQuery] string tags = null,
+            [FromQuery] bool includesAllTags = false,
+            [FromQuery] string name = null)
         {
-            return await this.locationService.ListAsync();
+            if (string.IsNullOrEmpty(tags) && string.IsNullOrEmpty(name))
+            {
+                return await this.locationService.ListAsync();
+            }
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                return await this.locationService.FindByNameAsync(name);
+            }
+
+            var tagsArray = tags.Split(',');
+            if (includesAllTags)
+            {
+                return await this.locationService.FindContainingAllTagsAsync(tagsArray);
+            }
+            else
+            {
+                return await this.locationService.FindContainingAnyTagsAsync(tagsArray);
+            }
         }
 
         // GET api/locations/5

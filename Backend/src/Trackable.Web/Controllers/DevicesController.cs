@@ -44,9 +44,30 @@ namespace Trackable.Web.Controllers
 
         // GET api/devices
         [HttpGet]
-        public async Task<IEnumerable<TrackingDevice>> Get()
+        public async Task<IEnumerable<TrackingDevice>> Get(
+            [FromQuery] string tags = null,
+            [FromQuery] bool includesAllTags = false,
+            [FromQuery] string name = null)
         {
-            return await this.deviceService.ListAsync();
+            if (string.IsNullOrEmpty(tags) && string.IsNullOrEmpty(name))
+            {
+                return await this.deviceService.ListAsync();
+            }
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                return await this.deviceService.FindByNameAsync(name);
+            }
+
+            var tagsArray = tags.Split(',');
+            if (includesAllTags)
+            {
+                return await this.deviceService.FindContainingAllTagsAsync(tagsArray);
+            }
+            else
+            {
+                return await this.deviceService.FindContainingAnyTagsAsync(tagsArray);
+            }
         }
 
         // GET api/devices/5

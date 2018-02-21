@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Trackable.Repositories;
 using Trackable.Models;
 
 namespace Trackable.Services
 {
     public interface ILocationService : ICrudService<int, Location>
     {
-        Task<IDictionary<string, int>> GetCountByAssetAsync(int locationid); 
+        Task<IDictionary<string, int>> GetCountByAssetAsync(int locationid);
+
+        Task<IEnumerable<Location>> FindByNameAsync(string name);
+
+        Task<IEnumerable<Location>> FindContainingAllTagsAsync(IEnumerable<string> tags);
+
+        Task<IEnumerable<Location>> FindContainingAnyTagsAsync(IEnumerable<string> tags);
     }
 }

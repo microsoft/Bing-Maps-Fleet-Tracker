@@ -25,11 +25,6 @@ namespace Trackable.Repositories
             return data.Select(d => this.ObjectMapper.Map<Location>(data));
         }
 
-        public async Task<int> GetCountAsync()
-        {
-            return await this.FindBy(a => true).CountAsync();
-        }
-
         public async Task<int> GetAutoLocationCountAsync()
         {
             return await this.FindBy(a => a.InterestLevel.HasValue &&
@@ -49,7 +44,9 @@ namespace Trackable.Repositories
                 .ToDictionaryAsync(g => g.Key, g => g.Count());
         }
 
-        protected override Expression<Func<LocationData, object>>[] Includes => null;
-
+        protected override Expression<Func<LocationData, object>>[] Includes => new Expression<Func<LocationData, object>>[]
+        {
+            data => data.Tags
+        };
     }
 }

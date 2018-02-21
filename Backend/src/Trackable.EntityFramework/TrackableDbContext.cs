@@ -22,6 +22,8 @@ namespace Trackable.EntityFramework
 
         public DbSet<TrackingPointData> TrackingPoints { get; set; }
 
+        public DbSet<TagData> Tags { get; set; }
+
         public DbSet<TripData> Trips { get; set; }
 
         public DbSet<TripLegData> TripLegs { get; set; }

@@ -147,9 +147,12 @@
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\GeographyHelper.cs" />
     <Compile Include="Helpers\PointEqualityComparer.cs" />
+    <Compile Include="IDbNamedRepository.cs" />
+    <Compile Include="IDbQueryRepository.cs" />
+    <Compile Include="IDbTaggedRepository.cs" />
     <Compile Include="IInstrumentationRepository.cs" />
     <Compile Include="IAssetPropertiesRepository.cs" />
-    <Compile Include="ICountableRepository.cs" />
+    <Compile Include="IDbCountableRepository.cs" />
     <Compile Include="IGeoFenceUpdateRepository.cs" />
     <Compile Include="IGeoFenceRepository.cs" />
     <Compile Include="IRoleRepository.cs" />

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Trackable.EntityFramework;
 using Trackable.Models;
 
 namespace Trackable.Repositories
 {
-    public interface ITrackingPointRepository : IRepository<int, TrackingPoint>, ICountableRepository
+    public interface ITrackingPointRepository : IRepository<int, TrackingPoint>, IDbCountableRepository<int, TrackingPointData, TrackingPoint>
     {
         /// <summary>
         /// Gets all points by asset ID asynchronously.

@@ -1,11 +1,9 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
-using Trackable.Common.Exceptions;
 using Trackable.Models;
 using Trackable.Repositories;
 using ZXing.QrCode;
@@ -78,6 +76,21 @@ namespace Trackable.Services
         public async Task<IDictionary<string, TrackingPoint>> GetDevicesLatestPositions()
         {
             return await this.repository.GetDevicesLatestPositions();
+        }
+
+        public async Task<IEnumerable<TrackingDevice>> FindByNameAsync(string name)
+        {
+            return await this.repository.FindByNameAsync(name);
+        }
+
+        public async Task<IEnumerable<TrackingDevice>> FindContainingAllTagsAsync(IEnumerable<string> tags)
+        {
+            return await this.repository.FindContainingAllTagsAsync(tags);
+        }
+
+        public async Task<IEnumerable<TrackingDevice>> FindContainingAnyTagsAsync(IEnumerable<string> tags)
+        {
+            return await this.repository.FindContainingAnyTagsAsync(tags);
         }
     }
 }

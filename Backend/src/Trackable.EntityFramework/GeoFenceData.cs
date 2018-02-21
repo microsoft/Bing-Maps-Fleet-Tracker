@@ -7,7 +7,7 @@ using System.Data.Entity.Spatial;
 namespace Trackable.EntityFramework
 {
     [Table("GeoFences")]
-    public class GeoFenceData : EntityBase<int>
+    public class GeoFenceData : EntityBase<int>, ITaggedEntity, INamedEntity
     {
         [Required]
         public string Name { get; set; }
@@ -26,5 +26,7 @@ namespace Trackable.EntityFramework
         public ICollection<AssetData> AssetDatas { get; set; }
 
         public ICollection<GeoFenceUpdateData> NotificationHistory { get; set; }
+
+        public ICollection<TagData> Tags { get; set; }
     }
 }

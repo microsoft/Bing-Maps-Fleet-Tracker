@@ -17,11 +17,6 @@ namespace Trackable.Repositories
         {
         }
 
-        public async Task<int> GetCountAsync()
-        {
-            return await this.FindBy(a => true).CountAsync();
-        }
-
         public async Task<TrackingDevice> GetDeviceByNameAsync(string name)
         {
             var data = await this.FindBy(device => (device.Name == name)).SingleOrDefaultAsync();
@@ -47,7 +42,8 @@ namespace Trackable.Repositories
 
         protected override Expression<Func<TrackingDeviceData, object>>[] Includes => new Expression<Func<TrackingDeviceData, object>>[]
         {
-            data => data.Asset
+            data => data.Asset,
+            data => data.Tags
         };
     }
 }

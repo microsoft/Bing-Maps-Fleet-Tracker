@@ -25,9 +25,30 @@ namespace Trackable.Web.Controllers
 
         // GET api/geofences
         [HttpGet]
-        public async Task<IEnumerable<GeoFence>> Get()
+        public async Task<IEnumerable<GeoFence>> Get(
+            [FromQuery] string tags = null,
+            [FromQuery] bool includesAllTags = false,
+            [FromQuery] string name = null)
         {
-            return await this.geoFenceService.ListAsync();
+            if (string.IsNullOrEmpty(tags) && string.IsNullOrEmpty(name))
+            {
+                return await this.geoFenceService.ListAsync();
+            }
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                return await this.geoFenceService.FindByNameAsync(name);
+            }
+
+            var tagsArray = tags.Split(',');
+            if (includesAllTags)
+            {
+                return await this.geoFenceService.FindContainingAllTagsAsync(tagsArray);
+            }
+            else
+            {
+                return await this.geoFenceService.FindContainingAnyTagsAsync(tagsArray);
+            }
         }
 
         // GET api/geofences/5
