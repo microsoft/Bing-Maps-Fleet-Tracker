@@ -7,6 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Trackable.Common;
+using Trackable.Common.Exceptions;
 using Trackable.EntityFramework;
 using Trackable.Models;
 
@@ -44,18 +45,27 @@ namespace Trackable.Repositories
             }
 
             var devicePointsLookup = models.ToLookup(m => m.TrackingDeviceId);
+            var deviceIds = devicePointsLookup.Select(g => g.Key).ToList();
+
+            var devicesDictionary = await this.Db.TrackingDevices
+                   .Where(d => !d.Deleted && deviceIds.Contains(d.Id))
+                   .Include(d => d.Asset)
+                   .ToDictionaryAsync(d => d.Id, d => d);
+
+            if (devicesDictionary.Count < devicePointsLookup.Count)
+            {
+                throw new BadArgumentException("A Device Id does not exist");
+            }
+
+            if(devicesDictionary.Any(d => d.Value.Asset == null))
+            {
+                throw new BadArgumentException("A Device is not linked to an asset");
+            }
+
             var savedModels = new List<TrackingPoint>();
             foreach (var dpl in devicePointsLookup)
             {
-                var device = await this.Db.TrackingDevices
-                   .Where(d => !d.Deleted)
-                   .Include(d => d.Asset)
-                   .SingleAsync(d => d.Id == dpl.Key);
-
-                if (device.Asset == null)
-                {
-                    throw new InvalidOperationException("Can't add a tracking point while device not linked to an asset");
-                }
+                var device = devicesDictionary[dpl.Key];
 
                 // All points should have the asset id they were assigned to
                 dpl.ForEach(model => model.AssetId = device.Asset.Id);
