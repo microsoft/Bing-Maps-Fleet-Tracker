@@ -84,7 +84,8 @@ namespace Trackable.Repositories
                 return Enumerable.Empty<TModel>();
             }
 
-            var dataModels = models.Select(m => ObjectMapper.Map<TData>(m));
+            // Unless passed data models is an array, EF will not fill computed fields
+            var dataModels = models.Select(m => ObjectMapper.Map<TData>(m)).ToArray();
 
             var resultingData = this.Db.Set<TData>().AddRange(dataModels);
 

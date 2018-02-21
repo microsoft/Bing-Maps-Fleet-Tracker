@@ -7,6 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Trackable.Common;
+using Trackable.Common.Exceptions;
 using Trackable.EntityFramework;
 using Trackable.Models;
 
@@ -43,25 +44,40 @@ namespace Trackable.Repositories
                 return new List<TrackingPoint>();
             }
 
-            string deviceId = models.First().TrackingDeviceId;
+            var devicePointsLookup = models.ToLookup(m => m.TrackingDeviceId);
+            var deviceIds = devicePointsLookup.Select(g => g.Key).ToList();
 
-            var device = await this.Db.TrackingDevices
-                .Where(d => !d.Deleted)
-                .Include(d => d.Asset)
-                .SingleAsync(d => d.Id == deviceId);
+            var devicesDictionary = await this.Db.TrackingDevices
+                   .Where(d => !d.Deleted && deviceIds.Contains(d.Id))
+                   .Include(d => d.Asset)
+                   .ToDictionaryAsync(d => d.Id, d => d);
 
-            if (device.Asset == null)
+            if (devicesDictionary.Count < devicePointsLookup.Count)
             {
-                throw new InvalidOperationException("Can't add a tracking point while device not linked to an asset");
+                throw new BadArgumentException("A Device Id does not exist");
             }
 
-            models.ForEach(model => model.AssetId = device.Asset.Id);
+            if(devicesDictionary.Any(d => d.Value.Asset == null))
+            {
+                throw new BadArgumentException("A Device is not linked to an asset");
+            }
 
-            var orderedModels = models.OrderBy(p => p.DeviceTimestampUtc);
-            var savedModels = (await base.AddAsync(orderedModels.Take(models.Count() - 1))).ToList();
-            var latestPoint = await this.AddAsyncInternal(orderedModels.Last(), device);
+            var savedModels = new List<TrackingPoint>();
+            foreach (var dpl in devicePointsLookup)
+            {
+                var device = devicesDictionary[dpl.Key];
 
-            savedModels.Add(latestPoint);
+                // All points should have the asset id they were assigned to
+                dpl.ForEach(model => model.AssetId = device.Asset.Id);
+
+                // Save all the points except the latest
+                var orderedModels = dpl.OrderBy(p => p.DeviceTimestampUtc);
+                savedModels.AddRange(await base.AddAsync(orderedModels.Take(dpl.Count() - 1)));
+
+                // Update the current position using the latest point
+                var latestPoint = await this.AddAsyncInternal(orderedModels.Last(), device);
+                savedModels.Add(latestPoint);
+            }
 
             return savedModels;
         }

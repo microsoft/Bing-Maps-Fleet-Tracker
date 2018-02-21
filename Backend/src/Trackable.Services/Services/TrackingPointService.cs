@@ -44,14 +44,20 @@ class TrackingPointService : CrudServiceBase<int, TrackingPoint, ITrackingPointR
         // Ignore tripId field
         models.ForEach(m => m.TripId = null);
 
-        // Do not save points if they are debug points
+        // Do not save points if they are debug points, but still retrieve asset id
         if (models.All(p => p.Debug))
         {
+            var devicePointsLookup = models.ToLookup(m => m.TrackingDeviceId);
+
             results = models;
-            var device = await this.deviceRepository.GetAsync(models.First().TrackingDeviceId);
-            foreach (var point in results)
+
+            foreach (var dpl in devicePointsLookup)
             {
-                point.AssetId = device?.AssetId;
+                var device = await this.deviceRepository.GetAsync(dpl.Key);
+                foreach (var point in dpl)
+                {
+                    point.AssetId = device?.AssetId;
+                }
             }
         }
         else

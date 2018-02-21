@@ -92,10 +92,26 @@ namespace Trackable.Web.Controllers
             return Json(await this.tokenService.GetLongLivedDeviceToken(response, false));
         }
 
+        // POST api/devices
+        [HttpPost("batch")]
+        [Authorize(UserRoles.Administrator)]
+        public async Task<IActionResult> Post([FromBody]TrackingDevice[] devices)
+        {
+            var addedDevices = await this.deviceService.AddAsync(devices);
+
+            var tokens = new List<string>();
+            foreach (var device in addedDevices)
+            {
+                tokens.Add(await this.tokenService.GetLongLivedDeviceToken(device, false));
+            }
+
+            return Json(tokens);
+        }
+
         // POST api/devices/5/points
         [HttpPost("{id}/points")]
         [Authorize(UserRoles.TrackingDevice)]
-        public async Task<IActionResult> PostPoint(string id, [FromBody]TrackingPoint[] points)
+        public async Task<IActionResult> PostPointsToDevice(string id, [FromBody]TrackingPoint[] points)
         {
             var subject = ClaimsReader.ReadSubject(this.User);
             var audience = ClaimsReader.ReadAudience(this.User);
@@ -105,12 +121,9 @@ namespace Trackable.Web.Controllers
                 return Forbid();
             }
 
-            if (points != null)
-            {
-                points.ForEach((point) => point.TrackingDeviceId = id);
-                var addedPoints = await this.pointService.AddAsync(points);
-                await this.geoFenceService.HandlePoints(addedPoints.First().AssetId, addedPoints.ToArray());
-            }
+            points.ForEach((point) => point.TrackingDeviceId = id);
+            var addedPoints = await this.pointService.AddAsync(points);
+            await this.geoFenceService.HandlePoints(addedPoints.First().AssetId, addedPoints.ToArray());
 
             return Ok();
         }

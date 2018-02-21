@@ -47,6 +47,13 @@ namespace Trackable.Web.Controllers
             return await this.locationService.AddAsync(location);
         }
 
+        //POST api/locations/batch
+        [HttpPost("batch")]
+        public async Task<IEnumerable<Location>> PostBatch([FromBody]Location[] locations)
+        {
+            return await this.locationService.AddAsync(locations);
+        }
+
         //PUT api/locations/5
         [HttpPut("{id}")]
         public async Task<Location> Put(int id, [FromBody]Location location)
