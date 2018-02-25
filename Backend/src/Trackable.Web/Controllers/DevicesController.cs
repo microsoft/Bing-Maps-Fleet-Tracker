@@ -54,20 +54,32 @@ namespace Trackable.Web.Controllers
                 return await this.deviceService.ListAsync();
             }
 
-            if (!string.IsNullOrEmpty(name))
+            IEnumerable<TrackingDevice> taggedResults = null;
+            if (!string.IsNullOrEmpty(tags))
             {
-                return await this.deviceService.FindByNameAsync(name);
+                var tagsArray = tags.Split(',');
+                if (includesAllTags)
+                {
+                    taggedResults = await this.deviceService.FindContainingAllTagsAsync(tagsArray);
+                }
+                else
+                {
+                    taggedResults = await this.deviceService.FindContainingAnyTagsAsync(tagsArray);
+                }
             }
 
-            var tagsArray = tags.Split(',');
-            if (includesAllTags)
+            if (string.IsNullOrEmpty(name))
             {
-                return await this.deviceService.FindContainingAllTagsAsync(tagsArray);
+                return taggedResults;
             }
-            else
+
+            var resultsByName = await this.deviceService.FindByNameAsync(name);
+            if (taggedResults == null)
             {
-                return await this.deviceService.FindContainingAnyTagsAsync(tagsArray);
+                return resultsByName;
             }
+
+            return taggedResults.Where(d => resultsByName.Select(r => r.Id).Contains(d.Id));
         }
 
         // GET api/devices/5
