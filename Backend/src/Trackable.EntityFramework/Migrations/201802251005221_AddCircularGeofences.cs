@@ -7,7 +7,7 @@ namespace Trackable.EntityFramework.Migrations
     {
         public override void Up()
         {
-            AddColumn("dbo.GeoFences", "AreaType", c => c.Int(nullable: false));
+            AddColumn("dbo.GeoFences", "AreaType", c => c.Int(nullable: false, defaultValue: 1));
             AddColumn("dbo.GeoFences", "Radius", c => c.Double());
         }
         
