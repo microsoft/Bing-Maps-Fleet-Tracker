@@ -83,7 +83,7 @@ export class LocationEditorComponent implements OnInit, OnDestroy {
       this.location.longitude = point.longitude;
       this.setlocationString();
       this.mapService.showLocationsPositions(new Map([[this.location.name, this.location]]));
-    })
+    });
 
   }
   submit() {

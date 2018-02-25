@@ -6,7 +6,7 @@ export enum Roles {
     Viewer = 20,
     Administrator = 30,
     Owner = 40
-};
+}
 
 export class Role {
     name: string;
@@ -14,4 +14,4 @@ export class Role {
     constructor(name = '') {
         this.name = name;
     }
-};
+}

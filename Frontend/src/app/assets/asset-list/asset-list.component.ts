@@ -108,7 +108,7 @@ export class AssetListComponent implements OnInit, OnDestroy {
           const value = points[key];
           const asset = this.assetsList.find(val => val.id === key);
           mappedAssets.push([asset, value]);
-        };
+        }
 
         this.mapsService.showAssetsPositions(mappedAssets);
 

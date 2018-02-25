@@ -82,7 +82,7 @@ export class LocationListComponent implements OnInit, OnDestroy {
     this.unsubscribe();
     this.subscription = this.locationService.getLocationAssetsCount(location)
     .subscribe(assetsCount => {
-      this.assetsCount = Object.keys(assetsCount).map(function (key){ return{
+      this.assetsCount = Object.keys(assetsCount).map(function (key) { return{
         key : key, value : assetsCount[key]};
       });
 
