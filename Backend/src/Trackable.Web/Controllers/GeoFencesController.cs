@@ -68,7 +68,7 @@ namespace Trackable.Web.Controllers
             }
 
             return this.dtoMapper.Map<IEnumerable<GeoFenceDto>>(
-                taggedResults.Where(d => resultsByName.Select(r => r.Id).Contains(d.Id));
+                taggedResults.Where(d => resultsByName.Select(r => r.Id).Contains(d.Id)));
         }
 
         // GET api/geofences/5
