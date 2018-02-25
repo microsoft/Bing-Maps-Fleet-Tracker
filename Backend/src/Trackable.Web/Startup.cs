@@ -81,14 +81,13 @@ namespace Trackable.Web
                 {
                     options.ClientId = Configuration["Authorization:ClientId"];
                     options.ClientSecret = Configuration["Authorization:ClientSecret"];
-                    options.Authority = "https://login.microsoftonline.com/common/v2.0";
+                    options.Authority = Configuration["Authorization:Authority"];
                     options.ResponseType = OpenIdConnectResponseType.IdToken;
                     options.CallbackPath = "/signin-oidc";
                     options.Events = new OpenIdConnectEvents
                     {
                         OnRemoteFailure = OnAuthenticationFailed,
                         OnRedirectToIdentityProvider = DoNotRedirectApiCalls,
-
                     };
                     options.TokenValidationParameters = new TokenValidationParameters()
                     {
