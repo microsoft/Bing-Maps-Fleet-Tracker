@@ -51,6 +51,9 @@
     <Compile Include="AssetProperties.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="GeoFence.cs" />
+    <Compile Include="CircularGeofenceArea.cs" />
+    <Compile Include="PolygonGeoFenceArea.cs" />
+    <Compile Include="IGeoFenceArea.cs" />
     <Compile Include="INamedModel.cs" />
     <Compile Include="ITaggedModel.cs" />
     <Compile Include="Location.cs" />

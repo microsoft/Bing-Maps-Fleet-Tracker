@@ -40,7 +40,12 @@ namespace Trackable.Repositories
             var pointsGeography = GeographyHelper.CreateDbMultiPoint(points);
 
             return await this.FindBy(g => g.AssetDatas.Any(a => a.Id == assetId))
-                 .Select(g => new { GeoFence = g, Intersects = g.Polygon.Intersects(pointsGeography) })
+                 .Select(g => new
+                 {
+                     GeoFence = g,
+                     Intersects = g.AreaType == (int)GeoFenceAreaType.Polygon ? g.Polygon.Intersects(pointsGeography) :
+                        g.AreaType == (int)GeoFenceAreaType.Circular ? g.Polygon.Distance(pointsGeography) < g.Radius : false
+                 })
                  .ToDictionaryAsync(r => this.ObjectMapper.Map<GeoFence>(r.GeoFence), r => r.Intersects);
         }
 

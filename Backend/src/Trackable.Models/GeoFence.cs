@@ -30,10 +30,10 @@ namespace Trackable.Models
         public FenceType FenceType { get; set; }
 
         /// <summary>
-        /// The points of the geofence.
+        /// The area of the geofence.
         /// </summary>
         [Mutable]
-        public IEnumerable<Point> FencePolygon { get; set; }
+        public IGeoFenceArea GeoFenceArea { get; set; }
 
         /// <summary>
         /// The ids of the assets constrained by this geo fence

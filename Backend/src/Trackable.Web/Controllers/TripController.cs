@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using Trackable.Common;
 using Trackable.Models;
 using Trackable.Services;
 using Trackable.TripDetection;
+using Trackable.Web.DTOs;
 
 namespace Trackable.Web.Controllers
 {
@@ -18,27 +20,27 @@ namespace Trackable.Web.Controllers
         private readonly ITripDetectorFactory tripFactory;
         private readonly IAssetService assetService;
         private readonly ITrackingPointService pointService;
-        private readonly ITripService tripService;
+        private readonly IMapper dtoMapper;
 
         public TripController(
             ITripDetectorFactory tripFactory,
             IAssetService assetService,
-            ITripService tripService,
             ITrackingPointService pointService,
             ILoggerFactory loggerFactory,
-            IPipeline pipeline)
+            IPipeline pipeline,
+            IMapper dtoMapper)
             : base(loggerFactory)
         {
-            this.pipeline = pipeline.ThrowIfNull(nameof(pipeline));
-            this.tripFactory = tripFactory.ThrowIfNull(nameof(tripFactory));
-            this.assetService = assetService.ThrowIfNull(nameof(assetService));
-            this.pointService = pointService.ThrowIfNull(nameof(pointService));
-            this.tripService = tripService.ThrowIfNull(nameof(tripService));
+            this.pipeline = pipeline;
+            this.tripFactory = tripFactory;
+            this.assetService = assetService;
+            this.pointService = pointService;
+            this.dtoMapper = dtoMapper;
         }
 
         [HttpGet("detect")]
         [Authorize(UserRoles.Administrator)]
-        public async Task<IDictionary<string, IEnumerable<Trip>>> Detect()
+        public async Task<IDictionary<string, IEnumerable<TripDto>>> Detect()
         {
             var tripDetector = await tripFactory.Create();
 
@@ -51,14 +53,16 @@ namespace Trackable.Web.Controllers
                 dict.Add(assetId, (IEnumerable<Trip>)result);
             }
 
-            return dict;
+            return this.dtoMapper.Map<IDictionary<string, IEnumerable<TripDto>>>(dict);
         }
 
         // GET api/trip/5/points?lat=x&lon=y
         [HttpGet("{id}/points")]
-        public async Task<IEnumerable<TrackingPoint>> GetPoint(int id, double lat, double lon, int count = 5)
+        public async Task<IEnumerable<TrackingPointDto>> GetPoint(int id, double lat, double lon, int count = 5)
         {
-            return await this.pointService.GetNearestPoints(id, new Point(lat, lon), count);
+            var results = await this.pointService.GetNearestPoints(id, new Point(lat, lon), count);
+
+            return this.dtoMapper.Map<IEnumerable<TrackingPointDto>>(results);
         }
     }
 }

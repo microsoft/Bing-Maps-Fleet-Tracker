@@ -42,7 +42,7 @@ namespace Trackable.Repositories.Helpers
             return DbGeography.LineFromText($"LINESTRING ({pointsString})", EarthSRID);
         }
 
-        public static DbGeography CreatePolygon(IEnumerable<IPoint> points)
+        public static DbGeography CreateDbPolygon(IEnumerable<IPoint> points)
         {
             var listPoints = points.ToList();
 
@@ -78,7 +78,7 @@ namespace Trackable.Repositories.Helpers
             }
         }
 
-        public static IEnumerable<Point> FromPolygon(DbGeography polygon)
+        public static IEnumerable<Point> FromDbPolygon(DbGeography polygon)
         {
             var sqlGeography = SqlGeography.STGeomFromText(new SqlChars(polygon.WellKnownValue.WellKnownText), EarthSRID);
 

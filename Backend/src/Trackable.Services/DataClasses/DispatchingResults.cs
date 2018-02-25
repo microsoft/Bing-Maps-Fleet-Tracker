@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Trackable.Models;
 
 namespace Trackable.Services
 {
     public class DispatchingResults
     {
-        public DispatchingResults() {}
+        public IEnumerable<string> ItineraryText { get; set; }
 
-        public IEnumerable<string> ItineraryText;
+        public IEnumerable<Point> ItineraryPoints { get; set; }
 
-        public IEnumerable<Point> ItineraryPoints;
+        public IEnumerable<string> ItineraryDistance { get; set; }
 
-        public IEnumerable<string> ItineraryDistance;
+        public IEnumerable<Point> RoutePoints { get; set; }
 
-        public IEnumerable<Point> RoutePoints;
-
-        public IEnumerable<Point> AlternativeCarRoutePoints;
+        public IEnumerable<Point> AlternativeCarRoutePoints { get; set; }
     }
 }

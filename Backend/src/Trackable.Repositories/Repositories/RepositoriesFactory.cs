@@ -5,7 +5,7 @@ namespace Trackable.Repositories
 {
     public static class RepositoryFactory
     {
-        public static Mapper mapper = new Mapper(new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>()));
+        public static Mapper mapper = new Mapper(new MapperConfiguration(cfg => cfg.AddProfile<ModelMappingProfile>()));
         public static IAssetRepository CreateAssetRepository(TrackableDbContext context)
         {
             return new AssetRepository(context, mapper);

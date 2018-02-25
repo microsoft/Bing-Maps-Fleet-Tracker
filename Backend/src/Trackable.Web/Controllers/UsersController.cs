@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +12,7 @@ using Trackable.Common;
 using Trackable.Models;
 using Trackable.Services;
 using Trackable.Web.Auth;
+using Trackable.Web.DTOs;
 
 namespace Trackable.Web.Controllers
 {
@@ -19,15 +21,18 @@ namespace Trackable.Web.Controllers
     {
         private readonly IUserService userService;
         private readonly ITokenService tokenService;
+        private readonly IMapper dtoMapper;
 
         public UsersController(
             IUserService userService,
             ILoggerFactory loggerFactory,
-            ITokenService tokenService)
+            ITokenService tokenService,
+            IMapper dtoMapper)
             : base(loggerFactory)
         {
             this.userService = userService;
             this.tokenService = tokenService;
+            this.dtoMapper = dtoMapper;
         }
 
         [AllowAnonymous]
@@ -89,23 +94,29 @@ namespace Trackable.Web.Controllers
 
         [HttpGet]
         [Authorize(UserRoles.Administrator)]
-        public async Task<IEnumerable<User>> Get()
+        public async Task<IEnumerable<UserDto>> Get()
         {
-            return await this.userService.ListAsync();
+            var results = await this.userService.ListAsync();
+
+            return this.dtoMapper.Map<IEnumerable<UserDto>>(results);
         }
 
         [HttpGet("me")]
         [Authorize(UserRoles.Blocked)]
-        public async Task<User> GetMe()
+        public async Task<UserDto> GetMe()
         {
-            return await this.userService.GetUserByEmailAsync(ClaimsReader.ReadEmail(this.User));
+            var result = await this.userService.GetUserByEmailAsync(ClaimsReader.ReadEmail(this.User));
+
+            return this.dtoMapper.Map<UserDto>(result);
         }
 
         [HttpGet("{userId}")]
         [Authorize(UserRoles.Administrator)]
-        public async Task<User> GetUser(Guid userId)
+        public async Task<UserDto> GetUser(Guid userId)
         {
-            return await this.userService.GetAsync(userId);
+            var result = await this.userService.GetAsync(userId);
+
+            return this.dtoMapper.Map<UserDto>(result);
         }
 
         [HttpPost("me/token")]
@@ -120,14 +131,18 @@ namespace Trackable.Web.Controllers
 
         [HttpPost]
         [Authorize(UserRoles.Administrator)]
-        public async Task<User> Post([FromBody]User user)
+        public async Task<UserDto> Post([FromBody]UserDto user)
         {
-            return await this.userService.AddAsync(user);
+            var model = this.dtoMapper.Map<User>(user);
+
+            var result = await this.userService.AddAsync(model);
+
+            return this.dtoMapper.Map<UserDto>(result);
         }
 
         [HttpPut("{userId}")]
         [Authorize(UserRoles.Administrator)]
-        public async Task<IActionResult> SetRole(Guid userId, [FromBody]User userJson)
+        public async Task<IActionResult> SetRole(Guid userId, [FromBody]UserDto userJson)
         {
             var user = await this.userService.GetAsync(userId);
 
@@ -158,7 +173,9 @@ namespace Trackable.Web.Controllers
                 return BadRequest();
             }
 
-            return Json(await this.userService.UpdateAsync(userId, user));
+            var result = await this.userService.UpdateAsync(userId, user);
+
+            return Json(this.dtoMapper.Map<UserDto>(result));
         }
 
         [HttpDelete("{userId}")]

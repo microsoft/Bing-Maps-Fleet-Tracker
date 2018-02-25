@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using System.Data.Entity.Validation;
 using System.Net;
 using System.Threading.Tasks;
 using Trackable.Common;
@@ -37,6 +39,13 @@ namespace Trackable.Web.Filters
                 result.ContentType = "text/plain";
                 logger.LogWarning(exception);
                 await instrumentationService.PostWarningAsync(exception.ToString());
+            }
+            else if(exception is DbEntityValidationException)
+            {
+                result.StatusCode = (int)HttpStatusCode.BadRequest;
+                result.Content = JsonConvert.SerializeObject((exception as DbEntityValidationException).EntityValidationErrors);
+                result.ContentType = "application/json";
+                logger.LogWarning(exception);
             }
             else if (exception is ModuleConfigurationException)
             {

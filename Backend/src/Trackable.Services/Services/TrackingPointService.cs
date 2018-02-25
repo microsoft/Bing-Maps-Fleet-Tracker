@@ -41,9 +41,6 @@ class TrackingPointService : CrudServiceBase<int, TrackingPoint, ITrackingPointR
     {
         IEnumerable<TrackingPoint> results;
 
-        // Ignore tripId field
-        models.ForEach(m => m.TripId = null);
-
         // Do not save points if they are debug points, but still retrieve asset id
         if (models.All(p => p.Debug))
         {

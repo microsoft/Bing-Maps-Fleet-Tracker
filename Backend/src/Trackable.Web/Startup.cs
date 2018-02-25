@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -19,12 +20,14 @@ using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Trackable.Common;
 using Trackable.Services;
 using Trackable.TripDetection;
 using Trackable.Web.Auth;
+using Trackable.Web.DTOs;
 using Trackable.Web.Filters;
 
 namespace Trackable.Web
@@ -128,7 +131,20 @@ namespace Trackable.Web
                 .AddTransient<IAuthorizationHandler, RoleRequirementHandler>()
                 .AddScoped<ExceptionHandlerFilter>()
                 .AddTripDetection(Configuration["SubscriptionKeys:BingMaps"])
-                .AddSingleton<IHostedService, HostedInstrumentationService>();
+                .AddSingleton<IHostedService, HostedInstrumentationService>()
+                .AddSingleton<Profile, DtoMappingProfile>();
+
+            // Add AutoMapper profiles
+            var mapperConfiguration = new MapperConfiguration(cfg =>
+            {
+                foreach (var mapperProfile in services.Where(s => s.ServiceType == typeof(AutoMapper.Profile)))
+                {
+                    var type = mapperProfile.ImplementationType;
+                    cfg.AddProfile(type);
+                }
+            });
+            mapperConfiguration.CompileMappings();
+            services.AddScoped<IMapper>(ctx => new Mapper(mapperConfiguration, t => ctx.GetService(t)));
 
             if (Configuration.GetValue<bool>("Serving:ServeSwagger"))
             {

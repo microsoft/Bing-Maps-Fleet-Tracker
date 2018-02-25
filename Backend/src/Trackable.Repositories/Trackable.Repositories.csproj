@@ -160,7 +160,7 @@
     <Compile Include="IUserRepository.cs" />
     <Compile Include="ITripLegRepository.cs" />
     <Compile Include="IConfigurationRepository.cs" />
-    <Compile Include="AutoMapper\MappingProfile.cs" />
+    <Compile Include="AutoMapper\ModelMappingProfile.cs" />
     <Compile Include="Repositories\AssetPropertiesRepository.cs" />
     <Compile Include="Repositories\ConfigurationRepository.cs" />
     <Compile Include="Repositories\InstrumentationRepository.cs" />

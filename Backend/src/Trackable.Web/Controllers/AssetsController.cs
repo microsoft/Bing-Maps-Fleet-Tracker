@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 using Trackable.Common;
 using Trackable.Models;
 using Trackable.Services;
+using Trackable.Web.DTOs;
 
 namespace Trackable.Web.Controllers
 {
@@ -15,86 +17,112 @@ namespace Trackable.Web.Controllers
         private readonly IAssetService assetService;
         private readonly ITrackingPointService pointService;
         private readonly ITripService tripService;
+        private readonly IMapper dtoMapper;
 
         public AssetsController(
             IAssetService assetService,
             ITrackingPointService pointService,
             ITripService tripService,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            IMapper dtoMapper)
             : base(loggerFactory)
         {
-            this.assetService = assetService.ThrowIfNull(nameof(assetService));
-            this.pointService = pointService.ThrowIfNull(nameof(pointService));
-            this.tripService = tripService.ThrowIfNull(nameof(tripService));
+            this.assetService = assetService;
+            this.pointService = pointService;
+            this.tripService = tripService;
+            this.dtoMapper = dtoMapper;
         }
 
         // GET api/assets
         [HttpGet]
-        public async Task<IEnumerable<Asset>> Get([FromQuery] string tags = null, [FromQuery] bool includesAllTags = false)
+        public async Task<IEnumerable<AssetDto>> Get([FromQuery] string tags = null, [FromQuery] bool includesAllTags = false)
         {
             if (string.IsNullOrEmpty(tags))
             {
-                return await this.assetService.ListAsync();
+                var results = await this.assetService.ListAsync();
+                return this.dtoMapper.Map<IEnumerable<AssetDto>>(results);
             }
 
             var tagsArray = tags.Split(',');
             if (includesAllTags)
             {
-                return await this.assetService.FindContainingAllTagsAsync(tagsArray);
+                var results = await this.assetService.FindContainingAllTagsAsync(tagsArray);
+                return this.dtoMapper.Map<IEnumerable<AssetDto>>(results);
             }
             else
             {
-                return await this.assetService.FindContainingAnyTagsAsync(tagsArray);
+                var results = await this.assetService.FindContainingAnyTagsAsync(tagsArray);
+                return this.dtoMapper.Map<IEnumerable<AssetDto>>(results);
             }
         }
 
         // GET api/assets/5
         [HttpGet("{id}")]
-        public async Task<Asset> Get(string id)
+        public async Task<AssetDto> Get(string id)
         {
-            return await this.assetService.GetAsync(id);
+            var results = await this.assetService.GetAsync(id);
+
+            return this.dtoMapper.Map<AssetDto>(results);
         }
 
         // GET api/assets/all/positions
         [HttpGet("all/positions")]
-        public async Task<IDictionary<string, TrackingPoint>> GetLatestPositions(string id)
+        public async Task<IDictionary<string, TrackingPointDto>> GetLatestPositions()
         {
-            return await this.assetService.GetAssetsLatestPositions();
+            var results = await this.assetService.GetAssetsLatestPositions();
+
+            return this.dtoMapper.Map<IDictionary<string, TrackingPointDto>>(results);
         }
 
         // GET api/assets/5/points
         [HttpGet("{id}/points")]
-        public async Task<IEnumerable<TrackingPoint>> GetPoints(string id)
+        public async Task<IEnumerable<TrackingPointDto>> GetPoints(string id)
         {
-            return await this.pointService.GetByAssetIdAsync(id);
+            var results = await this.pointService.GetByAssetIdAsync(id);
+
+            return this.dtoMapper.Map<IEnumerable<TrackingPointDto>>(results);
         }
 
         // GET api/assets/5/trips
         [HttpGet("{id}/trips")]
-        public async Task<IEnumerable<Trip>> GetTrips(string id)
+        public async Task<IEnumerable<TripDto>> GetTrips(string id)
         {
-            return await this.tripService.GetByAssetIdAsync(id);
+            var results = await this.tripService.GetByAssetIdAsync(id);
+
+            return this.dtoMapper.Map<IEnumerable<TripDto>>(results);
         }
 
         // POST api/assets
         [HttpPost]
-        public async Task<Asset> Post([FromBody]Asset asset)
+        public async Task<AssetDto> Post([FromBody]AssetDto asset)
         {
-            return await this.assetService.AddAsync(asset);
+            var model = this.dtoMapper.Map<Asset>(asset);
+
+            var result = await this.assetService.AddAsync(model);
+
+            return this.dtoMapper.Map<AssetDto>(result);
         }
 
         // PUT api/assets/5
         [HttpPut("{id}")]
-        public async Task<Asset> Put(string id, [FromBody]Asset asset)
+        public async Task<AssetDto> Put(string id, [FromBody]AssetDto asset)
         {
-            return await this.assetService.UpdateAsync(id, asset);
+            var model = this.dtoMapper.Map<Asset>(asset);
+
+            var result = await this.assetService.UpdateAsync(id, model);
+
+            return this.dtoMapper.Map<AssetDto>(result);
         }
 
         // POST api/assets
         [HttpPost("batch")]
-        public async Task<IEnumerable<Asset>> PostBatch([FromBody]Asset[] assets)
+        public async Task<IEnumerable<AssetDto>> PostBatch([FromBody]AssetDto[] assets)
         {
-            return await this.assetService.AddAsync(assets);
+            var models = this.dtoMapper.Map<Asset[]>(assets);
+
+            var result = await this.assetService.AddAsync(await this.assetService.AddAsync(models));
+
+            return this.dtoMapper.Map<IEnumerable<AssetDto>>(result);
         }
 
         // DELETE api/assets/5
