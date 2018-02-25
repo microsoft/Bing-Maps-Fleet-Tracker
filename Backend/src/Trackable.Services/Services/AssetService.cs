@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Trackable.Common.Exceptions;
 using Trackable.Models;
@@ -34,6 +33,16 @@ namespace Trackable.Services
             }
 
             return await this.repository.AddAsync(assets);
+        }
+
+        public async Task<IEnumerable<Asset>> FindContainingAllTagsAsync(IEnumerable<string> tags)
+        {
+            return await this.repository.FindContainingAllTagsAsync(tags);
+        }
+
+        public async Task<IEnumerable<Asset>> FindContainingAnyTagsAsync(IEnumerable<string> tags)
+        {
+            return await this.repository.FindContainingAnyTagsAsync(tags);
         }
 
         public async Task<IDictionary<string, TrackingPoint>> GetAssetsLatestPositions()

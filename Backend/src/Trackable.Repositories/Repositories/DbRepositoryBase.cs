@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -6,16 +7,15 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using Trackable.Common;
+using Trackable.Common.Exceptions;
 using Trackable.EntityFramework;
 using Trackable.Models;
 using Trackable.Models.Helpers;
-using Trackable.Common.Exceptions;
-using AutoMapper;
 
 namespace Trackable.Repositories
 {
-    internal abstract class DbRepositoryBase<TKey, TData, TModel>
-        : IRepository<TKey, TModel>
+    public abstract class DbRepositoryBase<TKey, TData, TModel>
+        : IRepository<TKey, TModel>, IDbQueryRepository<TKey, TData, TModel>
         where TData : EntityBase<TKey>
         where TModel : ModelBase<TKey>
         where TKey : IEquatable<TKey>
@@ -24,7 +24,7 @@ namespace Trackable.Repositories
         /// Gets the model mapper.
         /// </summary>
         //protected IMapper (AutoMapper)
-        protected IMapper ObjectMapper { get; set; }
+        public IMapper ObjectMapper { get; set; }
 
         /// <summary>
         /// The relations to be loaded with query
@@ -35,6 +35,11 @@ namespace Trackable.Repositories
         /// The database context.
         /// </summary>
         protected TrackableDbContext Db { get; }
+
+        /// <summary>
+        /// A pointer to the dbRepository for running extensions queries
+        /// </summary>
+        public DbRepositoryBase<TKey, TData, TModel> DbBaseRepository => this;
 
         /// <summary>
         /// Constructs new instance of the RepositoryBase.
@@ -91,7 +96,7 @@ namespace Trackable.Repositories
 
             await this.Db.SaveChangesAsync();
 
-            return resultingData.Select(d => ObjectMapper.Map <TModel>(d));
+            return ObjectMapper.Map<IEnumerable<TModel>>(resultingData);
         }
 
         /// <summary>
@@ -137,7 +142,7 @@ namespace Trackable.Repositories
         {
             var data = await this.FindBy(t => true).ToListAsync();
 
-            return data.Select(d => this.ObjectMapper.Map<TModel>(d));
+            return this.ObjectMapper.Map<IEnumerable<TModel>>(data);
         }
 
         /// <summary>
@@ -193,10 +198,10 @@ namespace Trackable.Repositories
             {
                 var ids = data.Select(d => d.Key).ToList();
                 var res = await this.FindBy(d => ids.Contains(d.Id)).ToListAsync();
-                return res.Select(d => this.ObjectMapper.Map<TModel>(d));
+                return this.ObjectMapper.Map<IEnumerable<TModel>>(res);
             }
 
-            return data.Select(i => this.ObjectMapper.Map<TModel>(i.Value));
+            return this.ObjectMapper.Map<IEnumerable<TModel>>(data);
         }
 
         /// <summary>
@@ -214,7 +219,7 @@ namespace Trackable.Repositories
         /// </summary>
         /// <param name="predicate">The predicate expression.</param>
         /// <returns>The found queryable.</returns>
-        protected IQueryable<TData> FindBy(Expression<Func<TData, bool>> predicate)
+        public IQueryable<TData> FindBy(Expression<Func<TData, bool>> predicate)
         {
             var query = this.Db.Set<TData>()
                 .Where(d => !d.Deleted)

@@ -22,12 +22,12 @@ namespace Trackable.Repositories
 
         public override async Task<AssetProperties> AddAsync(AssetProperties assetProperties)
         {
-            await checkValidity(assetProperties);
+            await CheckValidity(assetProperties);
 
             return await base.AddAsync(assetProperties);
         }
 
-        public Task checkValidity(AssetProperties assetProperties)
+        public Task CheckValidity(AssetProperties assetProperties)
         {
             if (assetProperties.AssetHeight < 0 ||
                 assetProperties.AssetWidth < 0 || 
@@ -44,9 +44,7 @@ namespace Trackable.Repositories
             return Task.FromResult(0);
         }
 
-
         protected override Expression<Func<AssetPropertiesData, object>>[] Includes => null;
-
     }
 
 

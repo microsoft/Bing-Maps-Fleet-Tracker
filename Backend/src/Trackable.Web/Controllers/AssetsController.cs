@@ -30,9 +30,22 @@ namespace Trackable.Web.Controllers
 
         // GET api/assets
         [HttpGet]
-        public async Task<IEnumerable<Asset>> Get()
+        public async Task<IEnumerable<Asset>> Get([FromQuery] string tags = null, [FromQuery] bool includesAllTags = false)
         {
-            return await this.assetService.ListAsync();
+            if (string.IsNullOrEmpty(tags))
+            {
+                return await this.assetService.ListAsync();
+            }
+
+            var tagsArray = tags.Split(',');
+            if (includesAllTags)
+            {
+                return await this.assetService.FindContainingAllTagsAsync(tagsArray);
+            }
+            else
+            {
+                return await this.assetService.FindContainingAnyTagsAsync(tagsArray);
+            }
         }
 
         // GET api/assets/5
@@ -68,6 +81,13 @@ namespace Trackable.Web.Controllers
         public async Task<Asset> Post([FromBody]Asset asset)
         {
             return await this.assetService.AddAsync(asset);
+        }
+
+        // PUT api/assets/5
+        [HttpPut("{id}")]
+        public async Task<Asset> Put(string id, [FromBody]Asset asset)
+        {
+            return await this.assetService.UpdateAsync(id, asset);
         }
 
         // POST api/assets

@@ -35,11 +35,6 @@ namespace Trackable.Repositories
             return this.ObjectMapper.Map<GeoFence>(fenceData);
         }
 
-        public async Task<int> GetCountAsync()
-        {
-            return await this.FindBy(a => true).CountAsync();
-        }
-
         public async Task<Dictionary<GeoFence, bool>> GetByAssetIdWithIntersectionAsync(string assetId, IPoint[] points)
         {
             var pointsGeography = GeographyHelper.CreateDbMultiPoint(points);
@@ -51,7 +46,8 @@ namespace Trackable.Repositories
 
         protected override Expression<Func<GeoFenceData, object>>[] Includes => new Expression<Func<GeoFenceData, object>>[]
         {
-            data => data.AssetDatas
+            data => data.AssetDatas,
+            data => data.Tags
         };
     }
 }

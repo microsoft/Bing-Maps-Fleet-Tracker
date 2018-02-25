@@ -31,10 +31,12 @@ namespace Trackable.Repositories
 
             // TrackingDevice Mappings
             CreateMap<TrackingDeviceData, TrackingDevice>()
-                .ForMember(dest => dest.AssetId, opt => opt.MapFrom(src => src.Asset.Id));
+                .ForMember(dest => dest.AssetId, opt => opt.MapFrom(src => src.Asset.Id))
+                .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => t.TagName)));
 
             CreateMap<TrackingDevice, TrackingDeviceData>()
-                .ForMember(dest => dest.Asset, opt => opt.ResolveUsing<TrackingDeviceAssetResolver>());
+                .ForMember(dest => dest.Asset, opt => opt.ResolveUsing<TrackingDeviceAssetResolver>())
+                .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => new TagData { TagName = t })));
 
             // Location Mappings
             CreateMap<LocationData, Location>()
@@ -43,11 +45,13 @@ namespace Trackable.Repositories
                 .ForMember(dest => dest.InterestLevel, opt =>
                 {
                     opt.MapFrom(src => (InterestLevel)(src.InterestLevel ?? 0));
-                });
+                })
+                .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => t.TagName)));
 
             CreateMap<Location, LocationData>()
                 .ForMember(dest => dest.InterestLevel, opt => opt.MapFrom(src => (int)src.InterestLevel))
-                .ForMember(dest => dest.Location, opt => opt.MapFrom(src => GeographyHelper.CreateDbPoint(src)));
+                .ForMember(dest => dest.Location, opt => opt.MapFrom(src => GeographyHelper.CreateDbPoint(src)))
+                .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => new TagData { TagName = t })));
 
 
             // GeoFence Mappings
@@ -56,13 +60,15 @@ namespace Trackable.Repositories
                 .ForMember(dest => dest.Cooldown, opt => opt.MapFrom(src => src.CooldownInMinutes))
                 .ForMember(dest => dest.EmailsToNotify, opt => opt.MapFrom(src => src.Emails.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)))
                 .ForMember(dest => dest.AssetIds, opt => opt.MapFrom(src => src.AssetDatas.Select(a => a.Id)))
-                .ForMember(dest => dest.FencePolygon, opt => opt.MapFrom(src => GeographyHelper.FromPolygon(src.Polygon)));
+                .ForMember(dest => dest.FencePolygon, opt => opt.MapFrom(src => GeographyHelper.FromPolygon(src.Polygon)))
+                .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => t.TagName)));
 
             CreateMap<GeoFence, GeoFenceData>()
                 .ForMember(dest => dest.FenceType, opt => opt.MapFrom(src => (int)src.FenceType))
                 .ForMember(dest => dest.CooldownInMinutes, opt => opt.MapFrom(src => src.Cooldown))
                 .ForMember(dest => dest.Emails, opt => opt.MapFrom(src => src.EmailsToNotify == null ? string.Empty : string.Join(",", src.EmailsToNotify)))
-                .ForMember(dest => dest.Polygon, opt => opt.MapFrom(src => GeographyHelper.CreatePolygon(src.FencePolygon)));
+                .ForMember(dest => dest.Polygon, opt => opt.MapFrom(src => GeographyHelper.CreatePolygon(src.FencePolygon)))
+                .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => new TagData { TagName = t })));
 
             // GeoFence update Mappings
             CreateMap<GeoFenceUpdateData, GeoFenceUpdate>()
@@ -93,12 +99,14 @@ namespace Trackable.Repositories
             // Asset Mappings
             CreateMap<AssetData, Asset>()
                 .ForMember(dest => dest.AssetType, opt => opt.MapFrom(src => (AssetType)src.AssetType))
+                .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => t.TagName)))
                 .ForMember(dest => dest.TrackingDeviceId,
                     opt => opt.MapFrom(src => src.TrackingDevice == null ? null : src.TrackingDevice.Id))
                 .ForMember(dest => dest.TrackingDeviceName,
                     opt => opt.MapFrom(src => src.TrackingDevice == null ? null : src.TrackingDevice.Name));
 
             CreateMap<Asset, AssetData>()
+                .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => new TagData { TagName = t })))
                 .ForMember(dest => dest.AssetType, opt => opt.MapFrom(src => (int)src.AssetType));
 
             // Trip leg mapping

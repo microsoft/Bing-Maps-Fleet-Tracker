@@ -151,11 +151,6 @@ namespace Trackable.Repositories
                 .ToDictionaryAsync(g => g.Key.Value, g => g.Count());
         }
 
-        public async Task<int> GetCountAsync()
-        {
-            return await this.FindBy(a => true).CountAsync();
-        }
-
         protected override Expression<Func<TrackingPointData, object>>[] Includes => new Expression<Func<TrackingPointData, object>>[]
         {
             data => data.Asset

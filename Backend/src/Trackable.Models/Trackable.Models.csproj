@@ -51,6 +51,8 @@
     <Compile Include="AssetProperties.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="GeoFence.cs" />
+    <Compile Include="INamedModel.cs" />
+    <Compile Include="ITaggedModel.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="IPoint.cs" />
     <Compile Include="ModelBase.cs" />

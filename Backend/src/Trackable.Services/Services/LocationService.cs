@@ -12,6 +12,21 @@ namespace Trackable.Services
         {
         }
 
+        public async Task<IEnumerable<Location>> FindByNameAsync(string name)
+        {
+            return await this.repository.FindByNameAsync(name);
+        }
+
+        public async Task<IEnumerable<Location>> FindContainingAllTagsAsync(IEnumerable<string> tags)
+        {
+            return await this.repository.FindContainingAllTagsAsync(tags);
+        }
+
+        public async Task<IEnumerable<Location>> FindContainingAnyTagsAsync(IEnumerable<string> tags)
+        {
+            return await this.repository.FindContainingAnyTagsAsync(tags);
+        }
+
         public async Task<IDictionary<string, int>> GetCountByAssetAsync(int locationid)
         {
             return await this.repository.GetCountPerAssetAsync(locationid);

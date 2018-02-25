@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.Spatial;
 
 namespace Trackable.EntityFramework
 {
     [Table("Locations")]
-    public class LocationData : EntityBase<int>
+    public class LocationData : EntityBase<int>, ITaggedEntity, INamedEntity
     {
         public string Name { get; set; }
 
@@ -18,5 +16,7 @@ namespace Trackable.EntityFramework
         public int? MinimumWaitTime { get; set; }
 
         public int? InterestLevel { get; set; }
+
+        public ICollection<TagData> Tags { get; set; }
     }
 }

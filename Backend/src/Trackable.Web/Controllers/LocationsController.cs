@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Trackable.Common;
 using Trackable.Models;
@@ -21,9 +22,42 @@ namespace Trackable.Web.Controllers
 
         // GET api/locations
         [HttpGet]
-        public async Task<IEnumerable<Location>> Get()
+        public async Task<IEnumerable<Location>> Get(
+            [FromQuery] string tags = null,
+            [FromQuery] bool includesAllTags = false,
+            [FromQuery] string name = null)
         {
-            return await this.locationService.ListAsync();
+            if (string.IsNullOrEmpty(tags) && string.IsNullOrEmpty(name))
+            {
+                return await this.locationService.ListAsync();
+            }
+
+            IEnumerable<Location> taggedResults = null;
+            if (!string.IsNullOrEmpty(tags))
+            {
+                var tagsArray = tags.Split(',');
+                if (includesAllTags)
+                {
+                    taggedResults = await this.locationService.FindContainingAllTagsAsync(tagsArray);
+                }
+                else
+                {
+                    taggedResults = await this.locationService.FindContainingAnyTagsAsync(tagsArray);
+                }
+            }
+
+            if (string.IsNullOrEmpty(name))
+            {
+                return taggedResults;
+            }
+
+            var resultsByName = await this.locationService.FindByNameAsync(name);
+            if (taggedResults == null)
+            {
+                return resultsByName;
+            }
+
+            return taggedResults.Where(d => resultsByName.Select(r => r.Id).Contains(d.Id));
         }
 
         // GET api/locations/5

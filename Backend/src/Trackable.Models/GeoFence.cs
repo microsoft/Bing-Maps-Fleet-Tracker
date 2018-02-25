@@ -3,7 +3,7 @@ using Trackable.Models.Helpers;
 
 namespace Trackable.Models
 {
-    public class GeoFence : ModelBase<int>
+    public class GeoFence : ModelBase<int>, ITaggedModel, INamedModel
     {
         /// <summary>
         /// A user friendly name for the GeoFence
@@ -39,6 +39,9 @@ namespace Trackable.Models
         /// The ids of the assets constrained by this geo fence
         /// </summary>
         public IEnumerable<string> AssetIds { get; set; }
+
+        [Mutable]
+        public IEnumerable<string> Tags { get; set; }
     }
 
 

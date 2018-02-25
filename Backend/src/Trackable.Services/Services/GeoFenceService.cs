@@ -139,5 +139,20 @@ namespace Trackable.Services
 
             return notifiedFenceIds;
         }
+
+        public async Task<IEnumerable<GeoFence>> FindByNameAsync(string name)
+        {
+            return await this.repository.FindByNameAsync(name);
+        }
+
+        public async Task<IEnumerable<GeoFence>> FindContainingAllTagsAsync(IEnumerable<string> tags)
+        {
+            return await this.repository.FindContainingAllTagsAsync(tags);
+        }
+
+        public async Task<IEnumerable<GeoFence>> FindContainingAnyTagsAsync(IEnumerable<string> tags)
+        {
+            return await this.repository.FindContainingAnyTagsAsync(tags);
+        }
     }
 }

@@ -237,12 +237,17 @@
     <Compile Include="ServiceExtensions.cs" />
     <Compile Include="Services\TrackingDeviceService.cs" />
     <Compile Include="Services\TrackingPointService.cs" />
+    <Compile Include="Services\TripService.cs" />
     <Compile Include="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Trackable.Common\Trackable.Common.csproj">
       <Project>{2C1543F6-CD61-4455-8D6E-BB83721F25EE}</Project>
       <Name>Trackable.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Trackable.EntityFramework\Trackable.EntityFramework.csproj">
+      <Project>{A6B23FF3-82F4-4F29-960C-60C2F09ECCAD}</Project>
+      <Name>Trackable.EntityFramework</Name>
     </ProjectReference>
     <ProjectReference Include="..\Trackable.Models\Trackable.Models.csproj">
       <Project>{E101551A-0727-4CD4-8C38-65BF8884F5DD}</Project>

@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using Trackable.Models.Helpers;
 
 namespace Trackable.Models
 {
     [Serializable]
-    public class Location : ModelBase<int>, IPoint
+    public class Location : ModelBase<int>, IPoint, ITaggedModel, INamedModel
     {
         /// <summary>
         /// The Location's name.
@@ -35,6 +36,9 @@ namespace Trackable.Models
 
         [Mutable]
         public double Longitude { get; set; }
+
+        [Mutable]
+        public IEnumerable<string> Tags { get; set; }
 
         public object Clone()
         {

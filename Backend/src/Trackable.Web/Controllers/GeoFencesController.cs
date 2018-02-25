@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Trackable.Common;
 using Trackable.Models;
@@ -25,9 +26,42 @@ namespace Trackable.Web.Controllers
 
         // GET api/geofences
         [HttpGet]
-        public async Task<IEnumerable<GeoFence>> Get()
+        public async Task<IEnumerable<GeoFence>> Get(
+            [FromQuery] string tags = null,
+            [FromQuery] bool includesAllTags = false,
+            [FromQuery] string name = null)
         {
-            return await this.geoFenceService.ListAsync();
+            if (string.IsNullOrEmpty(tags) && string.IsNullOrEmpty(name))
+            {
+                return await this.geoFenceService.ListAsync();
+            }
+
+            IEnumerable<GeoFence> taggedResults = null;
+            if (!string.IsNullOrEmpty(tags))
+            {
+                var tagsArray = tags.Split(',');
+                if (includesAllTags)
+                {
+                    taggedResults = await this.geoFenceService.FindContainingAllTagsAsync(tagsArray);
+                }
+                else
+                {
+                    taggedResults = await this.geoFenceService.FindContainingAnyTagsAsync(tagsArray);
+                }
+            }
+
+            if (string.IsNullOrEmpty(name))
+            {
+                return taggedResults;
+            }
+
+            var resultsByName = await this.geoFenceService.FindByNameAsync(name);
+            if (taggedResults == null)
+            {
+                return resultsByName;
+            }
+
+            return taggedResults.Where(d => resultsByName.Select(r => r.Id).Contains(d.Id));
         }
 
         // GET api/geofences/5

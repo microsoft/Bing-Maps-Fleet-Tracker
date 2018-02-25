@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Trackable.EntityFramework
 {
     [Table("TrackingDevices")]
-    public class TrackingDeviceData : EntityBase<string>
+    public class TrackingDeviceData : EntityBase<string>, ITaggedEntity, INamedEntity
     {
         public string Name { get; set; }
 
@@ -20,5 +21,7 @@ namespace Trackable.EntityFramework
         public AssetData Asset { get; set; }
 
         public TrackingPointData LatestPosition { get; set; }
+
+        public ICollection<TagData> Tags { get; set; }
     }
 }
