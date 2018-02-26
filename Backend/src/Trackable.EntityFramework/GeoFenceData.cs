@@ -12,8 +12,9 @@ namespace Trackable.EntityFramework
         [Required]
         public string Name { get; set; }
 
-        [Required]
         public string Emails { get; set; }
+
+        public string Webhooks { get; set; }
 
         [Required]
         public int FenceType { get; set; }
