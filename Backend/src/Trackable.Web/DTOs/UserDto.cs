@@ -1,7 +1,7 @@
 ﻿using System;
 using Trackable.Models;
 
-namespace Trackable.Web.DTOs
+namespace Trackable.Web.Dtos
 {
     public class UserDto
     {

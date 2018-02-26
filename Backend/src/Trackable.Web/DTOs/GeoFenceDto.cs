@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Trackable.Models;
 
-namespace Trackable.Web.DTOs
+namespace Trackable.Web.Dtos
 {
     public class GeoFenceDto
     {

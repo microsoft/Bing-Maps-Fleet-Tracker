@@ -9,7 +9,7 @@ using Trackable.Common;
 using Trackable.Models;
 using Trackable.Services;
 using Trackable.TripDetection;
-using Trackable.Web.DTOs;
+using Trackable.Web.Dtos;
 
 namespace Trackable.Web.Controllers
 {

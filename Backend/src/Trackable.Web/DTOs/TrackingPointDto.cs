@@ -1,4 +1,4 @@
-﻿namespace Trackable.Web.DTOs
+﻿namespace Trackable.Web.Dtos
 {
     public class TrackingPointDto
     {

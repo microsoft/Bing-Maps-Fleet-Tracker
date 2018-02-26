@@ -27,7 +27,7 @@ using Trackable.Common;
 using Trackable.Services;
 using Trackable.TripDetection;
 using Trackable.Web.Auth;
-using Trackable.Web.DTOs;
+using Trackable.Web.Dtos;
 using Trackable.Web.Filters;
 
 namespace Trackable.Web

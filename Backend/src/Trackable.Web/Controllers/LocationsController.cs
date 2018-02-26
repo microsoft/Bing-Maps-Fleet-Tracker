@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Trackable.Models;
 using Trackable.Services;
-using Trackable.Web.DTOs;
+using Trackable.Web.Dtos;
 
 namespace Trackable.Web.Controllers
 {

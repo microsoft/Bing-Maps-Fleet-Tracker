@@ -11,7 +11,7 @@ using Trackable.Common;
 using Trackable.Models;
 using Trackable.Services;
 using Trackable.Web.Auth;
-using Trackable.Web.DTOs;
+using Trackable.Web.Dtos;
 
 namespace Trackable.Web.Controllers
 {
@@ -169,7 +169,7 @@ namespace Trackable.Web.Controllers
                 return Forbid();
             }
 
-            points.ForEach((point) => point.TrackingDeviceId = id);
+            models.ForEach((point) => point.TrackingDeviceId = id);
             var addedPoints = await this.pointService.AddAsync(models);
             await this.geoFenceService.HandlePoints(addedPoints.First().AssetId, addedPoints.ToArray());
 

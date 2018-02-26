@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Trackable.Common;
 using Trackable.Models;
 using Trackable.Services;
-using Trackable.Web.DTOs;
+using Trackable.Web.Dtos;
 
 namespace Trackable.Web.Controllers
 {
