@@ -22,10 +22,10 @@ export class FilterListPipe implements PipeTransform {
           const val = item[key];
           switch (typeof val) {
             case 'string':
-              if (val.toLowerCase().indexOf(query) > -1) return true;
+              if (val.toLowerCase().indexOf(query) > -1) { return true; }
               break;
             case 'number':
-              if (val == query) return true;
+              if (val == query) { return true; }
               break;
           }
         }

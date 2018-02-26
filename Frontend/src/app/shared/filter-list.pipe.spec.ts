@@ -8,6 +8,6 @@ describe('ListFilterPipe', () => {
 
   it('filter string array', () => {
     const pipe = new FilterListPipe();
-    expect(pipe.transform(["a", "abc", "banana", "truck", "Wit"], "a")).toEqual(["a", "abc", "banana"])
+    expect(pipe.transform(['a', 'abc', 'banana', 'truck', 'Wit'], 'a')).toEqual(['a', 'abc', 'banana']);
   });
 });

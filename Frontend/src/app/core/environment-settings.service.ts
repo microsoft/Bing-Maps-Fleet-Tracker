@@ -8,7 +8,7 @@ export enum EnvironmentSettings {
 
 @Injectable()
 export class EnvironmentSettingsService {
-    getEnvironmentVariable(key: EnvironmentSettings){
+    getEnvironmentVariable(key: EnvironmentSettings) {
         return environment[EnvironmentSettings[key]];
     }
 }

@@ -21,7 +21,7 @@ import { ReportChartComponent } from './report-chart/report-chart.component';
   providers: [
     ReportService
   ],
-  exports:[
+  exports: [
       ReportChartComponent
   ]
 })

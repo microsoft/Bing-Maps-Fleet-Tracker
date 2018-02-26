@@ -28,7 +28,7 @@ export class DeviceEditorComponent implements OnInit, OnDestroy {
   private assetsSubscription: Subscription;
   private deviceSubscription: Subscription;
   private nonce: string;
-  private hubConnection: HubConnection
+  private hubConnection: HubConnection;
   private dialogRef: MatDialogRef<any>;
 
   constructor(
