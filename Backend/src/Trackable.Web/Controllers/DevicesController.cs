@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -11,6 +11,7 @@ using Trackable.Common;
 using Trackable.Models;
 using Trackable.Services;
 using Trackable.Web.Auth;
+using Trackable.Web.Dtos;
 
 namespace Trackable.Web.Controllers
 {
@@ -21,37 +22,38 @@ namespace Trackable.Web.Controllers
         private readonly ITrackingPointService pointService;
         private readonly IGeoFenceService geoFenceService;
         private readonly IHubContext<DynamicHub> deviceAdditionHubContext;
-        private readonly IConfiguration configuration;
         private readonly ITokenService tokenService;
+        private readonly IMapper dtoMapper;
 
         public DevicesController(
             ITrackingDeviceService deviceService,
             ITrackingPointService pointService,
             IGeoFenceService geoFenceService,
             ILoggerFactory loggerFactory,
-            IConfiguration configuration,
             IHubContext<DynamicHub> deviceAdditionHubContext,
-            ITokenService tokenService)
+            ITokenService tokenService,
+            IMapper dtoMapper)
             : base(loggerFactory)
         {
-            this.deviceService = deviceService.ThrowIfNull(nameof(deviceService));
-            this.pointService = pointService.ThrowIfNull(nameof(pointService));
-            this.geoFenceService = geoFenceService.ThrowIfNull(nameof(geoFenceService));
+            this.deviceService = deviceService;
+            this.pointService = pointService;
+            this.geoFenceService = geoFenceService;
             this.deviceAdditionHubContext = deviceAdditionHubContext;
             this.tokenService = tokenService;
-            this.configuration = configuration;
+            this.dtoMapper = dtoMapper;
         }
 
         // GET api/devices
         [HttpGet]
-        public async Task<IEnumerable<TrackingDevice>> Get(
+        public async Task<IEnumerable<TrackingDeviceDto>> Get(
             [FromQuery] string tags = null,
             [FromQuery] bool includesAllTags = false,
             [FromQuery] string name = null)
         {
             if (string.IsNullOrEmpty(tags) && string.IsNullOrEmpty(name))
             {
-                return await this.deviceService.ListAsync();
+                var results = await this.deviceService.ListAsync();
+                return this.dtoMapper.Map<IEnumerable<TrackingDeviceDto>>(results);
             }
 
             IEnumerable<TrackingDevice> taggedResults = null;
@@ -70,23 +72,26 @@ namespace Trackable.Web.Controllers
 
             if (string.IsNullOrEmpty(name))
             {
-                return taggedResults;
+                return this.dtoMapper.Map<IEnumerable<TrackingDeviceDto>>(taggedResults);
             }
 
             var resultsByName = await this.deviceService.FindByNameAsync(name);
             if (taggedResults == null)
             {
-                return resultsByName;
+                return this.dtoMapper.Map<IEnumerable<TrackingDeviceDto>>(resultsByName);
             }
 
-            return taggedResults.Where(d => resultsByName.Select(r => r.Id).Contains(d.Id));
+            return this.dtoMapper.Map<IEnumerable<TrackingDeviceDto>>(
+                taggedResults.Where(d => resultsByName.Select(r => r.Id).Contains(d.Id)));
         }
 
         // GET api/devices/5
         [HttpGet("{id}")]
-        public async Task<TrackingDevice> Get(string id)
+        public async Task<TrackingDeviceDto> Get(string id)
         {
-            return await this.deviceService.GetAsync(id);
+            var result = await this.deviceService.GetAsync(id);
+
+            return this.dtoMapper.Map<TrackingDeviceDto>(result);
         }
 
         // Post api/devices/5/token
@@ -101,24 +106,30 @@ namespace Trackable.Web.Controllers
 
         // GET api/devices/all/positions
         [HttpGet("all/positions")]
-        public async Task<IDictionary<string, TrackingPoint>> GetLatestPositions(string id)
+        public async Task<IDictionary<string, TrackingPointDto>> GetLatestPositions(string id)
         {
-            return await this.deviceService.GetDevicesLatestPositions();
+            var results = await this.deviceService.GetDevicesLatestPositions();
+
+            return this.dtoMapper.Map<IDictionary<string, TrackingPointDto>>(results);
         }
 
         // GET api/devices/5/points
         [HttpGet("{id}/points")]
-        public async Task<IEnumerable<TrackingPoint>> GetPoints(string id)
+        public async Task<IEnumerable<TrackingPointDto>> GetPoints(string id)
         {
-            return await this.pointService.GetByDeviceIdAsync(id);
+            var results = await this.pointService.GetByDeviceIdAsync(id);
+
+            return this.dtoMapper.Map<IEnumerable<TrackingPointDto>>(results);
         }
 
         // POST api/devices
         [HttpPost]
         [Authorize(UserRoles.DeviceRegistration)]
-        public async Task<IActionResult> Post([FromBody]TrackingDevice device, [FromQuery]string nonce = null)
+        public async Task<IActionResult> Post([FromBody]TrackingDeviceDto device, [FromQuery]string nonce = null)
         {
-            TrackingDevice response = await this.deviceService.AddOrUpdateDeviceAsync(device);
+            var model = this.dtoMapper.Map<TrackingDevice>(device);
+
+            var response = await this.deviceService.AddOrUpdateDeviceAsync(model);
 
             await this.deviceAdditionHubContext.Clients.All.InvokeAsync("DeviceAdded", nonce);
 
@@ -128,9 +139,11 @@ namespace Trackable.Web.Controllers
         // POST api/devices
         [HttpPost("batch")]
         [Authorize(UserRoles.Administrator)]
-        public async Task<IActionResult> Post([FromBody]TrackingDevice[] devices)
+        public async Task<IActionResult> Post([FromBody]TrackingDeviceDto[] devices)
         {
-            var addedDevices = await this.deviceService.AddAsync(devices);
+            var models = this.dtoMapper.Map<TrackingDevice[]>(devices);
+
+            var addedDevices = await this.deviceService.AddAsync(models);
 
             var tokens = new List<string>();
             foreach (var device in addedDevices)
@@ -144,8 +157,10 @@ namespace Trackable.Web.Controllers
         // POST api/devices/5/points
         [HttpPost("{id}/points")]
         [Authorize(UserRoles.TrackingDevice)]
-        public async Task<IActionResult> PostPointsToDevice(string id, [FromBody]TrackingPoint[] points)
+        public async Task<IActionResult> PostPointsToDevice(string id, [FromBody]TrackingPointDto[] points)
         {
+            var models = this.dtoMapper.Map<TrackingPoint[]>(points);
+
             var subject = ClaimsReader.ReadSubject(this.User);
             var audience = ClaimsReader.ReadAudience(this.User);
 
@@ -154,8 +169,8 @@ namespace Trackable.Web.Controllers
                 return Forbid();
             }
 
-            points.ForEach((point) => point.TrackingDeviceId = id);
-            var addedPoints = await this.pointService.AddAsync(points);
+            models.ForEach((point) => point.TrackingDeviceId = id);
+            var addedPoints = await this.pointService.AddAsync(models);
             await this.geoFenceService.HandlePoints(addedPoints.First().AssetId, addedPoints.ToArray());
 
             return Ok();
@@ -164,9 +179,13 @@ namespace Trackable.Web.Controllers
         // PUT api/devices/5
         [HttpPut("{id}")]
         [Authorize(UserRoles.Administrator)]
-        public async Task<TrackingDevice> Put(string id, [FromBody]TrackingDevice device)
+        public async Task<TrackingDeviceDto> Put(string id, [FromBody]TrackingDeviceDto device)
         {
-            return await this.deviceService.UpdateAsync(id, device);
+            var model = this.dtoMapper.Map<TrackingDevice>(device);
+
+            var result = await this.deviceService.UpdateAsync(id, model);
+
+            return this.dtoMapper.Map<TrackingDeviceDto>(result);
         }
 
         // DELETE api/devices/5

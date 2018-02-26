@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 using Trackable.Common;
 using Trackable.Models;
 using Trackable.Services;
+using Trackable.Web.Dtos;
 
 namespace Trackable.Web.Controllers
 {
@@ -15,25 +17,29 @@ namespace Trackable.Web.Controllers
     public class GeoFencesController : ControllerBase
     {
         private readonly IGeoFenceService geoFenceService;
+        private readonly IMapper dtoMapper;
 
         public GeoFencesController(
             IGeoFenceService geoFenceService,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            IMapper dtoMapper)
             : base(loggerFactory)
         {
-            this.geoFenceService = geoFenceService.ThrowIfNull(nameof(geoFenceService));
+            this.geoFenceService = geoFenceService;
+            this.dtoMapper = dtoMapper;
         }
 
         // GET api/geofences
         [HttpGet]
-        public async Task<IEnumerable<GeoFence>> Get(
+        public async Task<IEnumerable<GeoFenceDto>> Get(
             [FromQuery] string tags = null,
             [FromQuery] bool includesAllTags = false,
             [FromQuery] string name = null)
         {
             if (string.IsNullOrEmpty(tags) && string.IsNullOrEmpty(name))
             {
-                return await this.geoFenceService.ListAsync();
+                var results = await this.geoFenceService.ListAsync();
+                return this.dtoMapper.Map<IEnumerable<GeoFenceDto>>(results);
             }
 
             IEnumerable<GeoFence> taggedResults = null;
@@ -52,43 +58,58 @@ namespace Trackable.Web.Controllers
 
             if (string.IsNullOrEmpty(name))
             {
-                return taggedResults;
+                return this.dtoMapper.Map<IEnumerable<GeoFenceDto>>(taggedResults);
             }
 
             var resultsByName = await this.geoFenceService.FindByNameAsync(name);
             if (taggedResults == null)
             {
-                return resultsByName;
+                return this.dtoMapper.Map<IEnumerable<GeoFenceDto>>(resultsByName);
             }
 
-            return taggedResults.Where(d => resultsByName.Select(r => r.Id).Contains(d.Id));
+            return this.dtoMapper.Map<IEnumerable<GeoFenceDto>>(
+                taggedResults.Where(d => resultsByName.Select(r => r.Id).Contains(d.Id)));
         }
 
         // GET api/geofences/5
         [HttpGet("{id}")]
-        public async Task<GeoFence> Get(int id)
+        public async Task<GeoFenceDto> Get(int id)
         {
-            return await this.geoFenceService.GetAsync(id);
+            var result = await this.geoFenceService.GetAsync(id);
+
+            return this.dtoMapper.Map<GeoFenceDto>(result);
         }
 
         // POST api/geofences
         [HttpPost]
-        public async Task<GeoFence> Post([FromBody]GeoFence geoFence)
+        public async Task<GeoFenceDto> Post([FromBody]GeoFenceDto geoFence)
         {
-            return await this.geoFenceService.AddAsync(geoFence);
+            var model = this.dtoMapper.Map<GeoFence>(geoFence);
+
+            var result = await this.geoFenceService.AddAsync(model);
+
+            return this.dtoMapper.Map<GeoFenceDto>(result);
         }
 
         // POST api/geofences/batch
         [HttpPost("batch")]
-        public async Task<IEnumerable<GeoFence>> PostBatch([FromBody]GeoFence[] geoFences)
+        public async Task<IEnumerable<GeoFenceDto>> PostBatch([FromBody]GeoFenceDto[] geoFences)
         {
-            return await this.geoFenceService.AddAsync(geoFences);
+            var models = this.dtoMapper.Map<GeoFence[]>(geoFences);
+
+            var results = await this.geoFenceService.AddAsync(models);
+
+            return this.dtoMapper.Map<IEnumerable<GeoFenceDto>>(results);
         }
 
         [HttpPut("{id}")]
-        public async Task<GeoFence> Put(int id, [FromBody]GeoFence geoFence)
+        public async Task<GeoFenceDto> Put(int id, [FromBody]GeoFenceDto geoFence)
         {
-            return await this.geoFenceService.UpdateAsync(id, geoFence);
+            var model = this.dtoMapper.Map<GeoFence>(geoFence);
+
+            var result = await this.geoFenceService.UpdateAsync(id, model);
+
+            return this.dtoMapper.Map<GeoFenceDto>(result);
         }
 
         // DELETE api/geofences/5

@@ -13,9 +13,6 @@ namespace Trackable.Repositories
             string dbConnectionString,
             string rootPath)
         {
-            var mapperConfiguration = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
-            mapperConfiguration.CompileMappings();
-
             return services
                 .AddDbContext(dbConnectionString, rootPath)
 
@@ -33,13 +30,11 @@ namespace Trackable.Repositories
                 .AddTransient<IInstrumentationRepository, InstrumentationRepository>()
                 .AddTransient<ITokenRepository, TokenRepository>()
 
-                .AddSingleton(mapperConfiguration)
-                
+                .AddSingleton<Profile, ModelMappingProfile>()
+
                 .AddScoped<TrackingDeviceAssetResolver>()
                 .AddScoped<TokenTrackingDeviceResolver>()
-                .AddScoped<TokenUserResolver>()
-                
-                .AddScoped<IMapper>(ctx => new Mapper(ctx.GetService<MapperConfiguration>(), t => ctx.GetService(t)));
+                .AddScoped<TokenUserResolver>();
         }
 
         public static IApplicationBuilder UseRepositories(this IApplicationBuilder builder, string connectionString)

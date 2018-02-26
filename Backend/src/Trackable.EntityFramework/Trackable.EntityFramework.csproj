@@ -177,6 +177,10 @@
     <Compile Include="Migrations\201802201706273_TaggingForResources.Designer.cs">
       <DependentUpon>201802201706273_TaggingForResources.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201802251005221_AddCircularGeofences.cs" />
+    <Compile Include="Migrations\201802251005221_AddCircularGeofences.Designer.cs">
+      <DependentUpon>201802251005221_AddCircularGeofences.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlTypeHelper.cs" />
@@ -265,6 +269,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201802201706273_TaggingForResources.resx">
       <DependentUpon>201802201706273_TaggingForResources.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802251005221_AddCircularGeofences.resx">
+      <DependentUpon>201802251005221_AddCircularGeofences.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

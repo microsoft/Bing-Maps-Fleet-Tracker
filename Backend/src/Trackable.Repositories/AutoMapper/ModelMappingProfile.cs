@@ -11,9 +11,9 @@ using Trackable.Repositories.Helpers;
 
 namespace Trackable.Repositories
 {
-    class MappingProfile : Profile
+    class ModelMappingProfile : Profile
     {
-        public MappingProfile()
+        public ModelMappingProfile()
         {
             // Configuration Mappings
             CreateMap<ConfigurationData, Configuration>()
@@ -60,15 +60,30 @@ namespace Trackable.Repositories
                 .ForMember(dest => dest.Cooldown, opt => opt.MapFrom(src => src.CooldownInMinutes))
                 .ForMember(dest => dest.EmailsToNotify, opt => opt.MapFrom(src => src.Emails.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)))
                 .ForMember(dest => dest.AssetIds, opt => opt.MapFrom(src => src.AssetDatas.Select(a => a.Id)))
-                .ForMember(dest => dest.FencePolygon, opt => opt.MapFrom(src => GeographyHelper.FromPolygon(src.Polygon)))
+                .ForMember(dest => dest.GeoFenceArea, opt => opt.MapFrom(src =>
+                    (src.AreaType == (int)GeoFenceAreaType.Polygon) ?
+                    (IGeoFenceArea)new PolygonGeoFenceArea
+                    {
+                        FencePolygon = GeographyHelper.FromDbPolygon(src.Polygon)
+                    } : (src.AreaType == (int)GeoFenceAreaType.Circular) ?
+                    (IGeoFenceArea)new CircularGeoFenceArea
+                    {
+                        Center = new Point(src.Polygon.Latitude.Value, src.Polygon.Longitude.Value),
+                        RadiusInMeters = src.Radius.Value
+                    } : null))
                 .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => t.TagName)));
 
             CreateMap<GeoFence, GeoFenceData>()
                 .ForMember(dest => dest.FenceType, opt => opt.MapFrom(src => (int)src.FenceType))
                 .ForMember(dest => dest.CooldownInMinutes, opt => opt.MapFrom(src => src.Cooldown))
                 .ForMember(dest => dest.Emails, opt => opt.MapFrom(src => src.EmailsToNotify == null ? string.Empty : string.Join(",", src.EmailsToNotify)))
-                .ForMember(dest => dest.Polygon, opt => opt.MapFrom(src => GeographyHelper.CreatePolygon(src.FencePolygon)))
-                .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => new TagData { TagName = t })));
+                .ForMember(dest => dest.Polygon, opt => opt.MapFrom(src => src.GeoFenceArea.AreaType == GeoFenceAreaType.Polygon ? GeographyHelper.CreateDbPolygon(((PolygonGeoFenceArea)src.GeoFenceArea).FencePolygon) : GeographyHelper.CreateDbPoint(((CircularGeoFenceArea)src.GeoFenceArea).Center)))
+                .ForMember(dest => dest.Radius, opt => opt.MapFrom(src => src.GeoFenceArea.AreaType == GeoFenceAreaType.Circular ? (long?)((CircularGeoFenceArea)src.GeoFenceArea).RadiusInMeters : null))
+                .ForMember(dest => dest.AreaType, opt => opt.MapFrom(src => src.GeoFenceArea.AreaType))
+                .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => new TagData
+                {
+                    TagName = t
+                })));
 
             // GeoFence update Mappings
             CreateMap<GeoFenceUpdateData, GeoFenceUpdate>()
@@ -106,7 +121,10 @@ namespace Trackable.Repositories
                     opt => opt.MapFrom(src => src.TrackingDevice == null ? null : src.TrackingDevice.Name));
 
             CreateMap<Asset, AssetData>()
-                .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => new TagData { TagName = t })))
+                .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => new TagData
+                {
+                    TagName = t
+                })))
                 .ForMember(dest => dest.AssetType, opt => opt.MapFrom(src => (int)src.AssetType));
 
             // Trip leg mapping

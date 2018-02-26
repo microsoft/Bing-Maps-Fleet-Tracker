@@ -10,13 +10,11 @@ namespace Trackable.Models
         /// <summary>
         /// Timestamp of creation of the point.
         /// </summary>
-        [JsonIgnore]
         public DateTime CreatedAtUtc { get; set; }
 
         /// <summary>
         /// The device time in milliseconds, UTC.
         /// </summary>
-        [JsonProperty(PropertyName = "time")]
         public long DeviceTimestampUtc { get; set; }
         
         /// <summary>

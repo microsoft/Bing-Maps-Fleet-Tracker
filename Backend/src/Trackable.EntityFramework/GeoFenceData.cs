@@ -19,9 +19,14 @@ namespace Trackable.EntityFramework
         public int FenceType { get; set; }
 
         [Required]
+        public int AreaType { get; set; }
+
+        [Required]
         public long CooldownInMinutes { get; set; }
 
         public DbGeography Polygon { get; set; }
+
+        public double? Radius { get; set; }
 
         public ICollection<AssetData> AssetDatas { get; set; }
 
