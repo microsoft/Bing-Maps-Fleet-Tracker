@@ -20,9 +20,12 @@ export class MapsService {
     private trip = new Subject<Trip>();
     private geofence = new Subject<Geofence>();
     private geofences = new Subject<Geofence[]>();
-    private geofenceDraw = new Subject<Point[]>();
     private geofenceDrawEnd = new Subject();
-    private geofenceDrawResult = new BehaviorSubject<Point[]>(new Array<Point>());
+    private geofenceCircularRadiusChange = new Subject<number>();
+    private geofenceCircularDraw = new Subject<[Point, number]>();
+    private geofenceCircularDrawResult = new BehaviorSubject<Point>(null);
+    private geofencePolygonDraw = new Subject<Point[]>();
+    private geofencePolygonDrawResult = new BehaviorSubject<Point[]>(new Array<Point>());
     private assetsPositions = new Subject<[Asset, TrackingPoint][]>();
     private assetPosition = new Subject<[Asset, TrackingPoint]>();
     private devicesPositions = new Subject<Map<string, TrackingPoint>>();
@@ -47,11 +50,11 @@ export class MapsService {
     constructor() { }
 
     geocodeQuery(address: string) {
-      this.locationSearchQuery.next(address);
+        this.locationSearchQuery.next(address);
     }
 
     geocodeResult(point: Point) {
-      this.locationSearchResult.next(point);
+        this.locationSearchResult.next(point);
     }
 
 
@@ -67,9 +70,16 @@ export class MapsService {
         this.geofences.next(geofences);
     }
 
-    startGeofenceDraw(initialPoints: Point[] = null) {
-        this.geofenceDraw.next(initialPoints);
-        this.geofenceDrawResult.next([]);
+    startPolygonGeofenceDraw(initialPoints: Point[] = null) {
+        this.geofencePolygonDraw.next(initialPoints);
+    }
+
+    startCircularGeofenceDraw(initialCenter: Point = null, radius: number) {
+        this.geofenceCircularDraw.next([initialCenter, radius]);
+    }
+
+    changeCircularGeofenceRadius(radius: number) {
+        this.geofenceCircularRadiusChange.next(radius);
     }
 
     endGeofenceDraw() {
@@ -238,20 +248,36 @@ export class MapsService {
         return this.geofences.asObservable();
     }
 
-    getGeofenceDraw(): Observable<Point[]> {
-        return this.geofenceDraw.asObservable();
+    getGeofencePolygonDraw(): Observable<Point[]> {
+        return this.geofencePolygonDraw.asObservable();
+    }
+
+    getGeofenceCircularDraw(): Observable<[Point, number]> {
+        return this.geofenceCircularDraw.asObservable();
     }
 
     getGeofenceDrawEnd(): Observable<{}> {
         return this.geofenceDrawEnd.asObservable();
     }
 
-    getGeodenceDrawResult(): Observable<Point[]> {
-        return this.geofenceDrawResult.asObservable();
+    getGeodencePolygonDrawResult(): Observable<Point[]> {
+        return this.geofencePolygonDrawResult.asObservable();
     }
 
-    getGeofenceDrawResultSubject(): Subject<Point[]> {
-        return this.geofenceDrawResult;
+    getGeodenceCircularDrawResult(): Observable<Point> {
+        return this.geofenceCircularDrawResult.asObservable();
+    }
+
+    getCircularGeofenceRadiusChange(): Observable<number> {
+        return this.geofenceCircularRadiusChange.asObservable();
+    }
+
+    getGeofencePolygonDrawResultSubject(): Subject<Point[]> {
+        return this.geofencePolygonDrawResult;
+    }
+
+    getGeofenceCircularDrawResultSubject(): Subject<Point> {
+        return this.geofenceCircularDrawResult;
     }
 
     resetDispatchingDraw(initialPoints: Location[] = null) {
@@ -259,17 +285,12 @@ export class MapsService {
         this.startDispatchingPinsDraw(initialPoints);
     }
 
-    resetGeofenceDraw(initialPoints: Point[] = null) {
-        this.endGeofenceDraw();
-        this.startGeofenceDraw(initialPoints);
-    }
-
     getGeocodeQuery(): Observable<string> {
-      return this.locationSearchQuery.asObservable();
+        return this.locationSearchQuery.asObservable();
     }
 
     getGeocodeResult(): Observable<Point> {
-      return this.locationSearchResult.asObservable();
+        return this.locationSearchResult.asObservable();
     }
 
 }

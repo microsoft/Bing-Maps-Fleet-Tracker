@@ -15,6 +15,7 @@ namespace Trackable.Web.Dtos
 
             // Default to Polygon if AreaType not specified for backwards compatibility
             CreateMap<GeoFence, GeoFenceDto>()
+                .ForMember(d => d.AreaType, opt => opt.MapFrom(src => src.GeoFenceArea.AreaType))
                 .ForMember(d => d.FencePolygon, opt => opt.MapFrom(src => src.GeoFenceArea.AreaType == GeoFenceAreaType.Polygon ? ((PolygonGeoFenceArea)src.GeoFenceArea).FencePolygon : null))
                 .ForMember(d => d.FenceCenter, opt => opt.MapFrom(src => src.GeoFenceArea.AreaType == GeoFenceAreaType.Circular ? ((CircularGeoFenceArea)src.GeoFenceArea).Center : null))
                 .ForMember(d => d.RadiusInMeters, opt => opt.MapFrom(src => src.GeoFenceArea.AreaType == GeoFenceAreaType.Circular ? (long?)((CircularGeoFenceArea)src.GeoFenceArea).RadiusInMeters : null))

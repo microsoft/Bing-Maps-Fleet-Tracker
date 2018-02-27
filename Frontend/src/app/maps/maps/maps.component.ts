@@ -95,9 +95,18 @@ export class MapsComponent implements OnInit {
                         this.bingMapsService.zoomToPositionAndHighlight(position, 15)
                     );
 
-                this.mapsService.getGeofenceDraw().subscribe(draw => {
-                    this.bingMapsService.drawGeofence(
-                        this.mapsService.getGeofenceDrawResultSubject(),
+                this.mapsService.getGeofenceCircularDraw().subscribe(draw => {
+                    this.bingMapsService.drawCircularGeofence(
+                        this.mapsService.getGeofenceCircularDrawResultSubject(),
+                        draw[0],
+                        draw[1],
+                        this.mapsService.getCircularGeofenceRadiusChange()
+                    );
+                });
+
+                this.mapsService.getGeofencePolygonDraw().subscribe(draw => {
+                    this.bingMapsService.drawPolygonGeofence(
+                        this.mapsService.getGeofencePolygonDrawResultSubject(),
                         draw
                     );
                 });
