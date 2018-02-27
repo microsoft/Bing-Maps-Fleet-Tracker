@@ -11,6 +11,9 @@
       <input matInput placeholder="Emails To Notify" [(ngModel)]="joinedEmails" name="email">
     </mat-input-container>
     <mat-input-container>
+      <input matInput placeholder="Webhooks To Notify" [(ngModel)]="joinedWebhooks" name="webhook">
+    </mat-input-container>
+    <mat-input-container>
       <input matInput placeholder="Cooldown in Minutes" [(ngModel)]="geofence.cooldown" name="cooldown" type="number" min="0" required>
     </mat-input-container>
     <mat-input-container>
