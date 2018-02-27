@@ -20,6 +20,7 @@ export class GeofenceEditorComponent implements OnInit, OnDestroy {
   assets: Asset[];
   geofence: Geofence;
   joinedEmails = '';
+  joinedWebhooks = '';
   FenceType = FenceType;
   private assetsSubscription: Subscription;
   private geofenceSubscription: Subscription;
@@ -48,6 +49,7 @@ export class GeofenceEditorComponent implements OnInit, OnDestroy {
           if (geofence != null) {
             this.geofence = geofence;
             this.joinedEmails = this.geofence.emailsToNotify.join(', ');
+            this.joinedWebhooks = this.geofence.webhooksToNotify.join(', ');
             this.mapsService.startGeofenceDraw(geofence.fencePolygon);
             this.updateAssetState();
             this.geofence.fencePolygon = [];
@@ -115,6 +117,10 @@ export class GeofenceEditorComponent implements OnInit, OnDestroy {
     }
 
     this.geofence.emailsToNotify = this.joinedEmails.split(',').map(function (item) {
+      return item.trim();
+    });
+
+    this.geofence.webhooksToNotify = this.joinedWebhooks.split(',').map(function (item) {
       return item.trim();
     });
 

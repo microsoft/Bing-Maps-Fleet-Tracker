@@ -206,6 +206,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CrudServiceBase.cs" />
+    <Compile Include="DataClasses\GeofenceWebhookNotification.cs" />
     <Compile Include="DataClasses\DispatchingParameters.cs" />
     <Compile Include="DataClasses\DispatchingResults.cs" />
     <Compile Include="DataClasses\JwtAuthConstants.cs" />

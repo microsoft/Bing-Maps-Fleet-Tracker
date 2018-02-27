@@ -12,10 +12,16 @@ namespace Trackable.Models
         public string Name { get; set; }
 
         /// <summary>
-        /// The email that will be notified when the geofence is breached.
+        /// The emails that will be notified when the geofence is breached.
         /// </summary>
         [Mutable]
         public IEnumerable<string> EmailsToNotify { get; set; }
+
+        /// <summary>
+        /// The webhooks that will be notified when the geofence is breached.
+        /// </summary>
+        [Mutable]
+        public IEnumerable<string> WebhooksToNotify { get; set; }
 
         /// <summary>
         /// The cooldown in minutes between consecutive emails

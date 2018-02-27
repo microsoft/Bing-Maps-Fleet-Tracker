@@ -59,6 +59,7 @@ namespace Trackable.Repositories
                 .ForMember(dest => dest.FenceType, opt => opt.MapFrom(src => (FenceType)src.FenceType))
                 .ForMember(dest => dest.Cooldown, opt => opt.MapFrom(src => src.CooldownInMinutes))
                 .ForMember(dest => dest.EmailsToNotify, opt => opt.MapFrom(src => src.Emails.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)))
+                .ForMember(dest => dest.WebhooksToNotify, opt => opt.MapFrom(src => src.Webhooks.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)))
                 .ForMember(dest => dest.AssetIds, opt => opt.MapFrom(src => src.AssetDatas.Select(a => a.Id)))
                 .ForMember(dest => dest.GeoFenceArea, opt => opt.MapFrom(src =>
                     (src.AreaType == (int)GeoFenceAreaType.Polygon) ?
@@ -77,6 +78,7 @@ namespace Trackable.Repositories
                 .ForMember(dest => dest.FenceType, opt => opt.MapFrom(src => (int)src.FenceType))
                 .ForMember(dest => dest.CooldownInMinutes, opt => opt.MapFrom(src => src.Cooldown))
                 .ForMember(dest => dest.Emails, opt => opt.MapFrom(src => src.EmailsToNotify == null ? string.Empty : string.Join(",", src.EmailsToNotify)))
+                .ForMember(dest => dest.Webhooks, opt => opt.MapFrom(src => src.WebhooksToNotify == null ? string.Empty : string.Join(",", src.WebhooksToNotify)))
                 .ForMember(dest => dest.Polygon, opt => opt.MapFrom(src => src.GeoFenceArea.AreaType == GeoFenceAreaType.Polygon ? GeographyHelper.CreateDbPolygon(((PolygonGeoFenceArea)src.GeoFenceArea).FencePolygon) : GeographyHelper.CreateDbPoint(((CircularGeoFenceArea)src.GeoFenceArea).Center)))
                 .ForMember(dest => dest.Radius, opt => opt.MapFrom(src => src.GeoFenceArea.AreaType == GeoFenceAreaType.Circular ? (long?)((CircularGeoFenceArea)src.GeoFenceArea).RadiusInMeters : null))
                 .ForMember(dest => dest.AreaType, opt => opt.MapFrom(src => src.GeoFenceArea.AreaType))
