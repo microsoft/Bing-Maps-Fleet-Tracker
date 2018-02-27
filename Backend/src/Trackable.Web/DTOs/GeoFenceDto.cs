@@ -12,6 +12,8 @@ namespace Trackable.Web.Dtos
 
         public IEnumerable<string> EmailsToNotify { get; set; }
 
+        public IEnumerable<string> WebhooksToNotify { get; set; }
+
         public long Cooldown { get; set; }
 
         public FenceType FenceType { get; set; }

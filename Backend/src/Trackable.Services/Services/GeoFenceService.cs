@@ -127,7 +127,17 @@ namespace Trackable.Services
                     email,
                     $"{fence.Name} Geofence was triggered by asset {assetId}",
                     "",
-                    $"<strong>{fence.FenceType.ToString()}</strong> Geofence <strong>{fence.Name}</strong> was triggered by asset  <strong>{assetId}</strong> at  <strong>{DateTime.UtcNow}</strong>")));
+                    $"<strong>{fence.FenceType.ToString()}</strong> Geofence <strong>{fence.Name}</strong> was triggered by asset  <strong>{assetId}</strong> at  <strong>{DateTime.UtcNow.ToString("G")} (UTC)</strong>")));
+
+                tasks.AddRange(fence.WebhooksToNotify.Select(webhook => notificationService.NotifyViaWebhook(
+                    webhook,
+                    new GeofenceWebhookNotification()
+                    {
+                        GeoFenceName = fence.Name,
+                        GeoFenceType = fence.FenceType.ToString(),
+                        AssetId = assetId,
+                        TriggeredAtUtc = DateTime.UtcNow.ToString("G")
+                    })));
 
                 notifiedFenceIds.Add(fence.Id);
             }
