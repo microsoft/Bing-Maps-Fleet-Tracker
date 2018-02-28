@@ -16,7 +16,19 @@
     <mat-input-container>
       <input matInput placeholder="Cooldown in Minutes" [(ngModel)]="geofence.cooldown" name="cooldown" type="number" min="0" required>
     </mat-input-container>
+
     <mat-input-container>
+      <mat-select placeholder="Geofence Area Type" [(ngModel)]="geofence.areaType" name="areaType" (change)="onAreaTypeChanged($event)" required>
+        <mat-option [value]="AreaType.Polygon">Polygon</mat-option>
+        <mat-option [value]="AreaType.Circular">Circular</mat-option>
+      </mat-select>
+    </mat-input-container>
+
+    <mat-input-container *ngIf="geofence.areaType === AreaType.Circular">
+      <input matInput type="number" placeholder="Radius In Meters" [(ngModel)]="geofence.radiusInMeters" name="radiusInMeters" (change)="onRadiusChanged($event)" (keyup)="onRadiusChanged($event)" required>
+    </mat-input-container>
+
+    <mat-input-container *ngIf="geofence.areaType === AreaType.Polygon">
       <input matInput class="partial-input" placeholder="Fence Point Count" [(ngModel)]="geofence.fencePolygon.length" name="fencePolygon"
         disabled>
       <a class="partial-button" (click)="clearPoints()">Clear Points</a>
@@ -32,7 +44,7 @@
     <h3>Available Assets:</h3>
     <mat-list>
       <mat-list-item *ngFor="let asset of assets">
-        <mat-checkbox (change)="onCheckChanged($event)" [checked]="asset.checked" [name]="asset.id">{{asset.id}}</mat-checkbox>
+        <mat-checkbox (change)="onAssetCheckChanged($event)" [checked]="asset.checked" [name]="asset.id">{{asset.id}}</mat-checkbox>
       </mat-list-item>
     </mat-list>
 

@@ -12,6 +12,7 @@ import { MapsService } from '../../maps/maps.service';
   styleUrls: ['./geofence-list.component.css']
 })
 export class GeofenceListComponent implements OnInit, OnDestroy {
+  retrievedGeofences: Geofence[];
   selectedGeofence: Geofence;
   filter: string;
   geofences: Observable<Geofence[]>;
@@ -22,7 +23,10 @@ export class GeofenceListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.geofences = this.geofenceService.getAll();
-    this.geofencesSubscription = this.geofences.subscribe(geofences => this.mapsService.showGeofences(geofences));
+    this.geofencesSubscription = this.geofences.subscribe(geofences => {
+      this.mapsService.showGeofences(geofences);
+      this.retrievedGeofences = geofences;
+    });
   }
 
   ngOnDestroy(): void {
@@ -32,8 +36,13 @@ export class GeofenceListComponent implements OnInit, OnDestroy {
   }
 
   showGeofence(geofence: Geofence) {
-    this.mapsService.showGeofence(geofence);
-    this.selectedGeofence = geofence;
+    if (this.selectedGeofence === geofence) {
+      this.mapsService.showGeofences(this.retrievedGeofences);
+      this.selectedGeofence = null;
+    } else {
+      this.mapsService.showGeofence(geofence);
+      this.selectedGeofence = geofence;
+    }
   }
 
   deleteGeofence(geofence: Geofence) {

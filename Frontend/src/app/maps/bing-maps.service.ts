@@ -7,7 +7,7 @@ import { Subject } from 'rxjs/Subject';
 import { Asset, AssetType } from '../assets/asset';
 import { Point } from '../shared/point';
 import { TrackingPoint } from '../shared/tracking-point';
-import { Geofence } from '../shared/geofence';
+import { Geofence, AreaType } from '../shared/geofence';
 import { Trip } from '../shared/trip';
 import { Location } from '../shared/location';
 import { TripService } from '../core/trip.service';
@@ -26,7 +26,6 @@ export class BingMapsService {
     private trip: Trip;
     private readonly yellowSpeed = 4.4;
     private readonly greenSpeed = 13.4;
-    private readonly assetIconUrl = window.location.origin + '/assets/images/';
     private drawHandlerId;
     private previousHighlightPoint: Microsoft.Maps.Pushpin;
 
@@ -91,62 +90,113 @@ export class BingMapsService {
             // tslint:disable-next-line:forin
             for (const g in geofences) {
                 const geofence = geofences[g];
-                locations.splice(0, locations.length);
-                for (const p of geofence.fencePolygon) {
-                    const location = new Microsoft.Maps.Location(p.latitude, p.longitude);
-                    locations.push(location);
-                }
 
-                const polygon = new Microsoft.Maps.Polygon(locations, {
-                    fillColor: 'rgba(86,182,145,0.4)',
-                    strokeColor: BingMapsService.colors[0]
-                });
-                this.map.entities.push(polygon);
+                locations.splice(0, locations.length);
+                locations.push.apply(locations,
+                    this.drawGeofencePolygon(geofence, 'rgba(86,182,145,0.4)', BingMapsService.colors[0]));
             }
 
-            this.centerMap(locations);
+            this.centerMapCentroid(locations);
         });
     }
 
     showGeofence(geofence: Geofence): void {
         this.load().then(() => {
             this.clear();
-
-            const locations = new Array<Microsoft.Maps.Location>();
-            for (const p of geofence.fencePolygon) {
-                const location = new Microsoft.Maps.Location(p.latitude, p.longitude);
-                locations.push(location);
-            }
-
-            const polygon = new Microsoft.Maps.Polygon(locations, {
-                fillColor: 'rgba(86,182,145,0.4)',
-                strokeColor: BingMapsService.colors[0]
-            });
-            this.map.entities.push(polygon);
-
-            this.centerMap(locations);
+            const polygonLocations = this.drawGeofencePolygon(geofence, 'rgba(86,182,145,0.4)', BingMapsService.colors[0]);
+            this.centerMapCentroid(polygonLocations);
         });
     }
 
-    drawGeofence(subject: Subject<Point[]>, initialPoints: Point[]) {
+    drawCircularGeofence(subject: Subject<Point>, initialCenter: Point, initialRadius: number, radius: Observable<number>) {
         this.load().then(() => {
-            const polygonPoints = new Array<Point>();
+            const currentCenter = initialCenter;
+            let currentRadius = initialRadius;
+            this.clear();
+
+            if (initialCenter && initialCenter.latitude && initialCenter.longitude && initialRadius) {
+                const polygon = new Microsoft.Maps.Polygon(
+                    this.getCirclePolygon(currentCenter, currentRadius),
+                    {
+                        fillColor: 'rgba(86,182,145,0.4)',
+                        strokeColor: BingMapsService.colors[0]
+                    });
+
+                const pushpin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(currentCenter.latitude, currentCenter.longitude),
+                    {
+                        color: BingMapsService.colors[0],
+                        icon: '/assets/images/circular-geofence-center-green.svg',
+                        anchor: new Microsoft.Maps.Point(12, 12)
+                    });
+
+                this.map.entities.push(pushpin);
+                this.map.entities.push(polygon);
+                this.centerMap([currentCenter]);
+            }
+
+            const onCircularGeofenceChanged = () => {
+                this.clear();
+                const polygon = new Microsoft.Maps.Polygon(
+                    this.getCirclePolygon(currentCenter, currentRadius),
+                    {
+                        fillColor: 'rgba(233,87,148,0.4)',
+                        strokeColor: BingMapsService.colors[4]
+                    }
+                );
+
+                const pushpin = new Microsoft.Maps.Pushpin(
+                    new Microsoft.Maps.Location(currentCenter.latitude, currentCenter.longitude),
+                    {
+                        icon: '/assets/images/circular-geofence-center-pink.svg',
+                        anchor: new Microsoft.Maps.Point(12, 12),
+                        color: BingMapsService.colors[4]
+                    });
+
+                this.map.entities.push(pushpin);
+                this.map.entities.push(polygon);
+
+                subject.next(currentCenter);
+            };
+
+            this.drawHandlerId = Microsoft.Maps.Events.addHandler(this.map, 'click', e => {
+                const event = e as Microsoft.Maps.IMouseEventArgs;
+
+                currentCenter.latitude = event.location.latitude;
+                currentCenter.longitude = event.location.longitude;
+
+                onCircularGeofenceChanged();
+            });
+            const currentDrawHandlerId = this.drawHandlerId;
+            radius
+                .takeWhile(() => currentDrawHandlerId === this.drawHandlerId)
+                .subscribe(r => {
+                    currentRadius = r;
+                    if (currentCenter && currentCenter.latitude && currentCenter.longitude) {
+                        onCircularGeofenceChanged();
+                    }
+                });
+        });
+    }
+
+    drawPolygonGeofence(subject: Subject<Point[]>, initialPoints: Point[]) {
+        this.load().then(() => {
+            let polygonPoints = new Array<Point>();
             const locationsArray = new Array<Microsoft.Maps.Location>();
             this.clear();
 
             if (initialPoints && initialPoints.length > 1) {
-                const initialArray = new Array<Microsoft.Maps.Location>();
+                polygonPoints = initialPoints.slice(0);
                 initialPoints.forEach(p => {
                     const loc = new Microsoft.Maps.Location(p.latitude, p.longitude);
-                    initialArray.push(loc);
+                    locationsArray.push(loc);
                 });
 
-                const polygon = new Microsoft.Maps.Polygon(initialArray.slice(0), {
+                const polygon = new Microsoft.Maps.Polygon(locationsArray, {
                     fillColor: 'rgba(86,182,145,0.4)',
                     strokeColor: BingMapsService.colors[0]
                 });
                 this.map.entities.push(polygon);
-                this.centerMap(initialPoints);
+                this.centerMapCentroid(initialPoints);
             }
 
             this.drawHandlerId = Microsoft.Maps.Events.addHandler(this.map, 'click', e => {
@@ -343,7 +393,7 @@ export class BingMapsService {
                     const pushpin = new Microsoft.Maps.Pushpin(location, {
                         title: positionsArray[key][0],
                         subTitle: loc.address,
-                        icon: this.assetIconUrl + icon
+                        icon: icon
                     });
 
                     this.map.entities.push(pushpin);
@@ -373,10 +423,9 @@ export class BingMapsService {
                         title: position[0].id,
                         subTitle: this.timeConverter(p.time),
                         icon:
-                            this.assetIconUrl +
                             (position[0].assetType === AssetType.Car
-                                ? 'car-side.png'
-                                : 'truck-side.png')
+                                ? '/assets/images/car-side.png'
+                                : '/assets/images/truck-side.png')
                     });
                     this.map.entities.push(pushpin);
                 }
@@ -404,7 +453,7 @@ export class BingMapsService {
                     const pushpin = new Microsoft.Maps.Pushpin(location, {
                         title: key,
                         subTitle: this.timeConverter(value.time),
-                        icon: this.assetIconUrl + 'phone.png'
+                        icon: '/assets/images/phone.png'
                     });
                     this.map.entities.push(pushpin);
                 }
@@ -565,8 +614,6 @@ export class BingMapsService {
         });
     }
 
-
-
     geocodeAddress(address: string): Subject<Point> {
         const subject = new Subject<Point>();
         this.load().then(() => {
@@ -623,7 +670,7 @@ export class BingMapsService {
         loc.name = title;
 
         const pushpin = new Microsoft.Maps.Pushpin(event.location, {
-            icon: this.assetIconUrl + icon,
+            icon: icon,
             title: title
         });
 
@@ -680,6 +727,27 @@ export class BingMapsService {
         }
     }
 
+    private centerMapCentroid(points: Point[]) {
+        if (points.length) {
+            let centerLat = 0;
+            let centerLong = 0;
+            points.forEach(function (p) {
+                centerLat += p.latitude;
+                centerLong += p.longitude;
+            });
+
+            centerLat /= points.length;
+            centerLong /= points.length;
+
+            this.map.setView({
+                center: new Microsoft.Maps.Location(
+                    centerLat,
+                    centerLong
+                )
+            });
+        }
+    }
+
     private getLocationPoint(location: Location): Point {
         const p = new Point();
         p.latitude = location.latitude;
@@ -699,7 +767,7 @@ export class BingMapsService {
             );
             const pushpin = new Microsoft.Maps.Pushpin(location, {
                 title: locationName,
-                icon: this.assetIconUrl + icon
+                icon: icon
             });
 
             this.map.entities.push(pushpin);
@@ -748,5 +816,70 @@ export class BingMapsService {
     private clear() {
         this.trip = null;
         this.map.entities.clear();
+    }
+
+    private drawGeofencePolygon(geofence: Geofence, fillColor, strokeColor): Microsoft.Maps.Location[] {
+        let locations = new Array<Microsoft.Maps.Location>();
+
+        if (geofence.areaType === AreaType.Polygon) {
+            for (const p of geofence.fencePolygon) {
+                const location = new Microsoft.Maps.Location(p.latitude, p.longitude);
+                locations.push(location);
+            }
+        } else if (geofence.areaType === AreaType.Circular) {
+            locations = this.getCirclePolygon(geofence.fenceCenter, geofence.radiusInMeters);
+
+            const pushpin = new Microsoft.Maps.Pushpin(
+                new Microsoft.Maps.Location(geofence.fenceCenter.latitude, geofence.fenceCenter.longitude),
+                {
+                    color: strokeColor,
+                    icon: '/assets/images/circular-geofence-center-green.svg',
+                    anchor: new Microsoft.Maps.Point(12, 12)
+                });
+            this.map.entities.push(pushpin);
+        }
+
+        const polygon = new Microsoft.Maps.Polygon(locations,
+            {
+                fillColor: fillColor,
+                strokeColor: strokeColor
+            });
+
+        this.map.entities.push(polygon);
+
+        return locations;
+    }
+
+    private getCirclePolygon(center: Point, radiusInMeters): Microsoft.Maps.Location[] {
+        const earthRadiusInMeters = 6371000;
+        const radPerDeg = Math.PI / 180;
+        const locs = new Array<Microsoft.Maps.Location>();
+
+        if (!radiusInMeters || radiusInMeters <= 0 || radiusInMeters > earthRadiusInMeters / 2) {
+            return locs;
+        }
+
+        const lat = center.latitude * radPerDeg;
+        const lon = center.longitude * radPerDeg;
+
+        const angDist = parseFloat(radiusInMeters) / earthRadiusInMeters;
+
+        for (let i = 0; i <= 360; i++) {
+            let pLatitude, pLongitude;
+            const brng = i * radPerDeg;
+
+            pLatitude = Math.asin(Math.sin(lat) * Math.cos(angDist) +
+                Math.cos(lat) * Math.sin(angDist) * Math.cos(brng));
+
+            pLongitude = lon + Math.atan2(Math.sin(brng) * Math.sin(angDist) * Math.cos(lat),
+                Math.cos(angDist) - Math.sin(lat) * Math.sin(pLatitude));
+
+            pLatitude = pLatitude / radPerDeg;
+            pLongitude = pLongitude / radPerDeg;
+
+            locs.push(new Microsoft.Maps.Location(pLatitude, pLongitude));
+        }
+
+        return locs;
     }
 }

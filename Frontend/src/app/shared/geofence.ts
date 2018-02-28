@@ -8,10 +8,19 @@ export class Geofence {
     cooldown: number;
     fenceType: string;
     fencePolygon: Point[];
+    fenceCenter: Point;
+    radiusInMeters: number;
+    areaType: AreaType;
     assetIds: string[];
 }
 
 export enum FenceType {
     Inbound,
     Outbound
+}
+
+export enum AreaType {
+    Unknown,
+    Polygon,
+    Circular
 }

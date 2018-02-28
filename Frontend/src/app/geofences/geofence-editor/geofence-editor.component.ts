@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
-import { Geofence, FenceType } from '../../shared/geofence';
+import { Geofence, FenceType, AreaType } from '../../shared/geofence';
 import { Point } from '../../shared/point';
 import { Asset } from '../../assets/asset';
 import { GeofenceService } from '../geofence.service';
@@ -22,6 +22,7 @@ export class GeofenceEditorComponent implements OnInit, OnDestroy {
   joinedEmails = '';
   joinedWebhooks = '';
   FenceType = FenceType;
+  AreaType = AreaType;
   private assetsSubscription: Subscription;
   private geofenceSubscription: Subscription;
   private routeSubscription: Subscription;
@@ -40,6 +41,8 @@ export class GeofenceEditorComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.geofence = new Geofence();
+    this.geofence.areaType = AreaType.Polygon;
+    this.geofence.fencePolygon = new Array<Point>();
 
     this.routeSubscription = this.route.params.subscribe(params => {
       const id = params['id'];
@@ -50,15 +53,18 @@ export class GeofenceEditorComponent implements OnInit, OnDestroy {
             this.geofence = geofence;
             this.joinedEmails = this.geofence.emailsToNotify.join(', ');
             this.joinedWebhooks = this.geofence.webhooksToNotify.join(', ');
-            this.mapsService.startGeofenceDraw(geofence.fencePolygon);
+            if (this.geofence.areaType === AreaType.Polygon) {
+              this.mapsService.startPolygonGeofenceDraw(geofence.fencePolygon.slice(0, geofence.fencePolygon.length - 1));
+            } else if (this.geofence.areaType === AreaType.Circular) {
+              this.mapsService.startCircularGeofenceDraw(geofence.fenceCenter, geofence.radiusInMeters);
+            }
             this.updateAssetState();
-            this.geofence.fencePolygon = [];
           }
         });
 
         this.isEditable = true;
       } else {
-        this.mapsService.startGeofenceDraw();
+        this.mapsService.startPolygonGeofenceDraw(this.geofence.fencePolygon);
       }
     });
 
@@ -71,9 +77,14 @@ export class GeofenceEditorComponent implements OnInit, OnDestroy {
       this.updateAssetState();
     });
 
-    this.resultSubscription = this.mapsService.getGeodenceDrawResult()
+    this.resultSubscription = this.mapsService.getGeodencePolygonDrawResult()
       .subscribe(result => {
         this.geofence.fencePolygon = result;
+      });
+
+    this.resultSubscription = this.mapsService.getGeodenceCircularDrawResult()
+      .subscribe(result => {
+        this.geofence.fenceCenter = result;
       });
 
     this.toasterService.pop('info', 'Draw Geofence', 'Please use the map to specify your geofence');
@@ -106,8 +117,18 @@ export class GeofenceEditorComponent implements OnInit, OnDestroy {
       this.geofence.assetIds.push(checkedAsset.id);
     }
 
-    if (this.geofence.fencePolygon.length <= 2) {
-      this.toasterService.pop('error', 'Geofence invalid', 'Please use the map to specify a valid geofence');
+    if (this.geofence.areaType === AreaType.Polygon && this.geofence.fencePolygon.length <= 2) {
+      this.toasterService.pop('error', 'Geofence invalid', 'Please use the map to specify a valid geofence polygon');
+      return;
+    }
+
+    if (this.geofence.areaType === AreaType.Circular && !this.geofence.fenceCenter) {
+      this.toasterService.pop('error', 'Geofence invalid', 'Please use the map to specify a valid center for the geofence');
+      return;
+    }
+
+    if (this.geofence.areaType === AreaType.Circular && this.geofence.radiusInMeters <= 0 || this.geofence.radiusInMeters >= 3185500) {
+      this.toasterService.pop('error', 'Geofence invalid', 'Invalid geofence radius');
       return;
     }
 
@@ -138,8 +159,16 @@ export class GeofenceEditorComponent implements OnInit, OnDestroy {
   }
 
   clearPoints() {
-    this.geofence.fencePolygon = new Array<Point>();
-    this.mapsService.resetGeofenceDraw(this.geofence.fencePolygon);
+    this.mapsService.endGeofenceDraw();
+
+    if (this.geofence.areaType === AreaType.Polygon) {
+      this.geofence.fencePolygon = new Array<Point>();
+      this.mapsService.startPolygonGeofenceDraw(this.geofence.fencePolygon);
+    } else if (this.geofence.areaType === AreaType.Circular) {
+      this.geofence.fenceCenter = new Point();
+      this.geofence.radiusInMeters = 1000;
+      this.mapsService.startCircularGeofenceDraw(this.geofence.fenceCenter, this.geofence.radiusInMeters);
+    }
   }
 
   private updateAssetState() {
@@ -152,7 +181,15 @@ export class GeofenceEditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  onCheckChanged(event) {
+  onRadiusChanged(event) {
+    this.mapsService.changeCircularGeofenceRadius(this.geofence.radiusInMeters);
+  }
+
+  onAreaTypeChanged(event) {
+    this.clearPoints();
+  }
+
+  onAssetCheckChanged(event) {
     for (const asset of this.assets) {
       if (asset.id === event.source.name) {
         asset['checked'] = true;
