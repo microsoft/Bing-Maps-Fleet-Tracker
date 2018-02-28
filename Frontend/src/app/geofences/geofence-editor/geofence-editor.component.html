@@ -24,11 +24,11 @@
       </mat-select>
     </mat-input-container>
 
-    <mat-input-container *ngIf="geofence.areaType == AreaType.Circular">
+    <mat-input-container *ngIf="geofence.areaType === AreaType.Circular">
       <input matInput type="number" placeholder="Radius In Meters" [(ngModel)]="geofence.radiusInMeters" name="radiusInMeters" (change)="onRadiusChanged($event)" (keyup)="onRadiusChanged($event)" required>
     </mat-input-container>
 
-    <mat-input-container *ngIf="geofence.areaType == AreaType.Polygon">
+    <mat-input-container *ngIf="geofence.areaType === AreaType.Polygon">
       <input matInput class="partial-input" placeholder="Fence Point Count" [(ngModel)]="geofence.fencePolygon.length" name="fencePolygon"
         disabled>
       <a class="partial-button" (click)="clearPoints()">Clear Points</a>
