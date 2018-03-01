@@ -7,6 +7,7 @@ import { LocationService } from '../location.service';
 import { MapsService } from '../../maps/maps.service';
 import { Point } from '../../shared/point';
 import { Roles } from '../../shared/role';
+import { AssetService } from '../../assets/asset.service';
 
 @Component({
   selector: 'app-location-list',
@@ -22,43 +23,44 @@ export class LocationListComponent implements OnInit, OnDestroy {
   index = 1;
   singlePageSize = 10;
   showTable: boolean;
-  assetsCount: {key: string, value: any}[];
-  private subscription: Subscription;
-
+  assetsCount: { key: string, value: any }[];
+  private isAlive: boolean;
 
   constructor(
     private locationService: LocationService,
+    private assetService: AssetService,
     private mapsService: MapsService) { }
 
   ngOnInit() {
+    this.isAlive = true;
     this.showFirstPageLocations();
+
+    this.assetService.getLatestPoints()
+      .takeWhile(() => this.isAlive)
+      .subscribe(points => {
+        this.mapsService.showAssetsPositions(points, true);
+      });
   }
 
   showFirstPageLocations() {
-    this.unsubscribe();
-    this.subscription = this.locationService.getLocations()
-    .subscribe(locations => {
-      this.locations = locations;
-      this.showLocationsRange(this.locations.slice(0, this.singlePageSize - 1));
-    });
+    this.locationService.getLocations()
+      .takeWhile(() => this.isAlive)
+      .subscribe(locations => {
+        this.locations = locations;
+        this.showLocationsRange(this.locations.slice(0, this.singlePageSize - 1));
+      });
   }
 
   ngOnDestroy() {
-    this.unsubscribe();
+    this.isAlive = false;
   }
 
   private showLocationsRange(locationRange: Location[]) {
-      this.mapsService.showLocationsPositions(this.locationService.getLocationMap(locationRange));
-  }
-
-  private unsubscribe() {
-    if (this.subscription && !this.subscription.closed) {
-      this.subscription.unsubscribe();
-    }
+    this.mapsService.showLocationsPositions(locationRange);
   }
 
   getLocationName(location: Location) {
-    return this.locationService.generateLocationName(location);
+    return this.locationService.normalizeLocationName(location);
   }
 
   showLocation(location: Location) {
@@ -79,14 +81,16 @@ export class LocationListComponent implements OnInit, OnDestroy {
 
   private getLocationInformation(location: Location) {
     this.assetsCount = null;
-    this.unsubscribe();
-    this.subscription = this.locationService.getLocationAssetsCount(location)
-    .subscribe(assetsCount => {
-      this.assetsCount = Object.keys(assetsCount).map(function (key) { return{
-        key : key, value : assetsCount[key]};
-      });
+    this.locationService.getLocationAssetsCount(location)
+      .takeWhile(() => this.isAlive)
+      .subscribe(assetsCount => {
+        this.assetsCount = Object.keys(assetsCount).map(function (key) {
+          return {
+            key: key, value: assetsCount[key]
+          };
+        });
 
-      this.showTable = (this.assetsCount.length >= 1);
-    });
+        this.showTable = (this.assetsCount.length >= 1);
+      });
   }
 }

@@ -20,26 +20,24 @@ export class MapsService {
     private trip = new Subject<Trip>();
     private geofence = new Subject<Geofence>();
     private geofences = new Subject<Geofence[]>();
-    private geofenceDrawEnd = new Subject();
+    private currentDrawEnd = new Subject();
     private geofenceCircularRadiusChange = new Subject<number>();
     private geofenceCircularDraw = new Subject<[Point, number]>();
     private geofenceCircularDrawResult = new BehaviorSubject<Point>(null);
     private geofencePolygonDraw = new Subject<Point[]>();
     private geofencePolygonDrawResult = new BehaviorSubject<Point[]>(new Array<Point>());
-    private assetsPositions = new Subject<[Asset, TrackingPoint][]>();
+    private assetsPositions = new Subject<[{ [key: string]: TrackingPoint }, boolean]>();
     private assetPosition = new Subject<[Asset, TrackingPoint]>();
     private devicesPositions = new Subject<Map<string, TrackingPoint>>();
     private devicePosition = new Subject<[string, TrackingPoint]>();
     private dispatchingPinsDraw = new Subject<Location[]>();
-    private dispatchingPinsDrawEnd = new Subject();
     private dispatchingPinsDrawResult = new BehaviorSubject<Location[]>(new Array<Location>());
     private dispatchingPoints = new Subject<Point[]>();
     private dispatchingAlternativePoints = new Subject<Point[]>();
     private dispatchingPins = new Subject<Location[]>();
-    private locationsPositions = new Subject<Map<string, Location>>();
+    private locationsPositions = new Subject<Location[]>();
     private locationPosition = new Subject<Location>();
     private locationPinDraw = new Subject<Location>();
-    private locationPinDrawEnd = new Subject();
     private locationPinResult = new Subject<Location>();
     private itineraryPoint = new Subject<Point>();
     private locationSearchQuery = new Subject<string>();
@@ -56,7 +54,6 @@ export class MapsService {
     geocodeResult(point: Point) {
         this.locationSearchResult.next(point);
     }
-
 
     showPoints(points: Point[]) {
         this.points.next(points);
@@ -82,12 +79,8 @@ export class MapsService {
         this.geofenceCircularRadiusChange.next(radius);
     }
 
-    endGeofenceDraw() {
-        this.geofenceDrawEnd.next();
-    }
-
-    showAssetsPositions(positions: [Asset, TrackingPoint][]) {
-        this.assetsPositions.next(positions);
+    showAssetsPositions(positions: { [key: string]: TrackingPoint }, inBackground = false) {
+        this.assetsPositions.next([positions, inBackground]);
     }
 
     showAsset(position: [Asset, TrackingPoint]) {
@@ -102,7 +95,7 @@ export class MapsService {
         this.devicePosition.next(position);
     }
 
-    showLocationsPositions(positions: Map<string, Location>) {
+    showLocationsPositions(positions: Location[]) {
         this.locationsPositions.next(positions);
     }
 
@@ -114,8 +107,8 @@ export class MapsService {
         this.locationPinDraw.next();
     }
 
-    endLocationPinDraw() {
-        this.locationPinDrawEnd.next();
+    endCurrentDraw() {
+        this.currentDrawEnd.next();
     }
 
     showTrips(trips: Trip[]) {
@@ -144,10 +137,6 @@ export class MapsService {
         this.dispatchingPinsDrawResult.next([]);
     }
 
-    endDispatchingPinsDraw() {
-        this.dispatchingPinsDrawEnd.next();
-    }
-
     showItineraryPosition(point: Point) {
         this.itineraryPoint.next(point);
     }
@@ -156,7 +145,7 @@ export class MapsService {
         return this.points.asObservable();
     }
 
-    getAssetsPositions(): Observable<[Asset, TrackingPoint][]> {
+    getAssetsPositions(): Observable<[{ [key: string]: TrackingPoint }, boolean]> {
         return this.assetsPositions.asObservable();
     }
 
@@ -172,7 +161,7 @@ export class MapsService {
         return this.devicePosition.asObservable();
     }
 
-    getLocationsPositions(): Observable<Map<string, Location>> {
+    getLocationsPositions(): Observable<Location[]> {
         return this.locationsPositions.asObservable();
     }
 
@@ -192,10 +181,6 @@ export class MapsService {
         return this.locationPinResult;
     }
 
-    getlocationPinDrawEnd(): Observable<{}> {
-        return this.locationPinDrawEnd.asObservable();
-    }
-
     getDispatchingPinsDraw(): Observable<Location[]> {
         return this.dispatchingPinsDraw.asObservable();
     }
@@ -207,11 +192,6 @@ export class MapsService {
     getDispatchingPinsResultSubject(): Subject<Location[]> {
         return this.dispatchingPinsDrawResult;
     }
-
-    getDispatchingPinsDrawEnd(): Observable<{}> {
-        return this.dispatchingPinsDrawEnd.asObservable();
-    }
-
     getDispatchingPoints(): Observable<Point[]> {
         return this.dispatchingPoints.asObservable();
     }
@@ -256,8 +236,8 @@ export class MapsService {
         return this.geofenceCircularDraw.asObservable();
     }
 
-    getGeofenceDrawEnd(): Observable<{}> {
-        return this.geofenceDrawEnd.asObservable();
+    getCurrentDrawEnd(): Observable<{}> {
+        return this.currentDrawEnd.asObservable();
     }
 
     getGeodencePolygonDrawResult(): Observable<Point[]> {
@@ -281,7 +261,7 @@ export class MapsService {
     }
 
     resetDispatchingDraw(initialPoints: Location[] = null) {
-        this.endDispatchingPinsDraw();
+        this.endCurrentDraw();
         this.startDispatchingPinsDraw(initialPoints);
     }
 

@@ -8,7 +8,6 @@ import { LocationService } from '../location.service';
 import { ToasterService } from 'angular2-toaster';
 import { MapsService } from '../../maps/maps.service';
 
-
 @Component({
   selector: 'app-location-editor',
   templateUrl: './location-editor.component.html',
@@ -19,11 +18,9 @@ export class LocationEditorComponent implements OnInit, OnDestroy {
   didLocationChange: Boolean;
   isEditable: Boolean;
   locationString: string;
-  undeterminedMessage: string;
   locationTypeString: string;
-  private routerSubscription: Subscription;
-  private resultSubscription: Subscription;
-  private locationSubscription: Subscription;
+  private isAlive: boolean;
+  private readonly undeterminedMessage = 'Undetermined';
 
   constructor(
     private locationService: LocationService,
@@ -35,27 +32,31 @@ export class LocationEditorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
-    this.undeterminedMessage = 'Undetermined';
+    this.isAlive = true;
     this.mapService.startLocationPinDraw();
-    this.routerSubscription = this.route.params.subscribe(params => {
-      const id = params['id'];
-      if (id) {
-        this.isEditable = true;
-        this.locationSubscription = this.locationService.getLocation(id).subscribe(location => {
-          if (location) {
-            this.location = location;
-            this.setlocationString();
-            this.setLocationTypeString();
-            this.mapService.zoomToLocation(this.location);
-          }
-        });
-      } else {
-        this.locationString = this.undeterminedMessage;
-      }
-    });
+    this.route.params
+      .takeWhile(() => this.isAlive)
+      .subscribe(params => {
+        const id = params['id'];
+        if (id) {
+          this.isEditable = true;
+          this.locationService.getLocation(id)
+            .takeWhile(() => this.isAlive)
+            .subscribe(location => {
+              if (location) {
+                this.location = location;
+                this.setlocationString();
+                this.setLocationTypeString();
+                this.mapService.showLocationsPositions([this.location]);
+              }
+            });
+        } else {
+          this.locationString = this.undeterminedMessage;
+        }
+      });
 
-    this.resultSubscription = this.mapService.getLocationPinResult()
+    this.mapService.getLocationPinResult()
+      .takeWhile(() => this.isAlive)
       .subscribe(location => {
         if (this.location.latitude !== location.latitude || this.location.longitude !== location.longitude) {
           this.didLocationChange = true;
@@ -71,8 +72,8 @@ export class LocationEditorComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.mapService.endLocationPinDraw();
-    this.routerSubscription.unsubscribe();
+    this.mapService.endCurrentDraw();
+    this.isAlive = false;
   }
 
   changeAddress(): void {
@@ -82,10 +83,10 @@ export class LocationEditorComponent implements OnInit, OnDestroy {
       this.location.latitude = point.latitude;
       this.location.longitude = point.longitude;
       this.setlocationString();
-      this.mapService.showLocationsPositions(new Map([[this.location.name, this.location]]));
+      this.mapService.showLocationsPositions([this.location]);
     });
-
   }
+
   submit() {
     if (this.locationString === this.undeterminedMessage) {
       this.toasterService.pop('error', 'Invalid Input', 'Please add the location pin on the map');

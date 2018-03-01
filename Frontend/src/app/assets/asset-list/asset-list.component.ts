@@ -38,6 +38,7 @@ export class AssetListComponent implements OnInit, OnDestroy {
   private selectedDateRange: DateRange;
   private lastCalledFunction: (asset: Asset, filterSelected: Boolean) => void;
   private subscription: Subscription;
+  private isDrawing = false;
   private isAlive: boolean;
   private assetsList: Asset[];
 
@@ -102,15 +103,7 @@ export class AssetListComponent implements OnInit, OnDestroy {
     this.unsubscribe();
     this.subscription = this.assetService.getLatestPoints()
       .subscribe(points => {
-        const mappedAssets = new Array<[Asset, TrackingPoint]>();
-
-        for (const key of Object.keys(points)) {
-          const value = points[key];
-          const asset = this.assetsList.find(val => val.id === key);
-          mappedAssets.push([asset, value]);
-        }
-
-        this.mapsService.showAssetsPositions(mappedAssets);
+        this.mapsService.showAssetsPositions(points);
 
         if (this.selectedAsset && !points[this.selectedAsset.id]) {
           this.toasterService.pop('error', '', 'Can\'t find position of ' + this.selectedAsset.id);
@@ -142,6 +135,7 @@ export class AssetListComponent implements OnInit, OnDestroy {
 
   selectTrip(trip): void {
     this.mapsService.showTrip(trip);
+    this.isDrawing = true;
   }
 
   timeFilterChange(range) {
@@ -154,6 +148,10 @@ export class AssetListComponent implements OnInit, OnDestroy {
   private unsubscribe() {
     if (this.subscription && !this.subscription.closed) {
       this.subscription.unsubscribe();
+    }
+    if (this.isDrawing) {
+      this.mapsService.endCurrentDraw();
+      this.isDrawing = false;
     }
   }
 

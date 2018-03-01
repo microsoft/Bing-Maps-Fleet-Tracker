@@ -91,7 +91,7 @@ export class GeofenceEditorComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.mapsService.endGeofenceDraw();
+    this.mapsService.endCurrentDraw();
 
     if (this.routeSubscription) {
       this.routeSubscription.unsubscribe();
@@ -159,7 +159,7 @@ export class GeofenceEditorComponent implements OnInit, OnDestroy {
   }
 
   clearPoints() {
-    this.mapsService.endGeofenceDraw();
+    this.mapsService.endCurrentDraw();
 
     if (this.geofence.areaType === AreaType.Polygon) {
       this.geofence.fencePolygon = new Array<Point>();

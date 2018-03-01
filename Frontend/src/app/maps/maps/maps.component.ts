@@ -6,6 +6,9 @@ import { environment } from '../../../environments/environment';
 import { MapsService } from '../maps.service';
 import { Point } from '../../shared/point';
 import { SettingsService, SubscriptionKeys } from '../../core/settings.service';
+import { AssetService } from '../../assets/asset.service';
+import { Asset } from '../../assets/asset';
+import { TrackingPoint } from '../../shared/tracking-point';
 
 @Component({
     selector: 'app-maps',
@@ -18,6 +21,7 @@ export class MapsComponent implements OnInit {
     constructor(
         private bingMapsService: BingMapsService,
         private settingsService: SettingsService,
+        private assetsService: AssetService,
         private mapsService: MapsService, ) { }
 
     ngOnInit() {
@@ -47,7 +51,7 @@ export class MapsComponent implements OnInit {
                     .subscribe(trips => this.bingMapsService.showTrips(trips));
                 this.mapsService
                     .getTrip()
-                    .subscribe(trip => this.bingMapsService.showTrip(trip, true));
+                    .subscribe(trip => this.bingMapsService.showTrip(trip));
                 this.mapsService
                     .getGeofence()
                     .subscribe(geofence => this.bingMapsService.showGeofence(geofence));
@@ -77,22 +81,22 @@ export class MapsComponent implements OnInit {
                 this.mapsService
                     .getAssetPosition()
                     .subscribe(position =>
-                        this.bingMapsService.zoomToPosition(position[1], 15)
+                        this.bingMapsService.centerMap(position[1], 15)
                     );
                 this.mapsService
                     .getDevicePosition()
                     .subscribe(position =>
-                        this.bingMapsService.zoomToPosition(position[1], 15)
+                        this.bingMapsService.centerMap(position[1], 15)
                     );
                 this.mapsService
                     .getLocationPosition()
                     .subscribe(position =>
-                        this.bingMapsService.zoomToPosition(position, 15)
+                        this.bingMapsService.centerMap(position, 15)
                     );
                 this.mapsService
                     .getItineraryPosition()
                     .subscribe(position =>
-                        this.bingMapsService.zoomToPositionAndHighlight(position, 15)
+                        this.bingMapsService.centerMap(position, 15)
                     );
 
                 this.mapsService.getGeofenceCircularDraw().subscribe(draw => {
@@ -111,39 +115,44 @@ export class MapsComponent implements OnInit {
                     );
                 });
                 this.mapsService
-                    .getGeofenceDrawEnd()
-                    .subscribe(drawEnd => this.bingMapsService.endDraw());
+                    .getCurrentDrawEnd()
+                    .subscribe(drawEnd => this.bingMapsService.endCurrentDraw());
 
                 this.mapsService.getLocationPinDraw().subscribe(() => {
-                    this.bingMapsService.addLocationPin(
+                    this.bingMapsService.drawLocationPin(
                         this.mapsService.getLocationPinResultSubject()
                     );
                 });
 
-                this.mapsService
-                    .getlocationPinDrawEnd()
-                    .subscribe(drawEnd => this.bingMapsService.endDraw());
-
                 this.mapsService.getDispatchingPinsDraw().subscribe(draw => {
-                    this.bingMapsService.addRoutePins(
+                    this.bingMapsService.drawDispatchingRoute(
                         this.mapsService.getDispatchingPinsResultSubject(),
                         draw
                     );
                 });
 
-                this.mapsService
-                    .getDispatchingPinsDrawEnd()
-                    .subscribe(drawEnd => this.bingMapsService.endDraw());
+                let assets = new Array<Asset>();
+                this.assetsService.getAssets().subscribe(a => assets = a);
 
                 // Use lastPositionCall to track the last position call made so that not to recenter the map
                 // if this is just an update call.
                 let lastPositionCall;
 
-                this.mapsService.getAssetsPositions().subscribe(positions => {
+                // Do the mapping in this layer to avoid having to redo in multiple components
+                this.mapsService.getAssetsPositions().subscribe(data => {
+                    const positions = data[0];
+                    const mappedAssets = new Array<[Asset, TrackingPoint]>();
+                    for (const k of Object.keys(positions)) {
+                        const value = positions[k];
+                        const asset = assets.find(val => val.id === k);
+                        mappedAssets.push([asset, value]);
+                    }
+
                     this.bingMapsService.showAssets(
-                        positions,
-                        lastPositionCall !== 'assets'
+                        mappedAssets,
+                        !data[1] && lastPositionCall !== 'assets'
                     );
+
                     lastPositionCall = 'assets';
                 });
 
@@ -156,11 +165,7 @@ export class MapsComponent implements OnInit {
                 });
 
                 this.mapsService.getLocationsPositions().subscribe(positions => {
-                    this.bingMapsService.showLocations(
-                        positions,
-                        'location-pin.png',
-                        true
-                    );
+                    this.bingMapsService.showLocations(positions);
                 });
 
                 this.mapsService.getGeofences().subscribe(geofences => {
