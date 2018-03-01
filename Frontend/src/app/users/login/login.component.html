@@ -1,3 +1,6 @@
+<!-- Copyright (c) Microsoft Corporation. All rights reserved.
+     Licensed under the MIT License. -->
+
 <section>
     <span *ngIf='loggedInUser'>{{loggedInUser.name}} ({{loggedInUser.role.name}}) &middot; </span>
     <a [attr.href]="link">Sign {{loggedInUser ? 'out' : 'in'}}</a>
