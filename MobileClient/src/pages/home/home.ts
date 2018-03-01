@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 import { Component, NgZone, ViewChild, ElementRef } from '@angular/core';
 import { NavController, ModalController, Platform } from 'ionic-angular';
 import { Network } from 'ionic-native';

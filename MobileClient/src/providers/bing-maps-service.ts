@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 import { Injectable } from '@angular/core';
 import { Logger } from 'angular2-logger/core';
 import 'rxjs/add/operator/map';

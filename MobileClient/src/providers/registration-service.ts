@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { Platform } from 'ionic-angular';
