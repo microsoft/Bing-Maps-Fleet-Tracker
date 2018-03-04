@@ -74,7 +74,7 @@ namespace Trackable.TripDetection.Components
             this.arcWindowSize = arcWindowSize;
         }
 
-        protected async override Task<TripDetectionContext> ProcessInternal(TripDetectionContext input)
+        protected override Task<TripDetectionContext> ProcessInternal(TripDetectionContext input)
         {
             var tripSegments = new List<TripSegmentBase>();
 
@@ -179,7 +179,7 @@ namespace Trackable.TripDetection.Components
 
             input.TripSegments = tripSegments;
 
-            return input;
+            return Task.FromResult(input);
         }
 
         private enum State

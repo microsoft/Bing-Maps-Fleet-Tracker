@@ -50,7 +50,7 @@ namespace Trackable.TripDetection.Components
             this.minimumBlackoutTime = minimumBlackoutTime;
         }
 
-        protected async override Task<TripDetectionContext> ProcessInternal(TripDetectionContext input)
+        protected override Task<TripDetectionContext> ProcessInternal(TripDetectionContext input)
         {
             var oldSegments = input.TripSegments;
             var newSegments = new List<TripSegmentBase>();
@@ -89,7 +89,7 @@ namespace Trackable.TripDetection.Components
 
             input.TripSegments = newSegments;
 
-            return input;
+            return Task.FromResult(input);
         }
     }
 }

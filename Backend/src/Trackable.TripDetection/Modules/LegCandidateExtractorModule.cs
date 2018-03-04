@@ -38,7 +38,7 @@ namespace Trackable.TripDetection.Components
             this.minimumNumberOfLegPoints = minimumNumberOfLegPoints;
         }
 
-        public async override Task<TripDetectionContext> Process(TripDetectionContext input, ILogger logger)
+        public override Task<TripDetectionContext> Process(TripDetectionContext input, ILogger logger)
         {
             var tripSegments = input.TripSegments;
             input.TripLegCandidates = new List<TripLegCandidate>();
@@ -86,7 +86,7 @@ namespace Trackable.TripDetection.Components
 
             logger.LogDebugSerialize("Output trip candidates {0}", input.TripLegCandidates);
 
-            return input;
+            return Task.FromResult(input);
         }
 
         private enum State

@@ -56,3 +56,23 @@ The Restful service is a .Net Core 2 web application that targets .Net Framework
     * "Values: AzureWebJobsStorage": Specifies the connection string to an Azure Storage Account which is used internally in the Azure Function.
 4. Right click "Trackable.Func" project and choose option "Set as Startup Project".
 5. Run project using Visual Studio.
+
+### Using DotNet CLI
+
+If you wish to build the solution using dotnet CLI, you will need to run the following command from the root directory.
+
+``` Bash
+dotnet build Backend/
+```
+
+For building inidividual projects, you will need to specify the SolutionDir property for the build process to find the packages.
+
+``` Bash
+dotnet build Backend/src/Trackable.Web/ /p:SolutionDir=Backend/
+```
+
+For running the Rest Service you would use
+
+``` Bash
+dotnet run Backend/src/Trackable.Web/ /p:SolutionDir=Backend/
+```
