@@ -65,14 +65,14 @@ If you wish to build the solution using dotnet CLI, you will need to run the fol
 dotnet build Backend/
 ```
 
-For building inidividual projects, you will need to specify the SolutionDir property for the build process to find the packages.
+For building inidividual projects, you will need to specify the path to the directory containing the csproj.
 
 ``` Bash
-dotnet build Backend/src/Trackable.Web/ /p:SolutionDir=Backend/
+dotnet build Backend/src/Trackable.Web/
 ```
 
 For running the Rest Service you would use
 
 ``` Bash
-dotnet run Backend/src/Trackable.Web/ /p:SolutionDir=Backend/
+dotnet run --project Backend/src/Trackable.Web/Trackable.Web.csproj
 ```
