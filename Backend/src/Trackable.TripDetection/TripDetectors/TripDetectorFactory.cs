@@ -46,25 +46,27 @@ namespace Trackable.TripDetection
             return await Create(type);
         }
 
-        public async Task<ITripDetector> Create(TripDetectorType type)
+        public Task<ITripDetector> Create(TripDetectorType type)
         {
             if (type == TripDetectorType.SimpleHeuristic)
             {
-                return new TimeBasedTripDetector(
-                    this.configurationRepository,
-                    this.locationRepository,
-                    this.tripRepository,
-                    this.trackingPointRepository,
-                    this.bingMapsKey);
+                return Task.FromResult((ITripDetector)
+                    new TimeBasedTripDetector(
+                        this.configurationRepository,
+                        this.locationRepository,
+                        this.tripRepository,
+                        this.trackingPointRepository,
+                        this.bingMapsKey));
             }
             else if (type == TripDetectorType.SimplePointOfInterst)
             {
-                return new PointOfInterestTripDetector(
-                    this.configurationRepository,
-                    this.locationRepository,
-                    this.tripRepository,
-                    this.trackingPointRepository,
-                    this.bingMapsKey);
+                return Task.FromResult((ITripDetector)
+                    new PointOfInterestTripDetector(
+                        this.configurationRepository,
+                        this.locationRepository,
+                        this.tripRepository,
+                        this.trackingPointRepository,
+                        this.bingMapsKey));
             }
             else
             {

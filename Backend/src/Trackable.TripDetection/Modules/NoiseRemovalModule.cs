@@ -53,7 +53,7 @@ namespace Trackable.TripDetection.Components
         }
 
 
-        public async override Task<TripDetectionContext> Process(TripDetectionContext input, ILogger logger)
+        public override Task<TripDetectionContext> Process(TripDetectionContext input, ILogger logger)
         {
             logger.LogDebugSerialize("Recieved points {0}", input.FilteredOrderedPoints);
 
@@ -84,7 +84,7 @@ namespace Trackable.TripDetection.Components
             if (filteredPoints.Count < 2)
             {
                 logger.LogDebugSerialize("Output few points {0}", filteredPoints);
-                return input;
+                return Task.FromResult(input);
             }
 
             var accelerations = MathUtils.AveragePointAccelerations(filteredPoints);
@@ -111,7 +111,7 @@ namespace Trackable.TripDetection.Components
 
             logger.LogDebugSerialize("Output further filtered points {0}", input.FilteredOrderedPoints);
 
-            return input;
+            return Task.FromResult(input);
         }
     }
 }

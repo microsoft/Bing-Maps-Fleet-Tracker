@@ -64,7 +64,7 @@ namespace Trackable.TripDetection.Components
             this.minimumInterestLevel = minimumInterestLevel;
         }
 
-        protected async override Task onProcessCalled(TripDetectionContext input)
+        protected async override Task OnProcessCalled(TripDetectionContext input)
         {
             var locationIds = input.TripLegCandidates.Select(t => t.LastStoppedSegment.StartLocationId);
             var locations = await this.locationRepository.GetAsync(locationIds);

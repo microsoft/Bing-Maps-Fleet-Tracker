@@ -35,7 +35,7 @@ namespace Trackable.TripDetection.Components
             this.smoothingWindowSize = smoothingWindowSize;
         }
 
-        public async override Task<TripDetectionContext> Process(TripDetectionContext input, ILogger logger)
+        public override Task<TripDetectionContext> Process(TripDetectionContext input, ILogger logger)
         {
             var filteredSegments = input
                 .TripSegments
@@ -50,7 +50,7 @@ namespace Trackable.TripDetection.Components
 
             logger.LogDebugSerialize("Output moving segments {0}", filteredSegments);
 
-            return input;
+            return Task.FromResult(input);
         }
     }
 }

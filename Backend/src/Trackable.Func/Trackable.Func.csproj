@@ -3,10 +3,11 @@
     <TargetFramework>net461</TargetFramework>
   </PropertyGroup>
   <ItemGroup>    
-    <PackageReference Include="EntityFramework" Version="6.1.3" />    
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="1.1.1" />    
-    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.2" />    
-    <PackageReference Include="Microsoft.SqlServer.Types" Version="14.0.314.76" />
+    <PackageReference Include="EntityFramework" Version="6.2.0" />    
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />    
+    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.8" />    
+    <PackageReference Include="Microsoft.SqlServer.Types" Version="14.0.314.76" />    
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Trackable.Repositories\Trackable.Repositories.csproj" />

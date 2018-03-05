@@ -38,13 +38,13 @@ namespace Trackable.TripDetection.Components
             this.minimumSecondsBeforeTailInjection = minimumSecondsBeforeTailInjection;
         }
 
-        protected async override Task<TripDetectionContext> ProcessInternal(TripDetectionContext input)
+        protected override Task<TripDetectionContext> ProcessInternal(TripDetectionContext input)
         {
             var filteredPoints = input.FilteredOrderedPoints;
 
             if (!filteredPoints.Any())
             {
-                return input;
+                return Task.FromResult(input);
             }
 
             // Inject a stop segment at the beginning
@@ -62,7 +62,7 @@ namespace Trackable.TripDetection.Components
                 input.TripSegments.Add(new StoppedSegment(GenerateFakePoints(filteredPoints.Last())));
             }
 
-            return input;
+            return Task.FromResult(input);
         }
 
         // Generate two fake points that are Int32.Max time apart

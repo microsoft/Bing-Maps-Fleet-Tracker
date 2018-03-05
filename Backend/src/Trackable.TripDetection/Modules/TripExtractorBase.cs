@@ -37,8 +37,9 @@ namespace Trackable.TripDetection.Components
         /// Callback triggered when processing starts. Override to load extra data that
         /// will be used for the isEndOfTrip logic.
         /// </summary>
-        protected async virtual Task onProcessCalled(TripDetectionContext input)
+        protected virtual Task OnProcessCalled(TripDetectionContext input)
         {
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -64,7 +65,7 @@ namespace Trackable.TripDetection.Components
 
         public async override Task<TripDetectionContext> Process(TripDetectionContext input, ILogger logger)
         {
-            await onProcessCalled(input);
+            await OnProcessCalled(input);
 
             logger.LogDebugSerialize("Recieved trip leg candidates {0}", input.TripLegCandidates);
 
