@@ -22,6 +22,7 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -233,10 +234,9 @@ namespace Trackable.Web
                 // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Trackable APIs V1");
-                    c.ShowJsonEditor();
-                    c.ShowRequestHeaders();
-                    c.InjectOnCompleteJavaScript("/swagger/swagger.js");
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "BMFT APIs V1");
+                    c.HeadContent = "<script type=\"application/javascript\" src=\"/swagger/swagger.js\"></script>";
+                    c.DocumentTitle = "BMFT Swagger";
                 });
             }
 
