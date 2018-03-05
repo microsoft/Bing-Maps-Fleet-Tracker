@@ -153,27 +153,8 @@ export class BingMapsService {
 
     private timeConverter(timestamp) {
         const a = new Date(timestamp);
-        const months = [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec'
-        ];
-        const year = a.getFullYear();
-        const month = months[a.getMonth()];
-        const day = a.getDate();
-        const hour = a.getHours();
-        const min = a.getMinutes();
-        const sec = a.getSeconds();
-        return `${day} ${month} ${hour}:${min}:${sec}`;
+        return a.toLocaleString('en-US',
+            { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
     }
 
     private resetMap() {
