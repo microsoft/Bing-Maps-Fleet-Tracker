@@ -52,7 +52,6 @@ export class AssetEditorComponent implements OnInit, OnDestroy {
   }
 
   submit() {
-
     if (this.asset.assetType === AssetType.Truck) {
       this.asset.assetProperties = this.assetProperties;
     }

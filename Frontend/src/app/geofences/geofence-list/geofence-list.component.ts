@@ -6,6 +6,9 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { Geofence, FenceType } from '../../shared/geofence';
+import { Asset } from '../../assets/asset';
+import { TrackingPoint } from '../../shared/tracking-point';
+import { AssetService } from '../../assets/asset.service';
 import { GeofenceService } from '../geofence.service';
 import { MapsService } from '../../maps/maps.service';
 
@@ -15,27 +18,37 @@ import { MapsService } from '../../maps/maps.service';
   styleUrls: ['./geofence-list.component.css']
 })
 export class GeofenceListComponent implements OnInit, OnDestroy {
+  geofences: Observable<Geofence[]>;
   retrievedGeofences: Geofence[];
   selectedGeofence: Geofence;
-  filter: string;
-  geofences: Observable<Geofence[]>;
-  geofencesSubscription: Subscription;
   FenceType = FenceType;
+  filter: string;
+  private isAlive: boolean;
 
-  constructor(private geofenceService: GeofenceService, private mapsService: MapsService) { }
+  constructor(
+    private geofenceService: GeofenceService,
+    private assetService: AssetService,
+    private mapsService: MapsService) { }
 
   ngOnInit() {
+    this.isAlive = true;
     this.geofences = this.geofenceService.getAll();
-    this.geofencesSubscription = this.geofences.subscribe(geofences => {
-      this.mapsService.showGeofences(geofences);
-      this.retrievedGeofences = geofences;
-    });
+    this.geofences
+      .takeWhile(() => this.isAlive)
+      .subscribe(geofences => {
+        this.mapsService.showGeofences(geofences);
+        this.retrievedGeofences = geofences;
+      });
+
+    this.assetService.getLatestPoints()
+      .takeWhile(() => this.isAlive)
+      .subscribe(points => {
+        this.mapsService.showAssetsPositions(points, true);
+      });
   }
 
   ngOnDestroy(): void {
-    if (this.geofencesSubscription && !this.geofencesSubscription.closed) {
-      this.geofencesSubscription.unsubscribe();
-    }
+    this.isAlive = false;
   }
 
   showGeofence(geofence: Geofence) {

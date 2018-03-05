@@ -23,7 +23,8 @@ import {
   DispatchingParameters,
   OptimizeValue,
   RouteAttributes,
-  TimeType } from '../dispatching-parameters';
+  TimeType
+} from '../dispatching-parameters';
 
 import {
   AvoidOptions,
@@ -70,8 +71,7 @@ export class DispatchingEditorComponent implements OnInit, OnDestroy {
   showHazardPermitList: boolean;
   showResultsList: boolean;
 
-  private resultsSubscription: Subscription;
-  private assetsSubscription: Subscription;
+  private isAlive: boolean;
 
   constructor(
     private assetService: AssetService,
@@ -84,38 +84,40 @@ export class DispatchingEditorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.resultsSubscription = this.mapsService.getDispatchingPinsResult()
+    this.isAlive = true;
+    this.mapsService.getDispatchingPinsResult()
+      .takeWhile(() => this.isAlive)
       .subscribe(result => {
         if (result.length) {
-        this.pinsAdded = result;
+          this.pinsAdded = result;
         }
       });
 
-    this.assetsSubscription = this.assetService.getAssets()
+    this.assetService.getAssets()
+      .takeWhile(() => this.isAlive)
       .subscribe(assets => {
         if (!this.assets && assets.length) {
           this.assets = assets;
         }
       });
+
+    this.assetService.getLatestPoints()
+      .takeWhile(() => this.isAlive)
+      .subscribe(points => {
+        this.mapsService.showAssetsPositions(points, true);
+      });
   }
 
   ngOnDestroy() {
-    this.mapsService.endDispatchingPinsDraw();
-
-    if (this.resultsSubscription) {
-      this.resultsSubscription.unsubscribe();
-    }
-
-    if (this.assetsSubscription) {
-      this.assetsSubscription.unsubscribe();
-    }
+    this.mapsService.endCurrentDraw();
+    this.isAlive = false;
   }
 
   openDialog() {
     this.dialogService.showLocationsDialog()
       .subscribe(location => {
         if (location) {
-          location.name = this.locationService.generateLocationName(location);
+          location.name = this.locationService.normalizeLocationName(location);
           this.pinsAdded.push(location);
           this.mapsService.resetDispatchingDraw(this.pinsAdded);
         }
@@ -182,7 +184,7 @@ export class DispatchingEditorComponent implements OnInit, OnDestroy {
 
   private setAllDispatchingParameters() {
     this.dispatchingParameters.avoid = this.AvoidOptions
-    .filter(option => option.isChecked).map(option => option.value);
+      .filter(option => option.isChecked).map(option => option.value);
 
     this.dispatchingParameters.hazardousMaterials = this.HazardMaterialOptions
       .filter(option => option.isChecked).map(option => option.value);

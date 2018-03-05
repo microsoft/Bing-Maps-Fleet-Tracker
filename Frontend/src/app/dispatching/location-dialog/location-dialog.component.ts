@@ -42,6 +42,6 @@ export class LocationDialogComponent implements OnInit, OnDestroy {
   }
 
   getLocationName(location: Location) {
-    return this.locationService.generateLocationName(location);
+    return this.locationService.normalizeLocationName(location);
   }
 }
