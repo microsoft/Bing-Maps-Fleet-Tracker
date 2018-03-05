@@ -1,4 +1,7 @@
-﻿namespace Trackable.Services
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+namespace Trackable.Services
 {
     public static class JwtAuthConstants
     {

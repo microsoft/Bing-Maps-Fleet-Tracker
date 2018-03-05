@@ -1,4 +1,7 @@
-﻿using System.Data.Entity.Infrastructure;
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
 using System.IO;
 using Microsoft.AspNetCore.Builder;

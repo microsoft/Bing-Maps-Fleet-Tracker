@@ -1,4 +1,7 @@
-﻿using System.Data.SqlTypes;
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+using System.Data.SqlTypes;
 using Microsoft.SqlServer.Types;
 using System.Data.Entity.Spatial;
 

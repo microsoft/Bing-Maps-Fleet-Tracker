@@ -1,4 +1,7 @@
-﻿using Trackable.Models;
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+using Trackable.Models;
 using System;
 using System.Threading.Tasks;
 

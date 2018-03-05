@@ -1,4 +1,7 @@
-﻿namespace Trackable.Web.Dtos
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+namespace Trackable.Web.Dtos
 {
     public class AssetPropertiesDto
     {

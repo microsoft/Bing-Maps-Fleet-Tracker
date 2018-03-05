@@ -1,4 +1,7 @@
-﻿using AutoMapper;
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+using AutoMapper;
 using System.Data.Entity;
 using System.Threading.Tasks;
 using Trackable.EntityFramework;

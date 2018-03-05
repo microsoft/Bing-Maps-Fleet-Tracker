@@ -1,4 +1,7 @@
-﻿namespace Trackable.Func.Shared
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+namespace Trackable.Func.Shared
 {
     using System;
     using Microsoft.Azure.WebJobs.Host;
