@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 import { Directive, ElementRef, Input, OnInit } from '@angular/core';
 import { AuthService } from '../users/auth.service';
 import { Roles, Role } from './role';

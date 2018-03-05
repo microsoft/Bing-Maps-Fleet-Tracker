@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IMyOptions, IMyDate, IMyDateRange, IMyDateRangeModel } from 'mydaterangepicker';
 

@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 // tick this to make the cache invalidate and update
 const CACHE_VERSION = 1;
 const CURRENT_CACHES = {

@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 import { Local } from 'protractor/built/driverProviders';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';

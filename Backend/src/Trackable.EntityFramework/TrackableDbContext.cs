@@ -1,4 +1,7 @@
-﻿using System.Data.Entity;
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+using System.Data.Entity;
 using System.Data.Entity.SqlServer;
 using System.Data.Entity.Validation;
 using System.IO;
