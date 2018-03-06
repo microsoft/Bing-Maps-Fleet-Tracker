@@ -119,5 +119,12 @@ namespace Trackable.Web.Controllers
 
             return this.dtoMapper.Map<LocationDto>(result);
         }
+
+        // DELETE api/locations/5
+        [HttpDelete("{id}")]
+        public async Task Delete(int id)
+        {
+            await this.locationService.DeleteAsync(id);
+        }
     }
 }
