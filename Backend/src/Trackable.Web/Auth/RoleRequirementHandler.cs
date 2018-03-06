@@ -4,8 +4,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Trackable.Common;
 using Trackable.Services;
@@ -16,11 +20,13 @@ namespace Trackable.Web.Auth
     {
         private readonly ITokenService tokenService;
         private readonly IUserService userService;
+        private readonly IConfiguration configuration;
 
-        public RoleRequirementHandler(IUserService userService, ITokenService tokenService)
+        public RoleRequirementHandler(IUserService userService, ITokenService tokenService, IConfiguration configuration)
         {
             this.tokenService = tokenService;
             this.userService = userService;
+            this.configuration = configuration;
         }
 
         protected async override Task HandleRequirementAsync(AuthorizationHandlerContext context, RoleRequirement requirement)
@@ -29,6 +35,18 @@ namespace Trackable.Web.Auth
             var resoureContext = (AuthorizationFilterContext)context.Resource;
             var lastFilter = (AuthorizeFilter)resoureContext.Filters.Last(f => f is AuthorizeFilter);
             var filterRequirement = lastFilter.Policy.Requirements.FirstOrDefault() as RoleRequirement;
+
+            if (this.configuration.GetValue<bool>("Serving:BypassAuthentication"))
+            {
+                context.User.AddIdentity(new ClaimsIdentity(new List<Claim>
+                {
+                    new Claim(ClaimTypes.Upn, this.configuration.GetValue<string>("Authorization:OwnerEmail")),
+                    new Claim(ClaimTypes.Name, "Test User"),
+                    new Claim(JwtRegisteredClaimNames.Aud, "Testing Audience"),
+                    new Claim(ClaimTypes.NameIdentifier, "NAME23123213"),
+                }));
+            }
+
             if (filterRequirement == null || filterRequirement != requirement)
             {
                 context.Succeed(requirement);
