@@ -2,11 +2,13 @@
 // Licensed under the MIT License.
 
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Trackable.Common;
 using Trackable.Models;
 using Trackable.Services;
 using Trackable.Web.Dtos;
@@ -118,6 +120,14 @@ namespace Trackable.Web.Controllers
             var result = await this.locationService.UpdateAsync(id, model);
 
             return this.dtoMapper.Map<LocationDto>(result);
+        }
+
+        // DELETE api/locations/5
+        [HttpDelete("{id}")]
+        [Authorize(UserRoles.Administrator)]
+        public async Task Delete(int id)
+        {
+            await this.locationService.DeleteAsync(id);
         }
     }
 }
