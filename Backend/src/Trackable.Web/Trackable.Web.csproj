@@ -9,6 +9,14 @@
     <UserSecretsId>aspnet-Trackable.Web-20170716043513</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\net461\Trackable.Web.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\net461\Trackable.Web.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Include="App.config" />
     <None Update="wwwroot\**\*">

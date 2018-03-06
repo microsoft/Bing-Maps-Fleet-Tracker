@@ -32,6 +32,13 @@ namespace Trackable.Web.Controllers
             this.dtoMapper = dtoMapper;
         }
 
+        /// <summary>
+        /// Query Geofences
+        /// </summary>
+        /// <param name="tags">Tags to search for</param>
+        /// <param name="includesAllTags">True to return results including all tags, false to return results including any tags</param>
+        /// <param name="name">Name of device</param>
+        /// <returns>List of geofences</returns>
         // GET api/geofences
         [HttpGet]
         public async Task<IEnumerable<GeoFenceDto>> Get(
@@ -74,6 +81,11 @@ namespace Trackable.Web.Controllers
                 taggedResults.Where(d => resultsByName.Select(r => r.Id).Contains(d.Id)));
         }
 
+        /// <summary>
+        /// Get geofence by Id
+        /// </summary>
+        /// <param name="id">The geofence Id</param>
+        /// <returns>The geofence</returns>
         // GET api/geofences/5
         [HttpGet("{id}")]
         public async Task<GeoFenceDto> Get(int id)
@@ -83,6 +95,11 @@ namespace Trackable.Web.Controllers
             return this.dtoMapper.Map<GeoFenceDto>(result);
         }
 
+        /// <summary>
+        /// Create geofence
+        /// </summary>
+        /// <param name="geoFence">The geofence details</param>
+        /// <returns>The created geofence</returns>
         // POST api/geofences
         [HttpPost]
         public async Task<GeoFenceDto> Post([FromBody]GeoFenceDto geoFence)
@@ -94,6 +111,11 @@ namespace Trackable.Web.Controllers
             return this.dtoMapper.Map<GeoFenceDto>(result);
         }
 
+        /// <summary>
+        /// Create multiple geofences
+        /// </summary>
+        /// <param name="geoFences">List of geofence details</param>
+        /// <returns>List of created geofences</returns>
         // POST api/geofences/batch
         [HttpPost("batch")]
         public async Task<IEnumerable<GeoFenceDto>> PostBatch([FromBody]GeoFenceDto[] geoFences)
@@ -105,6 +127,13 @@ namespace Trackable.Web.Controllers
             return this.dtoMapper.Map<IEnumerable<GeoFenceDto>>(results);
         }
 
+        /// <summary>
+        /// Update existing geofence
+        /// </summary>
+        /// <param name="id">The geofence id</param>
+        /// <param name="geoFence">The geofence details</param>
+        /// <returns>The updated geofence</returns>
+        // PUT api/geofences/1
         [HttpPut("{id}")]
         public async Task<GeoFenceDto> Put(int id, [FromBody]GeoFenceDto geoFence)
         {
@@ -115,6 +144,11 @@ namespace Trackable.Web.Controllers
             return this.dtoMapper.Map<GeoFenceDto>(result);
         }
 
+        /// <summary>
+        /// Delete geofence
+        /// </summary>
+        /// <param name="id">The geofence Id</param>
+        /// <returns>Ok response</returns>
         // DELETE api/geofences/5
         [HttpDelete("{id}")]
         public async Task Delete(int id)

@@ -38,6 +38,11 @@ namespace Trackable.Web.Controllers
             this.dtoMapper = dtoMapper;
         }
 
+        /// <summary>
+        /// Redirects to login page
+        /// </summary>
+        /// <param name="redirectUri">Uri to be redirected to after signin is complete</param>
+        /// <returns>Redirect Response</returns>
         [AllowAnonymous]
         [HttpGet("login")]
         public async Task Login(string redirectUri = "")
@@ -46,6 +51,11 @@ namespace Trackable.Web.Controllers
                 new AuthenticationProperties { RedirectUri = $"/api/users/logincallback?redirectUri={redirectUri}" });
         }
 
+        /// <summary>
+        /// Call back invoked after successful sign in
+        /// </summary>
+        /// <param name="redirectUri">Uri to be redirected to after sign in processing is complete</param>
+        /// <returns>Redirect Response</returns>
         [Authorize]
         [HttpGet("logincallback")]
         public async Task<IActionResult> LoginCallback(string redirectUri = "")
@@ -72,6 +82,11 @@ namespace Trackable.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Redirect to logout page
+        /// </summary>
+        /// <param name="redirectUri">Uri to redirect to after signout is complete</param>
+        /// <returns>Redirect Response</returns>
         [HttpGet("logout")]
         [Authorize(UserRoles.Blocked)]
         public async Task LogOut(string redirectUri = "")
@@ -84,6 +99,11 @@ namespace Trackable.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// End the current session
+        /// </summary>
+        /// <param name="redirectUri">Uri to redirect to after session is closed</param>
+        /// <returns>Redirect Response</returns>
         [HttpGet("endsession")]
         [Authorize(UserRoles.Blocked)]
         public async Task<IActionResult> EndSession(string redirectUri = "")
@@ -95,6 +115,10 @@ namespace Trackable.Web.Controllers
             return Redirect(redirectUri);
         }
 
+        /// <summary>
+        /// Query users
+        /// </summary>
+        /// <returns>List of users</returns>
         [HttpGet]
         [Authorize(UserRoles.Administrator)]
         public async Task<IEnumerable<UserDto>> Get()
@@ -104,6 +128,10 @@ namespace Trackable.Web.Controllers
             return this.dtoMapper.Map<IEnumerable<UserDto>>(results);
         }
 
+        /// <summary>
+        /// Get the current signed-in User
+        /// </summary>
+        /// <returns>The current user</returns>
         [HttpGet("me")]
         [Authorize(UserRoles.Blocked)]
         public async Task<UserDto> GetMe()
@@ -113,6 +141,11 @@ namespace Trackable.Web.Controllers
             return this.dtoMapper.Map<UserDto>(result);
         }
 
+        /// <summary>
+        /// Get user by Id
+        /// </summary>
+        /// <param name="userId">The user id</param>
+        /// <returns>The user</returns>
         [HttpGet("{userId}")]
         [Authorize(UserRoles.Administrator)]
         public async Task<UserDto> GetUser(Guid userId)
@@ -122,7 +155,13 @@ namespace Trackable.Web.Controllers
             return this.dtoMapper.Map<UserDto>(result);
         }
 
+        /// <summary>
+        /// Get or Create the PAT token of the current signed in user
+        /// </summary>
+        /// <param name="regenerateToken">True if existing token is to be revoked and a new one generated, false returns existing token</param>
+        /// <returns>PAT token</returns>
         [HttpPost("me/token")]
+        [ProducesResponseType(typeof(string), 200)]
         public async Task<JsonResult> GetToken(bool regenerateToken = false)
         {
             var user = await this.userService.GetUserByEmailAsync(ClaimsReader.ReadEmail(this.User));
@@ -132,6 +171,11 @@ namespace Trackable.Web.Controllers
             return Json(token);
         }
 
+        /// <summary>
+        /// Create User
+        /// </summary>
+        /// <param name="user">The user details</param>
+        /// <returns>The created user</returns>
         [HttpPost]
         [Authorize(UserRoles.Administrator)]
         public async Task<UserDto> Post([FromBody]UserDto user)
@@ -143,20 +187,27 @@ namespace Trackable.Web.Controllers
             return this.dtoMapper.Map<UserDto>(result);
         }
 
+        /// <summary>
+        /// Update existing user
+        /// </summary>
+        /// <param name="userId">The user id</param>
+        /// <param name="userJson">The user details</param>
+        /// <returns>The updated user</returns>
         [HttpPut("{userId}")]
         [Authorize(UserRoles.Administrator)]
-        public async Task<IActionResult> SetRole(Guid userId, [FromBody]UserDto userJson)
+        [ProducesResponseType(typeof(UserDto), 200)]
+        public async Task<IActionResult> UpdateUser(Guid userId, [FromBody]UserDto userJson)
         {
             var user = await this.userService.GetAsync(userId);
 
             if (user == null)
             {
-                return null;
+                return NotFound();
             }
 
             if (user.Role.Name == UserRoles.Owner)
             {
-                return Json(user);
+                return BadRequest();
             }
 
             if (UserRoles.Blocked.Equals(userJson.Role.Name, StringComparison.InvariantCultureIgnoreCase))
@@ -181,6 +232,11 @@ namespace Trackable.Web.Controllers
             return Json(this.dtoMapper.Map<UserDto>(result));
         }
 
+        /// <summary>
+        /// Delete user and revoke user PATs
+        /// </summary>
+        /// <param name="userId">The user Id</param>
+        /// <returns>Ok response</returns>
         [HttpDelete("{userId}")]
         [Authorize(UserRoles.Administrator)]
         public async Task<IActionResult> DeleteUser(Guid userId)
@@ -198,6 +254,10 @@ namespace Trackable.Web.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Page used if error occured during authentication process
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("accessdenied")]
         [AllowAnonymous]
         public IActionResult AccessDenied()

@@ -31,6 +31,13 @@ namespace Trackable.Web.Controllers
             this.dtoMapper = dtoMapper;
         }
 
+        /// <summary>
+        /// Query locations
+        /// </summary>
+        /// <param name="tags">Tags to search for</param>
+        /// <param name="includesAllTags">True to return results including all tags, false to return results including any tags</param>
+        /// <param name="name">Name of device</param>
+        /// <returns>List of locations</returns>
         // GET api/locations
         [HttpGet]
         public async Task<IEnumerable<LocationDto>> Get(
@@ -73,6 +80,11 @@ namespace Trackable.Web.Controllers
                 taggedResults.Where(d => resultsByName.Select(r => r.Id).Contains(d.Id)));
         }
 
+        /// <summary>
+        /// Get location by id
+        /// </summary>
+        /// <param name="id">The location id</param>
+        /// <returns>The location</returns>
         // GET api/locations/5
         [HttpGet("{id}")]
         public async Task<LocationDto> Get(int id)
@@ -82,6 +94,11 @@ namespace Trackable.Web.Controllers
             return this.dtoMapper.Map<LocationDto>(result);
         }
 
+        /// <summary>
+        /// Get the number of times assets have visited a location
+        /// </summary>
+        /// <param name="id">The location id</param>
+        /// <returns>Dictionary containing asset ids vs visit count</returns>
         //GET api/locations/5/assetsCount
         [HttpGet("{id}/assetsCount")]
         public async Task<IDictionary<string, int>> GetAssetsCount(int id)
@@ -89,6 +106,11 @@ namespace Trackable.Web.Controllers
             return await this.locationService.GetCountByAssetAsync(id);
         }
 
+        /// <summary>
+        /// Create location
+        /// </summary>
+        /// <param name="location">The location details</param>
+        /// <returns>The created location</returns>
         //POST api/locations
         [HttpPost]
         public async Task<LocationDto> Post([FromBody]LocationDto location)
@@ -100,6 +122,11 @@ namespace Trackable.Web.Controllers
             return this.dtoMapper.Map<LocationDto>(result);
         }
 
+        /// <summary>
+        /// Create multiple locations
+        /// </summary>
+        /// <param name="locations">List of location details</param>
+        /// <returns>The created locations</returns>
         //POST api/locations/batch
         [HttpPost("batch")]
         public async Task<IEnumerable<LocationDto>> PostBatch([FromBody]LocationDto[] locations)
@@ -111,6 +138,12 @@ namespace Trackable.Web.Controllers
             return this.dtoMapper.Map<IEnumerable<LocationDto>>(results);
         }
 
+        /// <summary>
+        /// Update existing location 
+        /// </summary>
+        /// <param name="id">The location id</param>
+        /// <param name="location">The location details</param>
+        /// <returns>The updated location</returns>
         //PUT api/locations/5
         [HttpPut("{id}")]
         public async Task<LocationDto> Put(int id, [FromBody]LocationDto location)

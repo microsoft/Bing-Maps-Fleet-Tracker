@@ -154,13 +154,23 @@ namespace Trackable.Web
                 // Register the Swagger generator, defining one or more Swagger documents
                 services.AddSwaggerGen(c =>
                 {
-                    c.SwaggerDoc("v1", new Info { Title = "Trackable APIs", Version = "v1" });
+                    c.SwaggerDoc("v1", new Info
+                    {
+                        Title = "BMFT APIs",
+                        Version = "v1",
+                        Description = "Bing Maps Fleet Tracker is an open source fleet tracking solution. Read more at https://github.com/Microsoft/Bing-Maps-Fleet-Tracker",
+                        License = new License { Name = "MIT Licencse", Url = "https://github.com/Microsoft/Bing-Maps-Fleet-Tracker/blob/master/LICENSE" }
+                    });
                     c.DescribeAllEnumsAsStrings();
                     c.DescribeAllParametersInCamelCase();
                     c.DocInclusionPredicate((version, description) =>
                     {
                         return description.RelativePath.StartsWith("api");
                     });
+
+
+                    var filePath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Trackable.Web.xml");
+                    c.IncludeXmlComments(filePath);
                 });
             }
 

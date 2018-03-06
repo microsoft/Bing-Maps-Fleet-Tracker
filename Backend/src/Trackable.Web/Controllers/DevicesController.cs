@@ -46,6 +46,13 @@ namespace Trackable.Web.Controllers
             this.dtoMapper = dtoMapper;
         }
 
+        /// <summary>
+        /// Query devices
+        /// </summary>
+        /// <param name="tags">Tags to search for</param>
+        /// <param name="includesAllTags">True to return results including all tags, false to return results including any tags</param>
+        /// <param name="name">Name of device</param>
+        /// <returns>List of devices</returns>
         // GET api/devices
         [HttpGet]
         public async Task<IEnumerable<TrackingDeviceDto>> Get(
@@ -88,6 +95,11 @@ namespace Trackable.Web.Controllers
                 taggedResults.Where(d => resultsByName.Select(r => r.Id).Contains(d.Id)));
         }
 
+        /// <summary>
+        /// Get device with the specified id
+        /// </summary>
+        /// <param name="id">The device id</param>
+        /// <returns>The device</returns>
         // GET api/devices/5
         [HttpGet("{id}")]
         public async Task<TrackingDeviceDto> Get(string id)
@@ -97,16 +109,33 @@ namespace Trackable.Web.Controllers
             return this.dtoMapper.Map<TrackingDeviceDto>(result);
         }
 
+        /// <summary>
+        /// Get or Create device token
+        /// </summary>
+        /// <param name="id">The device Id</param>
+        /// <returns>The token value</returns>
         // Post api/devices/5/token
         [HttpPost("{id}/token")]
         [Authorize(UserRoles.Administrator)]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(string), 404)]
         public async Task<IActionResult> GetDeviceToken(string id)
         {
             var device = await this.deviceService.GetAsync(id);
 
+            if (device == null)
+            {
+                return NotFound();
+            }
+
             return Json(await this.tokenService.GetLongLivedDeviceToken(device, false));
         }
 
+        /// <summary>
+        /// Get the latest positions of all devices
+        /// </summary>
+        /// <param name="id">The device Id</param>
+        /// <returns>Dictionary containing device Ids vs last seen TrackingPoints</returns>
         // GET api/devices/all/positions
         [HttpGet("all/positions")]
         public async Task<IDictionary<string, TrackingPointDto>> GetLatestPositions(string id)
@@ -116,6 +145,11 @@ namespace Trackable.Web.Controllers
             return this.dtoMapper.Map<IDictionary<string, TrackingPointDto>>(results);
         }
 
+        /// <summary>
+        /// Get the points belonging to the device
+        /// </summary>
+        /// <param name="id">The device id</param>
+        /// <returns>List of points</returns>
         // GET api/devices/5/points
         [HttpGet("{id}/points")]
         public async Task<IEnumerable<TrackingPointDto>> GetPoints(string id)
@@ -125,9 +159,16 @@ namespace Trackable.Web.Controllers
             return this.dtoMapper.Map<IEnumerable<TrackingPointDto>>(results);
         }
 
+        /// <summary>
+        /// Create new device
+        /// </summary>
+        /// <param name="device">The device details</param>
+        /// <param name="nonce">Random string identifying which client is requesting this operation</param>
+        /// <returns>The created device's token</returns>
         // POST api/devices
         [HttpPost]
         [Authorize(UserRoles.DeviceRegistration)]
+        [ProducesResponseType(typeof(string), 200)]
         public async Task<IActionResult> Post([FromBody]TrackingDeviceDto device, [FromQuery]string nonce = null)
         {
             var model = this.dtoMapper.Map<TrackingDevice>(device);
@@ -139,9 +180,15 @@ namespace Trackable.Web.Controllers
             return Json(await this.tokenService.GetLongLivedDeviceToken(response, false));
         }
 
+        /// <summary>
+        /// Create multiple devices
+        /// </summary>
+        /// <param name="devices">List of device details</param>
+        /// <returns>List of device tokens in the same order as requested devices</returns>
         // POST api/devices
         [HttpPost("batch")]
         [Authorize(UserRoles.Administrator)]
+        [ProducesResponseType(typeof(string[]), 200)]
         public async Task<IActionResult> Post([FromBody]TrackingDeviceDto[] devices)
         {
             var models = this.dtoMapper.Map<TrackingDevice[]>(devices);
@@ -157,6 +204,12 @@ namespace Trackable.Web.Controllers
             return Json(tokens);
         }
 
+        /// <summary>
+        /// Register TrackingPoints related to device, check geofences
+        /// </summary>
+        /// <param name="id">The device id</param>
+        /// <param name="points">List of TrackingPoints</param>
+        /// <returns>Ok response</returns>
         // POST api/devices/5/points
         [HttpPost("{id}/points")]
         [Authorize(UserRoles.TrackingDevice)]
@@ -179,6 +232,12 @@ namespace Trackable.Web.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Update existing asset
+        /// </summary>
+        /// <param name="id">The device id</param>
+        /// <param name="device">The device details</param>
+        /// <returns>The updated device</returns>
         // PUT api/devices/5
         [HttpPut("{id}")]
         [Authorize(UserRoles.Administrator)]
@@ -191,24 +250,41 @@ namespace Trackable.Web.Controllers
             return this.dtoMapper.Map<TrackingDeviceDto>(result);
         }
 
+        /// <summary>
+        /// Delete device and disable its tokens
+        /// </summary>
+        /// <param name="id">The device Id</param>
+        /// <returns>Ok response</returns>
         // DELETE api/devices/5
         [HttpDelete("{id}")]
         [Authorize(UserRoles.Administrator)]
-        public async Task Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
             var device = await this.deviceService.GetAsync(id);
 
-            if (device != null)
+            if (device == null)
             {
-                await this.tokenService.DisableDeviceTokens(device);
-                await this.deviceService.DeleteAsync(device.Id);
+                return NotFound();
             }
+
+            await this.tokenService.DisableDeviceTokens(device);
+            await this.deviceService.DeleteAsync(device.Id);
+
+            return Ok();
         }
 
+        /// <summary>
+        /// Get a QR code to be used by BMFT mobile application
+        /// </summary>
+        /// <param name="nonce">Random string identifying which client is requesting this operation</param>
+        /// <param name="height">Height of the QR code</param>
+        /// <param name="width">Width of the QR code</param>
+        /// <param name="margin">Margin surrounding QR code</param>
+        /// <returns>File stream including QR code</returns>
         // GET api/devices/qrcode
         [HttpGet("qrcode")]
         [Authorize(UserRoles.Administrator)]
-        public IActionResult GetProvisioningQrCode(string nonce = null, int height = 300, int width = 300, int margin = 0)
+        public FileContentResult GetProvisioningQrCode(string nonce = null, int height = 300, int width = 300, int margin = 0)
         {
             string queryParams = string.Empty;
             if (!String.IsNullOrEmpty(nonce))

@@ -25,6 +25,11 @@ namespace Trackable.Web.Controllers
             this.assetService = assetService;
         }
 
+        /// <summary>
+        /// Dispatch according to route
+        /// </summary>
+        /// <param name="dispatchingParameters">The parameters required for dispatching</param>
+        /// <returns>Route results</returns>
         // Post api/dispatching
         [HttpPost]
         public async Task<IEnumerable<DispatchingResults>> Post([FromBody]DispatchingParameters dispatchingParameters)

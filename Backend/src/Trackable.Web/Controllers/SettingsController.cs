@@ -28,6 +28,10 @@ namespace Trackable.Web.Controllers
             this.settingsService = settingsService.ThrowIfNull(nameof(settingsService));
         }
 
+        /// <summary>
+        /// Get information about BMFT version
+        /// </summary>
+        /// <returns>Version information</returns>
         [HttpGet("version")]
         [Authorize(UserRoles.Owner)]
         public async Task<UpdateStatus> GetVersionInfo()
@@ -35,6 +39,10 @@ namespace Trackable.Web.Controllers
             return await this.settingsService.GetUpdateStatus();
         }
 
+        /// <summary>
+        /// Get subscription keys
+        /// </summary>
+        /// <returns>List of subscription keys</returns>
         [HttpGet("subscriptionkeys")]
         [Authorize(UserRoles.TrackingDevice)]
         public IEnumerable<SubscriptionKey> GetSubscriptionKeys()
@@ -42,6 +50,10 @@ namespace Trackable.Web.Controllers
             return this.settingsService.GetSubscriptionKeys();
         }
 
+        /// <summary>
+        /// Get status of instrumentation approval
+        /// </summary>
+        /// <returns>Null if not prompted previously, boolean otherwise</returns>
         [HttpGet("instrumentation")]
         [Authorize(UserRoles.Owner)]
         public async Task<bool?> GetInstrumentationApproval()
@@ -49,6 +61,11 @@ namespace Trackable.Web.Controllers
             return await this.instrumentationService.GetInstrumentationApproval();
         }
 
+        /// <summary>
+        /// Update status of the instrumentation approval
+        /// </summary>
+        /// <param name="approval">Approval status</param>
+        /// <returns>Ok response</returns>
         [HttpPost("instrumentation")]
         [Authorize(UserRoles.Owner)]
         public async Task SetInstrumentationApproval(bool approval)
