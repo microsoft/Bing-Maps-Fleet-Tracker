@@ -33,6 +33,11 @@ namespace Trackable.Web.Controllers
             this.dtoMapper = dtoMapper;
         }
 
+        /// <summary>
+        /// Create TrackingPoint and check geofences
+        /// </summary>
+        /// <param name="point">The tracking point details</param>
+        /// <returns>Ok response</returns>
         // POST api/points
         [HttpPost]
         [Authorize(UserRoles.Viewer)]
@@ -51,6 +56,11 @@ namespace Trackable.Web.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Create multiple TrackingPoints and check geofences
+        /// </summary>
+        /// <param name="points">List of TrackingPoint details</param>
+        /// <returns>Ok response</returns>
         // POST api/points/batch
         [HttpPost("batch")]
         [Authorize(UserRoles.Viewer)]

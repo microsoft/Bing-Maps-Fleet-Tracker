@@ -9,6 +9,14 @@
     <UserSecretsId>aspnet-Trackable.Web-20170716043513</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\net461\Trackable.Web.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\net461\Trackable.Web.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Include="App.config" />
     <None Update="wwwroot\**\*">
@@ -65,9 +73,9 @@
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.0.0" />
     <PackageReference Include="Microsoft.SqlServer.Types" Version="14.0.314.76" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="1.2.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="1.2.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="1.2.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="2.2.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="2.2.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">

@@ -8,6 +8,10 @@ namespace Trackable.Web.Controllers
     [Route("api/ping")]
     public class PingController : Controller
     {
+        /// <summary>
+        /// Ping endpoint for checking service availability
+        /// </summary>
+        /// <returns>Ok response</returns>
         // GET api/ping
         [HttpGet("")]
         public IActionResult Index()

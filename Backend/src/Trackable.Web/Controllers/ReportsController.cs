@@ -23,6 +23,10 @@ namespace Trackable.Web.Controllers
             this.reportingService = reportingService.ThrowIfNull(nameof(reportingService));
         }
 
+        /// <summary>
+        /// Get report metrics
+        /// </summary>
+        /// <returns>List of metrics</returns>
         [HttpGet("")]
         public async Task<IEnumerable<Metric>> Get()
         {

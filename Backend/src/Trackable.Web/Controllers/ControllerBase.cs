@@ -9,6 +9,7 @@ using Trackable.Web.Filters;
 
 namespace Trackable.Web
 {
+    [Produces("application/json")]
     [ModelBindingValidationFilter]
     [Authorize(UserRoles.Viewer, AuthenticationSchemes = "OpenIdConnect, Bearer")]
     public class ControllerBase : Controller

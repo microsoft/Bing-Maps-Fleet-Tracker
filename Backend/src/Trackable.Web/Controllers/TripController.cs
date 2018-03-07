@@ -41,6 +41,10 @@ namespace Trackable.Web.Controllers
             this.dtoMapper = dtoMapper;
         }
 
+        /// <summary>
+        /// Detect latest trips
+        /// </summary>
+        /// <returns>Detected trips per asset</returns>
         [HttpGet("detect")]
         [Authorize(UserRoles.Administrator)]
         public async Task<IDictionary<string, IEnumerable<TripDto>>> Detect()
@@ -59,6 +63,14 @@ namespace Trackable.Web.Controllers
             return this.dtoMapper.Map<IDictionary<string, IEnumerable<TripDto>>>(dict);
         }
 
+        /// <summary>
+        /// Get TrackingPoints belonging to trip nearest to specified location
+        /// </summary>
+        /// <param name="id">The trip Id</param>
+        /// <param name="lat">The latitude</param>
+        /// <param name="lon">The longitude</param>
+        /// <param name="count">The number of points to fetch</param>
+        /// <returns></returns>
         // GET api/trip/5/points?lat=x&lon=y
         [HttpGet("{id}/points")]
         public async Task<IEnumerable<TrackingPointDto>> GetPoint(int id, double lat, double lon, int count = 5)
