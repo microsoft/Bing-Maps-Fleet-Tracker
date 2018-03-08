@@ -4,7 +4,6 @@
 using AutoMapper;
 using System;
 using System.Data.Entity;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Trackable.Common;
@@ -13,11 +12,11 @@ using Trackable.EntityFramework;
 using Trackable.Models;
 
 namespace Trackable.Repositories
-{ 
+{
 
-    class UserRepository : DbRepositoryBase<Guid, UserData, User>, IUserRepository
+    class UserRepository : DbRepositoryBase<string, UserData, User>, IUserRepository
     {
-         
+
         public UserRepository(TrackableDbContext db, IMapper mapper)
             : base(db, mapper)
         {
@@ -36,15 +35,15 @@ namespace Trackable.Repositories
 
             var existingUser = await this.Db.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
 
-            if(existingUser != null)
+            if (existingUser != null)
             {
-                if(!existingUser.Deleted)
+                if (!existingUser.Deleted)
                 {
                     throw new DuplicateResourceException("A user already exists with this email");
                 }
 
                 existingUser.Deleted = false;
-                existingUser.Role = model.Role == null 
+                existingUser.Role = model.Role == null
                     ? await this.Db.Roles.SingleOrDefaultAsync(r => r.Name == UserRoles.Pending.ToString())
                     : await this.Db.Roles.SingleOrDefaultAsync(r => r.Id == model.Role.Id);
 
@@ -52,20 +51,23 @@ namespace Trackable.Repositories
                 return this.ObjectMapper.Map<User>(existingUser);
             }
 
+            if (string.IsNullOrEmpty(model.Id))
+            {
+                model.Id = Guid.NewGuid().ToString("N");
+            }
+
             var roleData = await this.Db.Roles.SingleOrDefaultAsync(r => r.Name == model.Role.Name);
 
-            var modelData = ObjectMapper.Map<UserData>(model);
-
-            modelData.Role = roleData;
-
-            this.Db.Users.Add(modelData);
+            var dataModel = ObjectMapper.Map<UserData>(model);
+            dataModel.Role = roleData;
+            this.Db.Users.Add(dataModel);
 
             await this.Db.SaveChangesAsync();
 
-            return this.ObjectMapper.Map<User>(modelData);
+            return this.ObjectMapper.Map<User>(dataModel);
         }
 
-        public async override Task<User> UpdateAsync(Guid id, User model)
+        public async override Task<User> UpdateAsync(string id, User model)
         {
             model.ThrowIfNull(nameof(model));
 

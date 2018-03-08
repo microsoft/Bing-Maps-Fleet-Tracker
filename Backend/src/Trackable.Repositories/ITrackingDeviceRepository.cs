@@ -17,8 +17,6 @@ namespace Trackable.Repositories
         IDbNamedRepository<string, TrackingDeviceData, TrackingDevice>,
         IDbTaggedRepository<string, TrackingDeviceData, TrackingDevice>
     {
-        Task<TrackingDevice> GetDeviceByNameAsync(string name);
-
         Task<IDictionary<string, TrackingPoint>> GetDevicesLatestPositions();
     }
 }

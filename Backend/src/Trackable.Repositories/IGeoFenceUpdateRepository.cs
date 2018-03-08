@@ -1,10 +1,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Trackable.EntityFramework;
-using Trackable.Models;
-using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Trackable.Models;
 
 namespace Trackable.Repositories
 {
@@ -13,9 +12,9 @@ namespace Trackable.Repositories
     /// </summary>
     public interface IGeoFenceUpdateRepository : IRepository<int, GeoFenceUpdate>
     {
-        Task<IDictionary<int, GeoFenceUpdate>> GetByGeofenceIdsAsync(string assetId, IEnumerable<int> geofenceIds);
+        Task<IDictionary<string, GeoFenceUpdate>> GetByGeofenceIdsAsync(string assetId, IEnumerable<string> geofenceIds);
 
-        Task UpdateStatusAsync(int geofenceId, NotificationStatus status);
+        Task UpdateStatusAsync(int updateId, NotificationStatus status);
     }
 
 }

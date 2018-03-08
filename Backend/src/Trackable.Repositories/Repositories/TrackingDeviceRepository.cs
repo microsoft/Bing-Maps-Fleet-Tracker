@@ -20,25 +20,10 @@ namespace Trackable.Repositories
         {
         }
 
-        public async Task<TrackingDevice> GetDeviceByNameAsync(string name)
-        {
-            var data = await this.FindBy(device => (device.Name == name)).SingleOrDefaultAsync();
-
-            if (data == null)
-            {
-                return default(TrackingDevice);
-            }
-            else
-            {
-                return this.ObjectMapper.Map<TrackingDevice>(data);
-            }
-        }
-
-
         public async Task<IDictionary<string, TrackingPoint>> GetDevicesLatestPositions()
         {
             return await this.Db.TrackingDevices
-                .Where(d => !d.Deleted)
+                .Where(d => !d.Deleted && d.LatestPosition != null)
                 .Include(d => d.LatestPosition)
                 .ToDictionaryAsync(d => d.Name, d => this.ObjectMapper.Map<TrackingPoint>(d.LatestPosition));
         }

@@ -20,16 +20,16 @@ namespace Trackable.Repositories
         {
         }
 
-        public async Task<IDictionary<int, GeoFenceUpdate>> GetByGeofenceIdsAsync(string assetId, IEnumerable<int> geofenceIds)
+        public async Task<IDictionary<string, GeoFenceUpdate>> GetByGeofenceIdsAsync(string assetId, IEnumerable<string> geofenceIds)
         {
             return await this.Db.GeoFenceUpdates
                 .Where(g => g.AssetDataId == assetId && geofenceIds.Contains(g.GeoFenceDataId))
                 .ToDictionaryAsync(r => r.GeoFenceDataId, r => this.ObjectMapper.Map<GeoFenceUpdate>(r));
         }
 
-        public async Task UpdateStatusAsync(int geofenceId, NotificationStatus status)
+        public async Task UpdateStatusAsync(int updateId, NotificationStatus status)
         {
-            var geofenceUpdate = await this.Db.GeoFenceUpdates.SingleAsync(g => geofenceId == g.Id);
+            var geofenceUpdate = await this.Db.GeoFenceUpdates.SingleAsync(g => updateId == g.Id);
 
             if (geofenceUpdate == null)
             {

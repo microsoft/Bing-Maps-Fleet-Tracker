@@ -35,7 +35,17 @@ namespace Trackable.Repositories
             // TrackingDevice Mappings
             CreateMap<TrackingDeviceData, TrackingDevice>()
                 .ForMember(dest => dest.AssetId, opt => opt.MapFrom(src => src.Asset.Id))
-                .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => t.TagName)));
+                .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => t.TagName)))
+                .ForMember(dest => dest.Asset, opt => opt.MapFrom(src => src.Asset))
+                .ForPath(dest => dest.Asset.TrackingDevice, opt => opt.Ignore())
+                .AfterMap((src, dst) =>
+                {
+                    // Avoid circular serialization
+                    if (dst.Asset != null)
+                    {
+                        dst.Asset.TrackingDevice = null;
+                    }
+                });
 
             CreateMap<TrackingDevice, TrackingDeviceData>()
                 .ForMember(dest => dest.Asset, opt => opt.ResolveUsing<TrackingDeviceAssetResolver>())
@@ -122,10 +132,18 @@ namespace Trackable.Repositories
                 .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => t.TagName)))
                 .ForMember(dest => dest.TrackingDeviceId,
                     opt => opt.MapFrom(src => src.TrackingDevice == null ? null : src.TrackingDevice.Id))
-                .ForMember(dest => dest.TrackingDeviceName,
-                    opt => opt.MapFrom(src => src.TrackingDevice == null ? null : src.TrackingDevice.Name));
+                .ForMember(dest => dest.TrackingDevice, opt => opt.MapFrom(src => src.TrackingDevice))
+                .AfterMap((src, dst) =>
+                {
+                    // Avoid circular serialization
+                    if (dst.TrackingDevice != null)
+                    {
+                        dst.TrackingDevice.Asset = null;
+                    }
+                });
 
             CreateMap<Asset, AssetData>()
+                .ForMember(dest => dest.TrackingDevice, opt => opt.ResolveUsing<AssetTrackingDeviceResolver>())
                 .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => new TagData
                 {
                     TagName = t
@@ -157,7 +175,7 @@ namespace Trackable.Repositories
 
             // Jwt Tokens
             CreateMap<TokenData, JwtToken>()
-                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.User == null ? default(Guid?) : src.User.Id))
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.User == null ? default(string) : src.User.Id))
                 .ForMember(dest => dest.TrackingDeviceId, opt => opt.MapFrom(src => src.TrackingDevice == null ? null : src.TrackingDevice.Id))
                 .ForMember(dest => dest.Claims, opt => opt.MapFrom(src => JsonConvert.DeserializeObject<Dictionary<string, string>>(src.Value).Select(d => new Claim(d.Key, d.Value))));
             CreateMap<JwtToken, TokenData>()

@@ -12,14 +12,14 @@ namespace Trackable.Repositories
     /// Responsible for handling the location repository.
     /// </summary>
     public interface ILocationRepository : 
-        IRepository<int, Location>, 
-        IDbCountableRepository<int, LocationData, Location>,
-        IDbNamedRepository<int, LocationData, Location>,
-        IDbTaggedRepository<int, LocationData, Location>
+        IRepository<string, Location>, 
+        IDbCountableRepository<string, LocationData, Location>,
+        IDbNamedRepository<string, LocationData, Location>,
+        IDbTaggedRepository<string, LocationData, Location>
     {
-        Task<IEnumerable<Location>> GetAsync(IEnumerable<int> ids);
+        Task<IEnumerable<Location>> GetAsync(IEnumerable<string> ids);
 
-        Task<IDictionary<string, int>> GetCountPerAssetAsync(int locationId);
+        Task<IDictionary<string, int>> GetCountPerAssetAsync(string locationId);
 
         Task<int> GetAutoLocationCountAsync();
     }
