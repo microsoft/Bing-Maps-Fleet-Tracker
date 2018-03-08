@@ -26,5 +26,7 @@ namespace Trackable.EntityFramework
         public TrackingPointData LatestPosition { get; set; }
 
         public ICollection<TagData> Tags { get; set; }
+
+        public ICollection<TokenData> Tokens { get; set; }
     }
 }

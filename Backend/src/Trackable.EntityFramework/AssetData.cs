@@ -8,8 +8,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Trackable.EntityFramework
 {
     [Table("Assets")]
-    public class AssetData : EntityBase<string>, ITaggedEntity
+    public class AssetData : EntityBase<string>, ITaggedEntity, INamedEntity
     {
+        public string Name { get; set; }
+
         public TrackingDeviceData TrackingDevice { get; set; }
 
         public ICollection<GeoFenceUpdateData> NotificationHistory { get; set; }

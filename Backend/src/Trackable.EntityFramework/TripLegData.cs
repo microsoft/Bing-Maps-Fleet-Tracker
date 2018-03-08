@@ -2,8 +2,6 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.Spatial;
 
@@ -15,7 +13,7 @@ namespace Trackable.EntityFramework
         public DateTime StartTimeUtc { get; set; }
 
         public DateTime EndTimeUtc { get; set; }
-
+        
         public DbGeography Route { get; set; }
 
         public double AverageSpeed { get; set; }
@@ -24,9 +22,9 @@ namespace Trackable.EntityFramework
 
         public TripData Trip { get; set; }
 
-        public int StartLocationId { get; set; }
+        public string StartLocationId { get; set; }
 
-        public int EndLocationId { get; set; }
+        public string EndLocationId { get; set; }
 
         public LocationData StartLocation { get; set; }
 

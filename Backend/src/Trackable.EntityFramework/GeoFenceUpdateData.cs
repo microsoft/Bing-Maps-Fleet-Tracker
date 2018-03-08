@@ -12,7 +12,7 @@ namespace Trackable.EntityFramework
         [Required]
         [Index("IX_GeoFenceDataId")]
         [Index("GeoFenceAssetUnique", IsUnique = true, Order = 0)]
-        public int GeoFenceDataId { get; set; }
+        public string GeoFenceDataId { get; set; }
 
         [Required]
         [Index("IX_AssetDataId")]
