@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Trackable.Models;
 using Trackable.Repositories;
@@ -22,10 +23,10 @@ namespace Trackable.Services
 
         public async Task<TrackingDevice> AddOrUpdateDeviceAsync(TrackingDevice device)
         {
-            var foundDevice = await GetAsync(device.Id);
-            var foundDeviceByName = await GetDeviceByNameAsync(device.Name);
+            var foundDevice = await this.GetAsync(device.Id);
+            var foundDeviceByName = await this.FindByNameAsync(device.Name);
 
-            if (foundDevice == null && foundDeviceByName == null)
+            if (foundDevice == null && !foundDeviceByName.Any())
             {
                 return await AddAsync(device);
             }
@@ -38,11 +39,6 @@ namespace Trackable.Services
 
                 return await UpdateAsync(device.Id, device);
             }
-        }
-
-        public async Task<TrackingDevice> GetDeviceByNameAsync(string name)
-        {
-            return await this.repository.GetDeviceByNameAsync(name);
         }
 
         public byte[] GetDeviceProvisioningQrCode(PhoneClientData data, int height, int width, int margin)

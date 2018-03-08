@@ -8,7 +8,7 @@ using Trackable.Repositories;
 
 namespace Trackable.Services
 {
-    class LocationService : CrudServiceBase<int, Location, ILocationRepository>, ILocationService
+    class LocationService : CrudServiceBase<string, Location, ILocationRepository>, ILocationService
     {
         public LocationService(ILocationRepository repository)
             : base(repository)
@@ -30,9 +30,9 @@ namespace Trackable.Services
             return await this.repository.FindContainingAnyTagsAsync(tags);
         }
 
-        public async Task<IDictionary<string, int>> GetCountByAssetAsync(int locationid)
+        public async Task<IDictionary<string, int>> GetCountByAssetAsync(string locationId)
         {
-            return await this.repository.GetCountPerAssetAsync(locationid);
+            return await this.repository.GetCountPerAssetAsync(locationId);
         }
     }
 }

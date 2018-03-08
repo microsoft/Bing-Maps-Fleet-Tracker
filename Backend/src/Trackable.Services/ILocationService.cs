@@ -7,9 +7,9 @@ using Trackable.Models;
 
 namespace Trackable.Services
 {
-    public interface ILocationService : ICrudService<int, Location>
+    public interface ILocationService : ICrudService<string, Location>
     {
-        Task<IDictionary<string, int>> GetCountByAssetAsync(int locationid);
+        Task<IDictionary<string, int>> GetCountByAssetAsync(string locationId);
 
         Task<IEnumerable<Location>> FindByNameAsync(string name);
 

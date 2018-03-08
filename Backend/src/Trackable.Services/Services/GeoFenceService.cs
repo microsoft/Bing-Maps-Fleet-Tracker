@@ -10,7 +10,7 @@ using Trackable.Repositories;
 
 namespace Trackable.Services
 {
-    class GeoFenceService : CrudServiceBase<int, GeoFence, IGeoFenceRepository>, IGeoFenceService
+    class GeoFenceService : CrudServiceBase<string, GeoFence, IGeoFenceRepository>, IGeoFenceService
     {
         private readonly INotificationService notificationService;
         private readonly IGeoFenceUpdateRepository geoFenceUpdateRepository;
@@ -47,7 +47,7 @@ namespace Trackable.Services
             return updated;
         }
 
-        public async override Task<IEnumerable<GeoFence>> UpdateAsync(IDictionary<int, GeoFence> models)
+        public async override Task<IEnumerable<GeoFence>> UpdateAsync(IDictionary<string, GeoFence> models)
         {
             var updatedModels = await base.UpdateAsync(models);
 
@@ -60,22 +60,22 @@ namespace Trackable.Services
             return updatedList;
         }
 
-        public async override Task<GeoFence> UpdateAsync(int geoFenceId, GeoFence model)
+        public async override Task<GeoFence> UpdateAsync(string geoFenceId, GeoFence model)
         {
             var updatedModel = await base.UpdateAsync(geoFenceId, model);
 
             return await this.repository.UpdateAssetsAsync(updatedModel, model.AssetIds);
         }
 
-        public async Task<IEnumerable<int>> HandlePoints(string assetId, params IPoint[] points)
+        public async Task<IEnumerable<string>> HandlePoints(string assetId, params IPoint[] points)
         {
-            var notifiedFenceIds = new List<int>();
+            var notifiedFenceIds = new List<string>();
             var tasks = new List<Task>();
 
             var fences = await this.repository.GetByAssetIdWithIntersectionAsync(assetId, points);
             if (!fences.Any())
             {
-                return Enumerable.Empty<int>();
+                return Enumerable.Empty<string>();
             }
 
             var updates = await this.geoFenceUpdateRepository.GetByGeofenceIdsAsync(assetId, fences.Select(f => f.Key.Id).ToList());
