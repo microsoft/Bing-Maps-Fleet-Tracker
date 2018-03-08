@@ -8,7 +8,7 @@ using Trackable.Models.Helpers;
 namespace Trackable.Models
 {
     [Serializable]
-    public class Location : ModelBase<int>, IPoint, ITaggedModel, INamedModel
+    public class Location : ModelBase<string>, IPoint, ITaggedModel, INamedModel
     {
         /// <summary>
         /// The Location's name.

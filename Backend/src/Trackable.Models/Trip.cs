@@ -20,13 +20,13 @@ namespace Trackable.Models
         /// The trip's starting Location ID.
         /// </summary>
         [Mutable]
-        public int StartLocationId { get; set; }
+        public string StartLocationId { get; set; }
 
         /// <summary>
         /// The trip's ending Location ID.
         /// </summary>
         [Mutable]
-        public int EndLocationId { get; set; }
+        public string EndLocationId { get; set; }
 
         public Location StartLocation { get; set; }
 

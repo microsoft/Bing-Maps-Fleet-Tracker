@@ -13,7 +13,7 @@ namespace Trackable.Models
 
         public DateTime UpdatedAt { get; set; }
 
-        public int GeoFenceId { get; set; }
+        public string GeoFenceId { get; set; }
 
         public string AssetId { get; set; }
     }

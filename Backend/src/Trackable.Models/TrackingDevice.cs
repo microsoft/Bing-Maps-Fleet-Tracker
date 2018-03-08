@@ -26,6 +26,8 @@ namespace Trackable.Models
         [Mutable]
         public string AssetId { get; set; }
 
+        public Asset Asset { get; set; }
+
         [Mutable]
         public IEnumerable<string> Tags { get; set; }
     }
