@@ -169,7 +169,6 @@ namespace Trackable.Web
                         return description.RelativePath.StartsWith("api");
                     });
 
-
                     var filePath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Trackable.Web.xml");
                     c.IncludeXmlComments(filePath);
                 });
@@ -246,7 +245,7 @@ namespace Trackable.Web
                 app.UseSwaggerUI(c =>
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "BMFT APIs V1");
-                    c.HeadContent = "<script type=\"application/javascript\" src=\"/swagger/swagger.js\"></script>";
+                    c.HeadContent = "<script type=\"application/javascript\" src=\"/swagger/swagger.js\"></script><link rel=\"stylesheet\" href=\"/swagger/swagger.css\">";
                     c.DocumentTitle = "BMFT Swagger";
                 });
             }

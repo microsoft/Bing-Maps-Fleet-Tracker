@@ -155,6 +155,11 @@ namespace Trackable.Web.Controllers
             return this.dtoMapper.Map<LocationDto>(result);
         }
 
+        /// <summary>
+        /// Delete location
+        /// </summary>
+        /// <param name="id">The location id</param>
+        /// <returns>Ok response</returns>
         // DELETE api/locations/5
         [HttpDelete("{id}")]
         [Authorize(UserRoles.Administrator)]

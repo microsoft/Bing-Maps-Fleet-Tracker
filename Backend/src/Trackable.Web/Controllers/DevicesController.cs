@@ -205,7 +205,7 @@ namespace Trackable.Web.Controllers
         }
 
         /// <summary>
-        /// Register TrackingPoints related to device, check geofences
+        /// Register TrackingPoints related to device and check geofences
         /// </summary>
         /// <param name="id">The device id</param>
         /// <param name="points">List of TrackingPoints</param>
