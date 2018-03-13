@@ -13,6 +13,9 @@ namespace Trackable.Web.Dtos
             CreateMap<Asset, AssetDto>()
                 .ReverseMap();
 
+            CreateMap<Asset, NestedAssetDto>()
+                .ReverseMap();
+
             CreateMap<AssetProperties, AssetPropertiesDto>()
                 .ReverseMap();
 
@@ -36,6 +39,9 @@ namespace Trackable.Web.Dtos
                 .ReverseMap();
 
             CreateMap<TrackingDevice, TrackingDeviceDto>()
+                .ReverseMap();
+
+            CreateMap<TrackingDevice, NestedTrackingDeviceDto>()
                 .ReverseMap();
 
             CreateMap<Trip, TripDto>()

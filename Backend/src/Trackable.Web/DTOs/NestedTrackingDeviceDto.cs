@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Trackable.Web.Dtos
 {
-    public class TrackingDeviceDto
+    public class NestedTrackingDeviceDto
     {
         /// <summary>
         /// Device Id
@@ -45,11 +45,6 @@ namespace Trackable.Web.Dtos
         /// Can be changed to relink to another device.
         /// </summary>
         public string AssetId { get; set; }
-
-        /// <summary>
-        /// The asset linked with this device.
-        /// </summary>
-        public NestedAssetDto Asset { get; set; }
 
         /// <summary>
         /// Tags
