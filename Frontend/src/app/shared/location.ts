@@ -4,11 +4,10 @@
 import { Point } from './point';
 
 export class Location extends Point {
-    id: number;
+    id: string;
     name: string;
     address: string;
-    minimumWaitTime: number;
-    interestLevel: InterestLevel;
+    tags: string[];
 }
 
 export enum InterestLevel {
