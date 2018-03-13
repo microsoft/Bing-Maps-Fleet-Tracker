@@ -76,7 +76,7 @@ namespace Trackable.Web.Auth
             else if (audience == JwtAuthConstants.UserAudience)
             {
                 var id = ClaimsReader.ReadSubject(context.User);
-                var user = await userService.GetAsync(Guid.Parse(id));
+                var user = await userService.GetAsync(id);
                 userRole = user.Role.Name;
 
                 // Validate jwtToken is not deactivated

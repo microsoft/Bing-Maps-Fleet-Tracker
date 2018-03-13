@@ -53,7 +53,7 @@ namespace Trackable.TripDetection.Components
         {
             var savedTrips = new List<Trip>();
 
-            var locationIdsToGeocode = new HashSet<int>();
+            var locationIdsToGeocode = new HashSet<string>();
 
             logger.LogDebugSerialize("Recieved trips {0}", input.ResultantTrips);
 
@@ -101,7 +101,7 @@ namespace Trackable.TripDetection.Components
 
                 var res = await geocodeManager.Geocode(geocodeFeed, bingMapsKey);
 
-                var locationsDict = new Dictionary<int, Location>();
+                var locationsDict = new Dictionary<string, Location>();
 
                 if (res.Succeeded != null)
                 {

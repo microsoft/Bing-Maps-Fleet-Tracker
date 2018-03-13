@@ -41,9 +41,15 @@ namespace Trackable.Web.Dtos
         public string Version { get; set; }
 
         /// <summary>
-        /// Id of the asset linked with this device
+        /// Id of the asset linked with this device.
+        /// Can be changed to relink to another device.
         /// </summary>
         public string AssetId { get; set; }
+
+        /// <summary>
+        /// The asset linked with this device.
+        /// </summary>
+        public AssetDto Asset { get; set; }
 
         /// <summary>
         /// Tags

@@ -37,7 +37,7 @@ namespace Trackable.TripDetection.Components
         /// <summary>
         /// Private variable used to store the ids of the intersting locations
         /// </summary>
-        private IEnumerable<int> interestingLocationIds;
+        private IEnumerable<string> interestingLocationIds;
 
         protected override Predicate<StoppedSegment> isEndOfTrip => stop =>
         {

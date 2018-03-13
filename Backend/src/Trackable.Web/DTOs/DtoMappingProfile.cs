@@ -6,7 +6,7 @@ using Trackable.Models;
 
 namespace Trackable.Web.Dtos
 {
-    public class DtoMappingProfile : Profile
+    internal class DtoMappingProfile : Profile
     {
         public DtoMappingProfile()
         {
@@ -45,6 +45,9 @@ namespace Trackable.Web.Dtos
                 .ReverseMap();
 
             CreateMap<User, UserDto>()
+                .ReverseMap();
+
+            CreateMap<Role, RoleDto>()
                 .ReverseMap();
         }
     }

@@ -135,7 +135,7 @@ namespace Trackable.Web.Controllers
         /// Get the latest positions of all devices
         /// </summary>
         /// <param name="id">The device Id</param>
-        /// <returns>Dictionary containing device Ids vs last seen TrackingPoints</returns>
+        /// <returns>Dictionary containing device names vs last seen TrackingPoints</returns>
         // GET api/devices/all/positions
         [HttpGet("all/positions")]
         public async Task<IDictionary<string, TrackingPointDto>> GetLatestPositions(string id)
