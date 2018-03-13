@@ -49,7 +49,6 @@ export class LocationEditorComponent implements OnInit, OnDestroy {
               if (location) {
                 this.location = location;
                 this.setlocationString();
-                this.setLocationTypeString();
                 this.mapService.showLocationsPositions([this.location]);
               }
             });
@@ -97,13 +96,9 @@ export class LocationEditorComponent implements OnInit, OnDestroy {
     }
 
     if (this.isEditable) {
-      if (this.didLocationChange) {
-        this.location.interestLevel = InterestLevel.Manual;
-      }
       this.locationService.updateLocation(this.location)
         .subscribe(() => this.router.navigate(['/locations']));
     } else {
-      this.location.interestLevel = InterestLevel.Manual;
       this.locationService.addLocation(this.location)
         .subscribe(() => this.router.navigate(['/locations']));
     }
@@ -111,13 +106,5 @@ export class LocationEditorComponent implements OnInit, OnDestroy {
 
   private setlocationString() {
     this.locationString = '(' + this.location.latitude + ' , ' + this.location.longitude + ' )';
-  }
-
-  private setLocationTypeString() {
-    if (this.location.interestLevel === InterestLevel.Manual) {
-      this.locationTypeString = 'Created/Edited Manually';
-    } else {
-      this.locationTypeString = 'Automatically Generated';
-    }
   }
 }

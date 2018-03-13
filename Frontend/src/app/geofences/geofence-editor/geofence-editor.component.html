@@ -47,7 +47,7 @@
     <h3>Available Assets:</h3>
     <mat-list>
       <mat-list-item *ngFor="let asset of assets">
-        <mat-checkbox (change)="onAssetCheckChanged($event)" [checked]="asset.checked" [name]="asset.id">{{asset.id}}</mat-checkbox>
+        <mat-checkbox (change)="onAssetCheckChanged($event)" [checked]="asset.checked" [name]="asset.id">{{asset.name}}</mat-checkbox>
       </mat-list-item>
     </mat-list>
 

@@ -2,24 +2,36 @@
      Licensed under the MIT License. -->
 
 <mat-toolbar color="primary">
-  <span>Add asset:</span>
+  <span>{{isEditable ? 'Edit Asset' : 'Add Asset'}}</span>
+  <span class="toolbar-spacer"></span>
+  <a *ngIf="isEditable" [appRoleLimiter]="Roles.Administrator" mat-icon-button mat-tooltip="Delete Asset" (click)="deleteAsset()">
+    <mat-icon>delete_forever</mat-icon>
+  </a>
 </mat-toolbar>
 
 <section>
   <form (submit)="submit()">
-    <mat-input-container>
-      <input matInput placeholder="Asset Name" [(ngModel)]="asset.id" [disabled]="isEditable" name="id" required>
+    <mat-input-container *ngIf="isEditable">
+      <input matInput placeholder="Asset Id" [(ngModel)]="asset.id" disabled name="id">
     </mat-input-container>
 
     <mat-input-container>
-      <mat-select *ngIf="!isEditable" placeholder="Asset Type" [(ngModel)]="asset.assetType" name="assetType" required>
+      <input matInput placeholder="Asset Name" [(ngModel)]="asset.name" name="name" required>
+    </mat-input-container>
+
+    <mat-input-container>
+      <mat-select placeholder="Asset Type" [(ngModel)]="asset.assetType" name="assetType" [disabled]="isEditable" required>
         <mat-option [value]="AssetType.Car">Car</mat-option>
         <mat-option [value]="AssetType.Truck">Truck</mat-option>
       </mat-select>
     </mat-input-container>
 
-    <mat-input-container *ngIf="asset.trackingDeviceId">
-      <input matInput placeholder="Tracking Device" [(ngModel)]="asset.trackingDeviceName" name="trackingDevice" disabled>
+    <mat-input-container>
+      <mat-select placeholder="Linked Device" [(ngModel)]="asset.trackingDeviceId" name="trackingDeviceId">
+        <mat-option *ngFor="let device of devices" [value]="device.id">
+          {{device.name}}
+        </mat-option>
+      </mat-select>
     </mat-input-container>
 
     <div *ngIf="asset.assetType == AssetType.Truck" class="truck-container">
@@ -66,7 +78,7 @@
 
     <div class="pull-right">
       <a mat-raised-button [routerLink]="['/assets']">Back</a>
-      <button *ngIf="!isEditable" mat-raised-button class="dispatch-button" type="submit">Submit</button>
+      <button mat-raised-button class="dispatch-button" type="submit">Submit</button>
     </div>
   </form>
 </section>

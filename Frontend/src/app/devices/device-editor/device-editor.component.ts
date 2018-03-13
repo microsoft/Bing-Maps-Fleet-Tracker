@@ -9,6 +9,7 @@ import { ToasterService } from 'angular2-toaster';
 import { HubConnection } from '@aspnet/signalr-client';
 import { UUID } from 'angular2-uuid';
 
+import { Roles } from '../../shared/role';
 import { Asset } from '../../assets/asset';
 import { AssetService } from '../../assets/asset.service';
 import { Device } from '../device';
@@ -26,6 +27,7 @@ export class DeviceEditorComponent implements OnInit, OnDestroy {
   isEditing: boolean;
   assets: Asset[];
   deviceToken = '';
+  Roles = Roles;
 
   private routerSubscription: Subscription;
   private assetsSubscription: Subscription;
@@ -110,5 +112,10 @@ export class DeviceEditorComponent implements OnInit, OnDestroy {
       width: '70%',
       data: this.deviceService.getProvisioningQrCodeUrl(this.nonce)
     });
+  }
+
+  deleteDevice() {
+    this.deviceService.deleteDevice(this.device)
+      .subscribe(() => this.router.navigate(['/devices']));
   }
 }

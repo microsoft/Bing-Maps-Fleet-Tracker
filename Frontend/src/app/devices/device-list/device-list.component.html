@@ -19,13 +19,13 @@
 <mat-list>
   <mat-list-item *ngFor="let device of devices | async | filterList:filter" [class.active]="device == selectedDevice && isDeviceListSelected()">
     <h3 mat-line (click)="showDevice(device)">{{device.name}}</h3>
-    <span mat-line class="subtle" (click)="showDevice(device)">asset: {{device.assetId}}</span>
+    <span mat-line class="subtle" (click)="showDevice(device)">asset: {{device.asset ? device.asset.name : ''}}</span>
+    <button mat-icon-button mat-tooltip='Points' (click)="showPoints(device)" [class.active]="device == selectedDevice && isDevicePointSelected()">
+      <mat-icon>gps_fixed</mat-icon>
+    </button>
     <a [appRoleLimiter]="Roles.Administrator" mat-icon-button mat-tooltip="Edit" [routerLink]="['/devices', device.id]">
       <mat-icon>mode_edit</mat-icon>
     </a>
-    <button mat-icon-button mat-tooltip='Points' (click)="showPoints(device)" [class.active]="device == selectedDevice && isDevicePointSelected()">
-              <mat-icon>gps_fixed</mat-icon>
-           </button>
   </mat-list-item>
 </mat-list>
 

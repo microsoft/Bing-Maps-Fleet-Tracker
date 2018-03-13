@@ -134,7 +134,6 @@ export class DispatchingEditorComponent implements OnInit, OnDestroy {
   }
 
   showRoute() {
-
     if (this.pinsAdded.length < 2 || this.pinsAdded.length > 20) {
       this.toasterService.pop('error', 'Invalid Input', 'Number of Points per route has to be between 2 and 20');
       return;

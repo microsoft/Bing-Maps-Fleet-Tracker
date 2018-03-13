@@ -57,6 +57,10 @@ export class DeviceService {
     return this.dataService.put<Device>('devices', device.id, device, true);
   }
 
+  deleteDevice(device: Device): Observable<void> {
+    return this.dataService.delete<Device>('devices', device.id);
+  }
+
   getProvisioningQrCodeUrl(nonce: String): string {
     return `${this.envSettingsService.getEnvironmentVariable(EnvironmentSettings.backendUrl)}/devices/qrcode?nonce=${nonce}`;
   }
