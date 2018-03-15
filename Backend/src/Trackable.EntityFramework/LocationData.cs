@@ -8,7 +8,7 @@ using System.Data.Entity.Spatial;
 namespace Trackable.EntityFramework
 {
     [Table("Locations")]
-    public class LocationData : EntityBase<int>, ITaggedEntity, INamedEntity
+    public class LocationData : EntityBase<string>, ITaggedEntity, INamedEntity
     {
         public string Name { get; set; }
 

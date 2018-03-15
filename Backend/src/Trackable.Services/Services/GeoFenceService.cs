@@ -10,75 +10,37 @@ using Trackable.Repositories;
 
 namespace Trackable.Services
 {
-    class GeoFenceService : CrudServiceBase<int, GeoFence, IGeoFenceRepository>, IGeoFenceService
+    class GeoFenceService : CrudServiceBase<string, GeoFence, IGeoFenceRepository>, IGeoFenceService
     {
         private readonly INotificationService notificationService;
         private readonly IGeoFenceUpdateRepository geoFenceUpdateRepository;
+        private readonly IAssetRepository assetRepository;
 
         public GeoFenceService(
             IGeoFenceRepository repository,
             IGeoFenceUpdateRepository geoFenceUpdateRepository,
+            IAssetRepository assetRepository,
             INotificationService notificationService)
             : base(repository)
         {
             this.notificationService = notificationService;
             this.geoFenceUpdateRepository = geoFenceUpdateRepository;
+            this.assetRepository = assetRepository;
         }
 
-        public async override Task<IEnumerable<GeoFence>> AddAsync(IEnumerable<GeoFence> models)
+        public async Task<IEnumerable<string>> HandlePoints(string assetId, params IPoint[] points)
         {
-            var results = await base.AddAsync(models);
-
-            var updatedList = new List<GeoFence>();
-            foreach (var zipped in results.Zip(models, (r, m) => new { result = r, model = m }))
-            {
-                updatedList.Add(await this.repository.UpdateAssetsAsync(zipped.result, zipped.model.AssetIds));
-            }
-
-            return updatedList;
-        }
-
-        public async override Task<GeoFence> AddAsync(GeoFence model)
-        {
-            var result = await base.AddAsync(model);
-
-            var updated = await this.repository.UpdateAssetsAsync(result, model.AssetIds);
-
-            return updated;
-        }
-
-        public async override Task<IEnumerable<GeoFence>> UpdateAsync(IDictionary<int, GeoFence> models)
-        {
-            var updatedModels = await base.UpdateAsync(models);
-
-            var updatedList = new List<GeoFence>();
-            foreach (var updatedModel in updatedModels)
-            {
-                updatedList.Add(await this.repository.UpdateAssetsAsync(updatedModel, models[updatedModel.Id].AssetIds));
-            }
-
-            return updatedList;
-        }
-
-        public async override Task<GeoFence> UpdateAsync(int geoFenceId, GeoFence model)
-        {
-            var updatedModel = await base.UpdateAsync(geoFenceId, model);
-
-            return await this.repository.UpdateAssetsAsync(updatedModel, model.AssetIds);
-        }
-
-        public async Task<IEnumerable<int>> HandlePoints(string assetId, params IPoint[] points)
-        {
-            var notifiedFenceIds = new List<int>();
+            var notifiedFenceIds = new List<string>();
             var tasks = new List<Task>();
 
-            var fences = await this.repository.GetByAssetIdWithIntersectionAsync(assetId, points);
+            var asset = await this.assetRepository.GetAsync(assetId);
+            var fences = await this.repository.GetByAssetIdWithIntersectionAsync(asset.Id, points);
             if (!fences.Any())
             {
-                return Enumerable.Empty<int>();
+                return Enumerable.Empty<string>();
             }
 
-            var updates = await this.geoFenceUpdateRepository.GetByGeofenceIdsAsync(assetId, fences.Select(f => f.Key.Id).ToList());
+            var updates = await this.geoFenceUpdateRepository.GetByGeofenceIdsAsync(asset.Id, fences.Select(f => f.Key.Id).ToList());
 
             foreach (var fence in fences.Keys)
             {
@@ -110,7 +72,7 @@ namespace Trackable.Services
                     {
                         NotificationStatus = fenceStatus,
                         GeoFenceId = fence.Id,
-                        AssetId = assetId
+                        AssetId = asset.Id
                     };
 
                     tasks.Add(this.geoFenceUpdateRepository.AddAsync(latestUpdate));
@@ -128,9 +90,9 @@ namespace Trackable.Services
 
                 tasks.AddRange(fence.EmailsToNotify.Select(email => notificationService.NotifyViaEmail(
                     email,
-                    $"{fence.Name} Geofence was triggered by asset {assetId}",
+                    $"{fence.Name} Geofence was triggered by asset {asset.Name}",
                     "",
-                    $"<strong>{fence.FenceType.ToString()}</strong> Geofence <strong>{fence.Name}</strong> was triggered by asset  <strong>{assetId}</strong> at  <strong>{DateTime.UtcNow.ToString("G")} (UTC)</strong>")));
+                    $"<strong>{fence.FenceType.ToString()}</strong> Geofence <strong>{fence.Name}</strong> was triggered by asset  <strong>{asset.Name}</strong> at  <strong>{DateTime.UtcNow.ToString("G")} (UTC)</strong>")));
 
                 tasks.AddRange(fence.WebhooksToNotify.Select(webhook => notificationService.NotifyViaWebhook(
                     webhook,
@@ -138,7 +100,7 @@ namespace Trackable.Services
                     {
                         GeoFenceName = fence.Name,
                         GeoFenceType = fence.FenceType.ToString(),
-                        AssetId = assetId,
+                        AssetId = asset.Id,
                         TriggeredAtUtc = DateTime.UtcNow.ToString("G")
                     })));
 

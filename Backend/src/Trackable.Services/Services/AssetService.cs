@@ -1,7 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,9 +17,9 @@ namespace Trackable.Services
         {
         }
 
-        public async override Task<Asset> AddAsync (Asset asset)
+        public async override Task<Asset> AddAsync(Asset asset)
         {
-            if(asset.AssetType == AssetType.Car && asset.AssetProperties != null)
+            if (asset.AssetType == AssetType.Car && asset.AssetProperties != null)
             {
                 throw new BadArgumentException("AssetType \"Car\" should not contain assetProperties");
             }
@@ -46,6 +45,11 @@ namespace Trackable.Services
         public async Task<IEnumerable<Asset>> FindContainingAnyTagsAsync(IEnumerable<string> tags)
         {
             return await this.repository.FindContainingAnyTagsAsync(tags);
+        }
+
+        public async Task<IEnumerable<Asset>> FindByNameAsync(string name)
+        {
+            return await this.repository.FindByNameAsync(name);
         }
 
         public async Task<IDictionary<string, TrackingPoint>> GetAssetsLatestPositions()

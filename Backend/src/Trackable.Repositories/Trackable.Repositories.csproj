@@ -160,6 +160,8 @@
   <ItemGroup>
     <Compile Include="AutoMapper\TokenTrackingDeviceResolver.cs" />
     <Compile Include="AutoMapper\TokenUserResolver.cs" />
+    <Compile Include="AutoMapper\AssetTrackingDeviceResolver.cs" />
+    <Compile Include="AutoMapper\GeoFenceAssetResolver.cs" />
     <Compile Include="Helpers\DbGeographyExtensions.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\GeographyHelper.cs" />

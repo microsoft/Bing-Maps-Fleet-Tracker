@@ -34,8 +34,18 @@ namespace Trackable.Repositories
 
             // TrackingDevice Mappings
             CreateMap<TrackingDeviceData, TrackingDevice>()
-                .ForMember(dest => dest.AssetId, opt => opt.MapFrom(src => src.Asset.Id))
-                .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => t.TagName)));
+                .ForMember(dest => dest.AssetId, opt => opt.MapFrom(src => (src.Asset != null && !src.Asset.Deleted) ? src.Asset.Id : null))
+                .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => t.TagName)))
+                .ForMember(dest => dest.Asset, opt => opt.MapFrom(src => (src.Asset != null && !src.Asset.Deleted) ? src.Asset : null))
+                .ForPath(dest => dest.Asset.TrackingDevice, opt => opt.Ignore())
+                .AfterMap((src, dst) =>
+                {
+                    // Avoid circular serialization
+                    if (dst.Asset != null)
+                    {
+                        dst.Asset.TrackingDevice = null;
+                    }
+                });
 
             CreateMap<TrackingDevice, TrackingDeviceData>()
                 .ForMember(dest => dest.Asset, opt => opt.ResolveUsing<TrackingDeviceAssetResolver>())
@@ -78,6 +88,7 @@ namespace Trackable.Repositories
                 .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => t.TagName)));
 
             CreateMap<GeoFence, GeoFenceData>()
+                .ForMember(dest => dest.AssetDatas, opt => opt.ResolveUsing<GeoFenceAssetResolver>())
                 .ForMember(dest => dest.FenceType, opt => opt.MapFrom(src => (int)src.FenceType))
                 .ForMember(dest => dest.CooldownInMinutes, opt => opt.MapFrom(src => src.Cooldown))
                 .ForMember(dest => dest.Emails, opt => opt.MapFrom(src => src.EmailsToNotify == null ? string.Empty : string.Join(",", src.EmailsToNotify)))
@@ -121,11 +132,19 @@ namespace Trackable.Repositories
                 .ForMember(dest => dest.AssetType, opt => opt.MapFrom(src => (AssetType)src.AssetType))
                 .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => t.TagName)))
                 .ForMember(dest => dest.TrackingDeviceId,
-                    opt => opt.MapFrom(src => src.TrackingDevice == null ? null : src.TrackingDevice.Id))
-                .ForMember(dest => dest.TrackingDeviceName,
-                    opt => opt.MapFrom(src => src.TrackingDevice == null ? null : src.TrackingDevice.Name));
+                    opt => opt.MapFrom(src => (src.TrackingDevice != null && !src.TrackingDevice.Deleted) ? src.TrackingDevice.Id : null))
+                .ForMember(dest => dest.TrackingDevice, opt => opt.MapFrom(src => (src.TrackingDevice != null && !src.TrackingDevice.Deleted) ? src.TrackingDevice : null))
+                .AfterMap((src, dst) =>
+                {
+                    // Avoid circular serialization
+                    if (dst.TrackingDevice != null)
+                    {
+                        dst.TrackingDevice.Asset = null;
+                    }
+                });
 
             CreateMap<Asset, AssetData>()
+                .ForMember(dest => dest.TrackingDevice, opt => opt.ResolveUsing<AssetTrackingDeviceResolver>())
                 .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => new TagData
                 {
                     TagName = t
@@ -157,7 +176,7 @@ namespace Trackable.Repositories
 
             // Jwt Tokens
             CreateMap<TokenData, JwtToken>()
-                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.User == null ? default(Guid?) : src.User.Id))
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.User == null ? default(string) : src.User.Id))
                 .ForMember(dest => dest.TrackingDeviceId, opt => opt.MapFrom(src => src.TrackingDevice == null ? null : src.TrackingDevice.Id))
                 .ForMember(dest => dest.Claims, opt => opt.MapFrom(src => JsonConvert.DeserializeObject<Dictionary<string, string>>(src.Value).Select(d => new Claim(d.Key, d.Value))));
             CreateMap<JwtToken, TokenData>()

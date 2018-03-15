@@ -23,7 +23,7 @@
     <mat-input-container>
       <mat-select placeholder="Asset" [(ngModel)]="selectedAsset" name="assetId" required="true">
         <mat-option *ngFor="let asset of assets" [value]="asset" (click)="checkSelected(asset)">
-          {{asset.id}}
+          {{asset.name}}
         </mat-option>
       </mat-select>
     </mat-input-container>

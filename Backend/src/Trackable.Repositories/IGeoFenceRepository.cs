@@ -12,13 +12,11 @@ namespace Trackable.Repositories
     /// Responsible for handling the Geofence repository.
     /// </summary>
     public interface IGeoFenceRepository : 
-        IRepository<int, GeoFence>,
-        IDbCountableRepository<int, GeoFenceData, GeoFence>,
-        IDbNamedRepository<int, GeoFenceData, GeoFence>,
-        IDbTaggedRepository<int, GeoFenceData, GeoFence>
+        IRepository<string, GeoFence>,
+        IDbCountableRepository<string, GeoFenceData, GeoFence>,
+        IDbNamedRepository<string, GeoFenceData, GeoFence>,
+        IDbTaggedRepository<string, GeoFenceData, GeoFence>
     {
         Task<Dictionary<GeoFence, bool>> GetByAssetIdWithIntersectionAsync(string assetId, IPoint[] points);
-
-        Task<GeoFence> UpdateAssetsAsync(GeoFence fence, IEnumerable<string> assetIds);
     }
 }

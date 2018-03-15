@@ -7,9 +7,9 @@ using Trackable.Models;
 
 namespace Trackable.Services
 {
-    public interface IGeoFenceService : ICrudService<int, GeoFence>
+    public interface IGeoFenceService : ICrudService<string, GeoFence>
     {
-        Task<IEnumerable<int>> HandlePoints(string assetId, params IPoint[] points);
+        Task<IEnumerable<string>> HandlePoints(string assetId, params IPoint[] points);
 
         Task<IEnumerable<GeoFence>> FindByNameAsync(string name);
 

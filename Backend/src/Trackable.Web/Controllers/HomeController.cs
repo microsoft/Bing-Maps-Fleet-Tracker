@@ -22,6 +22,10 @@ namespace Trackable.Web.Controllers
             // https://github.com/aspnet/Mvc/issues/6875
             this.HttpContext.Request.Headers.Remove("If-Modified-Since");
 
+            // Do not cache index.html
+            this.HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store");
+            this.HttpContext.Response.Headers.Add("Expires", "-1");
+
             if (configuration.GetValue<bool>("Serving:ServeFrontend"))
             {
                 return File("dist/Index.html", "text/html");

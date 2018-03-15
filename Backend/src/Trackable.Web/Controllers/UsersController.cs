@@ -148,7 +148,7 @@ namespace Trackable.Web.Controllers
         /// <returns>The user</returns>
         [HttpGet("{userId}")]
         [Authorize(UserRoles.Administrator)]
-        public async Task<UserDto> GetUser(Guid userId)
+        public async Task<UserDto> GetUser(string userId)
         {
             var result = await this.userService.GetAsync(userId);
 
@@ -196,7 +196,7 @@ namespace Trackable.Web.Controllers
         [HttpPut("{userId}")]
         [Authorize(UserRoles.Administrator)]
         [ProducesResponseType(typeof(UserDto), 200)]
-        public async Task<IActionResult> UpdateUser(Guid userId, [FromBody]UserDto userJson)
+        public async Task<IActionResult> UpdateUser(string userId, [FromBody]UserDto userJson)
         {
             var user = await this.userService.GetAsync(userId);
 
@@ -239,7 +239,7 @@ namespace Trackable.Web.Controllers
         /// <returns>Ok response</returns>
         [HttpDelete("{userId}")]
         [Authorize(UserRoles.Administrator)]
-        public async Task<IActionResult> DeleteUser(Guid userId)
+        public async Task<IActionResult> DeleteUser(string userId)
         {
             var user = await this.userService.GetAsync(userId);
 

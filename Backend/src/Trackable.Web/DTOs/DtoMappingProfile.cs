@@ -6,11 +6,14 @@ using Trackable.Models;
 
 namespace Trackable.Web.Dtos
 {
-    public class DtoMappingProfile : Profile
+    internal class DtoMappingProfile : Profile
     {
         public DtoMappingProfile()
         {
             CreateMap<Asset, AssetDto>()
+                .ReverseMap();
+
+            CreateMap<Asset, NestedAssetDto>()
                 .ReverseMap();
 
             CreateMap<AssetProperties, AssetPropertiesDto>()
@@ -38,6 +41,9 @@ namespace Trackable.Web.Dtos
             CreateMap<TrackingDevice, TrackingDeviceDto>()
                 .ReverseMap();
 
+            CreateMap<TrackingDevice, NestedTrackingDeviceDto>()
+                .ReverseMap();
+
             CreateMap<Trip, TripDto>()
                 .ReverseMap();
 
@@ -45,6 +51,9 @@ namespace Trackable.Web.Dtos
                 .ReverseMap();
 
             CreateMap<User, UserDto>()
+                .ReverseMap();
+
+            CreateMap<Role, RoleDto>()
                 .ReverseMap();
         }
     }

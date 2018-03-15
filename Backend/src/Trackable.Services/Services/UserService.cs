@@ -1,7 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
 using System.Threading.Tasks;
 using Trackable.Common;
 using Trackable.Models;
@@ -9,7 +8,7 @@ using Trackable.Repositories;
 
 namespace Trackable.Services
 {
-    class UserService : CrudServiceBase<Guid, User, IUserRepository>, IUserService
+    class UserService : CrudServiceBase<string, User, IUserRepository>, IUserService
     {
         private readonly IRoleRepository roleRepository;
 

@@ -2,8 +2,11 @@
      Licensed under the MIT License. -->
 
 <mat-toolbar color="primary">
-  <span *ngIf="!isEditing">Add device</span>
-  <span *ngIf="isEditing">Edit Device</span>
+    <span>{{isEditing ? 'Edit Device' : 'Add Device'}}</span>
+  <span class="toolbar-spacer"></span>
+  <a *ngIf="isEditing" [appRoleLimiter]="Roles.Administrator" mat-icon-button mat-tooltip="Delete Asset" (click)="deleteDevice()">
+    <mat-icon>delete_forever</mat-icon>
+  </a>
 </mat-toolbar>
 
 <section>
@@ -39,7 +42,7 @@
     <mat-input-container>
       <mat-select placeholder="Linked Asset" [(ngModel)]="device.assetId" name="assetId">
         <mat-option *ngFor="let asset of assets" [value]="asset.id">
-          {{asset.id}}
+          {{asset.name}}
         </mat-option>
       </mat-select>
     </mat-input-container>

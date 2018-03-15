@@ -15,6 +15,7 @@ namespace Trackable.Repositories
     public interface IAssetRepository : 
         IRepository<string, Asset>,
         IDbCountableRepository<string, AssetData, Asset>,
+        IDbNamedRepository<string, AssetData, Asset>,
         IDbTaggedRepository<string, AssetData, Asset>
     {
         Task<IDictionary<string, TrackingPoint>> GetAssetsLatestPositions();

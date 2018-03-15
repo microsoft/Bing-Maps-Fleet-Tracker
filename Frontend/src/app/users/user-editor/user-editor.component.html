@@ -25,7 +25,7 @@
       <a class="partial-button" (click)="regenerateToken()">Regenerate</a>
     </mat-input-container>
 
-    <mat-input-container [hidden]="user.role.name === 'Owner'"> 
+    <mat-input-container *ngIf="user.role.name !== 'Owner'"> 
       <mat-select placeholder="Role" [(ngModel)]="user.role.name" name="role" [required]="isAddingNew">
         <mat-option *ngFor="let role of roles" [value]="role.name">
           {{role.name}}

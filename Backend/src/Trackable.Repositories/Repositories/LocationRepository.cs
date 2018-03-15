@@ -1,19 +1,19 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Trackable.EntityFramework;
 using Trackable.Models;
-using System;
-using System.Linq.Expressions;
-using AutoMapper;
 
 namespace Trackable.Repositories
 {
-    internal class LocationRepository : DbRepositoryBase<int, LocationData, Location>, ILocationRepository
+    internal class LocationRepository : DbRepositoryBase<string, LocationData, Location>, ILocationRepository
     {
 
         public LocationRepository(TrackableDbContext db, IMapper mapper)
@@ -21,7 +21,30 @@ namespace Trackable.Repositories
         {
         }
 
-        public async Task<IEnumerable<Location>> GetAsync(IEnumerable<int> ids)
+        public override Task<IEnumerable<Location>> AddAsync(IEnumerable<Location> models)
+        {
+            foreach (var model in models)
+            {
+                if (string.IsNullOrEmpty(model.Id))
+                {
+                    model.Id = Guid.NewGuid().ToString("N");
+                }
+            }
+
+            return base.AddAsync(models);
+        }
+
+        public override Task<Location> AddAsync(Location model)
+        {
+            if (string.IsNullOrEmpty(model.Id))
+            {
+                model.Id = Guid.NewGuid().ToString("N");
+            }
+
+            return base.AddAsync(model);
+        }
+
+        public async Task<IEnumerable<Location>> GetAsync(IEnumerable<string> ids)
         {
             var data = await this.FindBy(l => ids.Contains(l.Id))
                 .ToListAsync();
@@ -37,12 +60,13 @@ namespace Trackable.Repositories
                 ).CountAsync();
         }
 
-        public async Task<IDictionary<string, int>> GetCountPerAssetAsync(int locationId)
+        public async Task<IDictionary<string, int>> GetCountPerAssetAsync(string locationId)
         {
             return await this.Db.TripLegs
+                .AsNoTracking()
                 .Include(leg => leg.Trip)
                 .Where(leg => leg.StartLocationId == locationId || leg.EndLocationId == locationId)
-                .GroupBy(leg => leg.Trip.AssetId)
+                .GroupBy(leg => leg.Trip.Asset.Name)
                 .OrderByDescending(g => g.Count())
                 .ToDictionaryAsync(g => g.Key, g => g.Count());
         }

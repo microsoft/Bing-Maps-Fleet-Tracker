@@ -273,7 +273,7 @@ export class BingMapsService {
                     const pushpin = new Microsoft.Maps.Pushpin(event.location, {
                         color: this.genericColors[4]
                     });
-                    this.map.entities.push(pushpin);
+                    this.geofencesLayer.add(pushpin);
                 }
 
                 subject.next(tempGeofence.fencePolygon);
@@ -355,10 +355,14 @@ export class BingMapsService {
     /* END GEOFENCES FUNCTIONS */
 
     /* LOCATION FUNCTIONS */
-    drawLocationPin(subject: Subject<Location>) {
+    drawLocationPin(subject: Subject<Location>, location: Location) {
         this.load().then(() => {
             const tempLocation = new Location();
             tempLocation.name = 'New Location';
+
+            if (location && location.name) {
+                tempLocation.name = location.name;
+            }
 
             this.resetMap();
             this.locationsLayer.setVisible(true);
@@ -433,7 +437,7 @@ export class BingMapsService {
                     strokeThickness: 2
                 });
 
-                this.map.entities.push(polyline);
+                this.locationsLayer.add(polyline);
                 this.centerMap(points[0]);
             }
         });
@@ -441,13 +445,7 @@ export class BingMapsService {
 
     showDispatchingRoutePins(locations: Location[]) {
         this.load().then(() => {
-            this.resetMap();
-            this.locationsLayer.setVisible(true);
-            this.locationsLayer.clear();
-
-            let index = 1;
             locations.forEach(location => {
-                location.name = this.getNormalizedLocationName(location) + ' (' + index++ + ')';
                 this.showLocation(location);
             });
         });
@@ -534,9 +532,9 @@ export class BingMapsService {
     /* END POINT FUNCTIONS */
 
     /* ASSET FUNCTIONS */
-    showAssets(positions: [Asset, TrackingPoint][], centerMap: boolean): void {
+    showAssets(positions: [Asset, TrackingPoint][], centerMap: boolean, clearMap: boolean): void {
         this.load().then(() => {
-            if (centerMap) {
+            if (clearMap) {
                 this.resetMap();
                 this.assetsLayer.setVisible(true);
             }
@@ -551,7 +549,7 @@ export class BingMapsService {
                     points.push(p);
                     const location = new Microsoft.Maps.Location(p.latitude, p.longitude);
                     const pushpin = new Microsoft.Maps.Pushpin(location, {
-                        title: position[0].id,
+                        title: position[0].name,
                         subTitle: this.timeConverter(p.time),
                         icon:
                             (position[0].assetType === AssetType.Car
@@ -570,9 +568,9 @@ export class BingMapsService {
     /* END ASSET FUNCTIONS */
 
     /* DEVICE FUNCTIONS */
-    showDevices(positions: Map<string, TrackingPoint>, centerMap: boolean): void {
+    showDevices(positions: Map<string, TrackingPoint>, centerMap: boolean, clearMap: boolean): void {
         this.load().then(() => {
-            if (centerMap) {
+            if (clearMap) {
                 this.resetMap();
                 this.devicesLayer.setVisible(true);
             }
@@ -666,7 +664,7 @@ export class BingMapsService {
             const tripLegLocations = [];
 
             // Show the starting stop in a leg if its different from the ending stop of the last
-            if (!previousTripLeg || previousTripLeg.endLocationId !== leg.startLocationId) {
+            if (!previousTripLeg || previousTripLeg.endLocation.id !== leg.startLocation.id) {
                 this.showTripLocation(leg.startLocation);
                 tripLegLocations.push(new Microsoft.Maps.Location(
                     leg.startLocation.latitude,
@@ -696,10 +694,8 @@ export class BingMapsService {
             });
             this.tripsLayer.add(line);
 
-            previousTripLeg = leg;
-
             // Draw a dotted line between trip leg stop locations, if they are not the same.
-            if (previousTripLeg && previousTripLeg.endLocationId !== leg.startLocationId) {
+            if (previousTripLeg && previousTripLeg.endLocation.id !== leg.startLocation.id) {
                 const startPoint = new Microsoft.Maps.Location(
                     leg.startLocation.latitude,
                     leg.startLocation.longitude
@@ -719,6 +715,8 @@ export class BingMapsService {
                 );
                 this.tripsLayer.add(dottedLine);
             }
+
+            previousTripLeg = leg;
         }
 
         this.centerMap(trip.startLocation);
@@ -747,7 +745,7 @@ export class BingMapsService {
             }
 
             // Draw a dotted line between trip leg stop locations, if they are not the same.
-            if (previousTripLeg && previousTripLeg.endLocationId !== leg.startLocationId) {
+            if (previousTripLeg && previousTripLeg.endLocation.id !== leg.startLocation.id) {
                 const startPoint = new Microsoft.Maps.Location(
                     leg.startLocation.latitude,
                     leg.startLocation.longitude

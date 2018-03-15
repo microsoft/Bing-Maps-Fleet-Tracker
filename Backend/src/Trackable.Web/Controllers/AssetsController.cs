@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Trackable.Common;
 using Trackable.Models;
@@ -41,28 +42,48 @@ namespace Trackable.Web.Controllers
         /// </summary>
         /// <param name="tags">Tags to search for</param>
         /// <param name="includesAllTags">True to return results including all tags, false to return results including any tags</param>
+        /// <param name="name">Name of asset</param>
         /// <returns>List of assets</returns>
         // GET api/assets
         [HttpGet]
-        public async Task<IEnumerable<AssetDto>> Get([FromQuery] string tags = null, [FromQuery] bool includesAllTags = false)
+        public async Task<IEnumerable<AssetDto>> Get(
+            [FromQuery] string tags = null,
+            [FromQuery] bool includesAllTags = false,
+            [FromQuery] string name = null)
         {
-            if (string.IsNullOrEmpty(tags))
+            if (string.IsNullOrEmpty(tags) && string.IsNullOrEmpty(name))
             {
                 var results = await this.assetService.ListAsync();
                 return this.dtoMapper.Map<IEnumerable<AssetDto>>(results);
             }
 
-            var tagsArray = tags.Split(',');
-            if (includesAllTags)
+            IEnumerable<Asset> taggedResults = null;
+            if (!string.IsNullOrEmpty(tags))
             {
-                var results = await this.assetService.FindContainingAllTagsAsync(tagsArray);
-                return this.dtoMapper.Map<IEnumerable<AssetDto>>(results);
+                var tagsArray = tags.Split(',');
+                if (includesAllTags)
+                {
+                    taggedResults = await this.assetService.FindContainingAllTagsAsync(tagsArray);
+                }
+                else
+                {
+                    taggedResults = await this.assetService.FindContainingAnyTagsAsync(tagsArray);
+                }
             }
-            else
+
+            if (string.IsNullOrEmpty(name))
             {
-                var results = await this.assetService.FindContainingAnyTagsAsync(tagsArray);
-                return this.dtoMapper.Map<IEnumerable<AssetDto>>(results);
+                return this.dtoMapper.Map<IEnumerable<AssetDto>>(taggedResults);
             }
+
+            var resultsByName = await this.assetService.FindByNameAsync(name);
+            if (taggedResults == null)
+            {
+                return this.dtoMapper.Map<IEnumerable<AssetDto>>(resultsByName);
+            }
+
+            return this.dtoMapper.Map<IEnumerable<AssetDto>>(
+                taggedResults.Where(d => resultsByName.Select(r => r.Id).Contains(d.Id)));
         }
 
         /// <summary>
@@ -82,7 +103,7 @@ namespace Trackable.Web.Controllers
         /// <summary>
         /// Get latest position of all assets
         /// </summary>
-        /// <returns>Dictionary containing AssetID vs last seen TrackingPoint</returns>
+        /// <returns>Dictionary containing Asset Name vs last seen TrackingPoint</returns>
         // GET api/assets/all/positions
         [HttpGet("all/positions")]
         public async Task<IDictionary<string, TrackingPointDto>> GetLatestPositions()

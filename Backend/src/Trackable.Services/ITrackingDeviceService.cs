@@ -9,8 +9,6 @@ namespace Trackable.Services
 {
     public interface ITrackingDeviceService : ICrudService<string, TrackingDevice>
     {
-        Task<TrackingDevice> GetDeviceByNameAsync(string name);
-
         Task<TrackingDevice> AddOrUpdateDeviceAsync(TrackingDevice device);
 
         byte[] GetDeviceProvisioningQrCode(PhoneClientData data, int height, int width, int margin);

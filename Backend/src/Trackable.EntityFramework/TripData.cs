@@ -29,9 +29,9 @@ namespace Trackable.EntityFramework
 
         public ICollection<TripLegData> TripLegDatas { get; set; }
 
-        public int StartLocationId { get; set; }
+        public string StartLocationId { get; set; }
 
-        public int EndLocationId { get; set; }
+        public string EndLocationId { get; set; }
 
         public LocationData StartLocation { get; set; }
 

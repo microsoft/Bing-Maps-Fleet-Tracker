@@ -5,6 +5,7 @@ import { Local } from 'protractor/built/driverProviders';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { Point } from '../shared/point';
@@ -18,32 +19,32 @@ import { Asset } from '../assets/asset';
 @Injectable()
 export class MapsService {
 
-    private points = new Subject<Point[]>();
-    private trips = new Subject<Trip[]>();
-    private trip = new Subject<Trip>();
-    private geofence = new Subject<Geofence>();
-    private geofences = new Subject<Geofence[]>();
-    private currentDrawEnd = new Subject();
-    private geofenceCircularRadiusChange = new Subject<number>();
-    private geofenceCircularDraw = new Subject<[Point, number]>();
+    private points = new ReplaySubject<Point[]>();
+    private trips = new ReplaySubject<Trip[]>();
+    private trip = new ReplaySubject<Trip>();
+    private geofence = new ReplaySubject<Geofence>();
+    private geofences = new ReplaySubject<Geofence[]>();
+    private currentDrawEnd = new ReplaySubject();
+    private geofenceCircularRadiusChange = new ReplaySubject<number>();
+    private geofenceCircularDraw = new ReplaySubject<[Point, number]>();
     private geofenceCircularDrawResult = new BehaviorSubject<Point>(null);
-    private geofencePolygonDraw = new Subject<Point[]>();
+    private geofencePolygonDraw = new ReplaySubject<Point[]>();
     private geofencePolygonDrawResult = new BehaviorSubject<Point[]>(new Array<Point>());
-    private assetsPositions = new Subject<[{ [key: string]: TrackingPoint }, boolean]>();
-    private assetPosition = new Subject<[Asset, TrackingPoint]>();
-    private devicesPositions = new Subject<Map<string, TrackingPoint>>();
-    private devicePosition = new Subject<[string, TrackingPoint]>();
-    private dispatchingPinsDraw = new Subject<Location[]>();
+    private assetsPositions = new ReplaySubject<[{ [key: string]: TrackingPoint }, boolean]>();
+    private assetPosition = new ReplaySubject<[Asset, TrackingPoint]>();
+    private devicesPositions = new ReplaySubject<[Map<string, TrackingPoint>, boolean]>();
+    private devicePosition = new ReplaySubject<[string, TrackingPoint]>();
+    private dispatchingPinsDraw = new ReplaySubject<Location[]>();
     private dispatchingPinsDrawResult = new BehaviorSubject<Location[]>(new Array<Location>());
-    private dispatchingPoints = new Subject<Point[]>();
-    private dispatchingAlternativePoints = new Subject<Point[]>();
-    private dispatchingPins = new Subject<Location[]>();
-    private locationsPositions = new Subject<Location[]>();
-    private locationPosition = new Subject<Location>();
-    private locationPinDraw = new Subject<Location>();
+    private dispatchingPoints = new ReplaySubject<Point[]>();
+    private dispatchingAlternativePoints = new ReplaySubject<Point[]>();
+    private dispatchingPins = new ReplaySubject<Location[]>();
+    private locationsPositions = new ReplaySubject<Location[]>();
+    private locationPosition = new ReplaySubject<Location>();
+    private locationPinDraw = new ReplaySubject<Location>();
     private locationPinResult = new Subject<Location>();
-    private itineraryPoint = new Subject<Point>();
-    private locationSearchQuery = new Subject<string>();
+    private itineraryPoint = new ReplaySubject<Point>();
+    private locationSearchQuery = new ReplaySubject<string>();
     private locationSearchResult = new Subject<Point>();
 
     private routeColor: number;
@@ -90,8 +91,8 @@ export class MapsService {
         this.assetPosition.next(position);
     }
 
-    showDevicesPositions(positions: Map<string, TrackingPoint>) {
-        this.devicesPositions.next(positions);
+    showDevicesPositions(positions: Map<string, TrackingPoint>, inBackground = false) {
+        this.devicesPositions.next([positions, inBackground]);
     }
 
     showDevice(position: [string, TrackingPoint]) {
@@ -106,12 +107,12 @@ export class MapsService {
         this.locationPosition.next(position);
     }
 
-    startLocationPinDraw() {
-        this.locationPinDraw.next();
+    startLocationPinDraw(location: Location) {
+        this.locationPinDraw.next(location);
     }
 
     endCurrentDraw() {
-        this.currentDrawEnd.next();
+        this.currentDrawEnd.next(null);
     }
 
     showTrips(trips: Trip[]) {
@@ -156,7 +157,7 @@ export class MapsService {
         return this.assetPosition.asObservable();
     }
 
-    getDevicesPositions(): Observable<Map<string, TrackingPoint>> {
+    getDevicesPositions(): Observable<[Map<string, TrackingPoint>, boolean]> {
         return this.devicesPositions.asObservable();
     }
 

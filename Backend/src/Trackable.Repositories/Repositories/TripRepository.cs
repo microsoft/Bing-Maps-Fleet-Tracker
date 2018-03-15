@@ -34,7 +34,9 @@ namespace Trackable.Repositories
         {
             data => data.StartLocation,
             data => data.EndLocation,
-            data => data.TripLegDatas
+            data => data.TripLegDatas,
+            data => data.TripLegDatas.Select(t => t.StartLocation),
+            data => data.TripLegDatas.Select(t => t.EndLocation)
         };
     }
 }

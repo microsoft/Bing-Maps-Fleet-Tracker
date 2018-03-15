@@ -87,7 +87,7 @@ namespace Trackable.Web.Controllers
         /// <returns>The location</returns>
         // GET api/locations/5
         [HttpGet("{id}")]
-        public async Task<LocationDto> Get(int id)
+        public async Task<LocationDto> Get(string id)
         {
             var result = await this.locationService.GetAsync(id);
 
@@ -98,10 +98,10 @@ namespace Trackable.Web.Controllers
         /// Get the number of times assets have visited a location
         /// </summary>
         /// <param name="id">The location id</param>
-        /// <returns>Dictionary containing asset ids vs visit count</returns>
+        /// <returns>Dictionary containing asset names vs visit count</returns>
         //GET api/locations/5/assetsCount
         [HttpGet("{id}/assetsCount")]
-        public async Task<IDictionary<string, int>> GetAssetsCount(int id)
+        public async Task<IDictionary<string, int>> GetAssetsCount(string id)
         {
             return await this.locationService.GetCountByAssetAsync(id);
         }
@@ -146,7 +146,7 @@ namespace Trackable.Web.Controllers
         /// <returns>The updated location</returns>
         //PUT api/locations/5
         [HttpPut("{id}")]
-        public async Task<LocationDto> Put(int id, [FromBody]LocationDto location)
+        public async Task<LocationDto> Put(string id, [FromBody]LocationDto location)
         {
             var model = this.dtoMapper.Map<Location>(location);
 
@@ -155,10 +155,15 @@ namespace Trackable.Web.Controllers
             return this.dtoMapper.Map<LocationDto>(result);
         }
 
+        /// <summary>
+        /// Delete location
+        /// </summary>
+        /// <param name="id">The location id</param>
+        /// <returns>Ok response</returns>
         // DELETE api/locations/5
         [HttpDelete("{id}")]
         [Authorize(UserRoles.Administrator)]
-        public async Task Delete(int id)
+        public async Task Delete(string id)
         {
             await this.locationService.DeleteAsync(id);
         }

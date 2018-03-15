@@ -282,4 +282,5 @@ __pycache__/
 PublishProfiles/
 src/Trackable.Web/wwwroot/dist/**
 !src/Trackable.Web/wwwroot/dist/swagger/
+!src/Trackable.Web/wwwroot/dist/swagger/swagger.css
 !src/Trackable.Web/wwwroot/dist/swagger/swagger.js

@@ -21,48 +21,58 @@ namespace Trackable.Repositories
         {
         }
 
-        public async override Task<Asset> UpdateAsync(string id, Asset model)
+        public async override Task<Asset> AddAsync(Asset model)
         {
-            var data = await this.FindAsync(id);
-
-            if (data == null)
+            if (string.IsNullOrEmpty(model.Id))
             {
-                throw new ResourceNotFoundException("Attempting to update a resource that does not exist");
+                model.Id = Guid.NewGuid().ToString("N");
             }
 
-            data.Tags = model.Tags.Select(t => new TagData { TagName = t }).ToList();
+            if (string.IsNullOrEmpty(model.Name))
+            {
+                throw new BadArgumentException("Asset must have a name");
+            }
 
-            await this.Db.SaveChangesAsync();
+            var nameIsUsed = await this.FindBy(a => a.Name == model.Name).AnyAsync();
+            if (nameIsUsed)
+            {
+                throw new BadArgumentException("Asset name must be unique");
+            }
 
-            return ObjectMapper.Map<Asset>(await this.FindAsync(data.Id));
+            return await base.AddAsync(model);
         }
 
-        public async override Task<IEnumerable<Asset>> UpdateAsync(IDictionary<string, Asset> models)
+        public async override Task<IEnumerable<Asset>> AddAsync(IEnumerable<Asset> models)
         {
-            var dataModels = await this.FindBy(item => models.Keys.Contains(item.Id)).ToListAsync();
-
-            if (dataModels.Any(d => d == null))
+            foreach (var model in models)
             {
-                throw new ResourceNotFoundException("Attempting to update a resource that does not exist");
+                if (string.IsNullOrEmpty(model.Id))
+                {
+                    model.Id = Guid.NewGuid().ToString("N");
+                }
+
+                if (string.IsNullOrEmpty(model.Name))
+                {
+                    throw new BadArgumentException("Assets must have a name");
+                }
             }
 
-            foreach (var item in dataModels)
+            var modelNames = models.Select(m => m.Name).ToList();
+            var nameIsUsed = await this.FindBy(a => modelNames.Contains(a.Name)).AnyAsync();
+            if (nameIsUsed)
             {
-                item.Tags = models[item.Id].Tags.Select(t => new TagData { TagName = t }).ToList();
+                throw new BadArgumentException("Asset names must be unique");
             }
 
-            await this.Db.SaveChangesAsync();
-
-            var ids = models.Select(d => d.Key).ToList();
-            return this.ObjectMapper.Map<IEnumerable<Asset>>(await this.FindBy(d => ids.Contains(d.Id)).ToListAsync());
+            return await base.AddAsync(models);
         }
 
         public async Task<IDictionary<string, TrackingPoint>> GetAssetsLatestPositions()
         {
             return await this.Db.Assets
-                .Where(d => !d.Deleted)
+                .Where(d => !d.Deleted && d.LatestPosition != null)
                 .Include(d => d.LatestPosition)
-                .ToDictionaryAsync(d => d.Id, d => this.ObjectMapper.Map<TrackingPoint>(d.LatestPosition));
+                .ToDictionaryAsync(d => d.Name, d => this.ObjectMapper.Map<TrackingPoint>(d.LatestPosition));
         }
 
         public async Task<int> GetNumberOfActiveAssets(DateTime activeThreshold)
@@ -70,6 +80,22 @@ namespace Trackable.Repositories
             return await this.Db.Assets
                 .Where(d => (!d.Deleted && d.LatestPosition.CreatedAtTimeUtc > activeThreshold))
                 .CountAsync();
+        }
+
+        public override async Task DeleteAsync(string id)
+        {
+            var data = await this.FindAsync(id);
+
+            if (data == null)
+            {
+                throw new ResourceNotFoundException("Attempting to delete a resource that does not exist");
+            }
+
+            this.Db.Assets.Attach(data);
+            data.Deleted = true;
+            data.TrackingDevice = null;
+
+            await this.Db.SaveChangesAsync();
         }
 
         protected override Expression<Func<AssetData, object>>[] Includes => new Expression<Func<AssetData, object>>[]

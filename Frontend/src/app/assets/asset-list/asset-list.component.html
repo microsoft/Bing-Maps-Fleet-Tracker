@@ -8,8 +8,8 @@
     <mat-icon>add_circle</mat-icon>
   </a>
   <button mat-icon-button>
-      <mat-icon>info</mat-icon>
-    </button>
+    <mat-icon>info</mat-icon>
+  </button>
 </mat-toolbar>
 
 <mat-input-container>
@@ -17,18 +17,18 @@
 </mat-input-container>
 
 <mat-list>
-  <mat-list-item *ngFor="let asset of assets | async | filterList:filter" [class.active]="asset == selectedAsset && isAssetListSeleceted()">
-    <h3 mat-line (click)="showAsset(asset)">{{asset.id}}</h3>
-    <span mat-line class="subtle" (click)="showAsset(asset)">device: {{asset.trackingDeviceName}}</span>
+  <mat-list-item *ngFor="let asset of assetsList | filterList:filter" [class.active]="asset == selectedAsset && isAssetListSeleceted()">
+    <h3 mat-line (click)="showAsset(asset)">{{asset.name}}</h3>
+    <span mat-line class="subtle" (click)="showAsset(asset)">device: {{asset.trackingDevice ? asset.trackingDevice.name : ''}}</span>
     <button mat-icon-button mat-tooltip='Trips' (click)="showTrips(asset)" [class.active]="asset == selectedAsset && isAssetTripsSelected()">
-          <mat-icon>trending_up</mat-icon>
-      </button>
+      <mat-icon>trending_up</mat-icon>
+    </button>
     <button mat-icon-button mat-tooltip='Points' (click)="showPoints(asset)" [class.active]="asset == selectedAsset && isAssetPointsSelected()">
-          <mat-icon>gps_fixed</mat-icon>
-      </button>
-    <!--<a mat-icon-button [routerLink]="['/assets', asset.id]">
-        <mat-icon>mode_edit</mat-icon>
-     </a>-->
+      <mat-icon>gps_fixed</mat-icon>
+    </button>
+    <button mat-icon-button mat-tooltip='Edit' [routerLink]="['/assets', asset.id]">
+      <mat-icon>mode_edit</mat-icon>
+    </button>
   </mat-list-item>
 </mat-list>
 

@@ -14,28 +14,34 @@ using Trackable.Repositories.Helpers;
 
 namespace Trackable.Repositories
 {
-    class GeoFenceRepository : DbRepositoryBase<int, GeoFenceData, GeoFence>, IGeoFenceRepository
+    class GeoFenceRepository : DbRepositoryBase<string, GeoFenceData, GeoFence>, IGeoFenceRepository
     {
         public GeoFenceRepository(TrackableDbContext db, IMapper mapper)
             : base(db, mapper)
         {
         }
 
-        public async Task<GeoFence> UpdateAssetsAsync(GeoFence fence, IEnumerable<string> assetIds)
+        public override Task<GeoFence> AddAsync(GeoFence model)
         {
-            var assets = await this.Db.Assets.Where(a => assetIds.Contains(a.Id)).ToListAsync();
-            var fenceData = await this.FindAsync(fence.Id);
-
-            fenceData.AssetDatas.Clear();
-
-            foreach (var asset in assets)
+            if (string.IsNullOrEmpty(model.Id))
             {
-                fenceData.AssetDatas.Add(asset);
+                model.Id = Guid.NewGuid().ToString("N");
             }
 
-            await this.Db.SaveChangesAsync();
+            return base.AddAsync(model);
+        }
 
-            return this.ObjectMapper.Map<GeoFence>(fenceData);
+        public override Task<IEnumerable<GeoFence>> AddAsync(IEnumerable<GeoFence> models)
+        {
+            foreach (var model in models)
+            {
+                if (string.IsNullOrEmpty(model.Id))
+                {
+                    model.Id = Guid.NewGuid().ToString("N");
+                }
+            }
+
+            return base.AddAsync(models);
         }
 
         public async Task<Dictionary<GeoFence, bool>> GetByAssetIdWithIntersectionAsync(string assetId, IPoint[] points)

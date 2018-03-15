@@ -21,6 +21,14 @@ export class AssetService {
     return this.dataService.post<Asset>('assets', asset);
   }
 
+  updateAsset(asset: Asset): Observable<void> {
+    return this.dataService.put<Asset>('assets', asset.id, asset, true);
+  }
+
+  deleteAsset(asset: Asset): Observable<void> {
+    return this.dataService.delete<Asset>('assets', asset.id);
+  }
+
   getAssets(): Observable<Asset[]> {
     return this.dataService.get<Asset>('assets');
   }
@@ -57,7 +65,7 @@ export class AssetService {
         }
 
         return trips.filter(t => {
-          return t.startTimeStampUtc >= +dateRange.from && t.startTimeStampUtc <= +dateRange.to;
+          return Date.parse(t.startTimeUtc) >= +dateRange.from && Date.parse(t.startTimeUtc) <= +dateRange.to;
         });
       });
   }

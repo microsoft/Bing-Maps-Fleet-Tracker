@@ -23,7 +23,6 @@ export class LocationEditorComponent implements OnInit, OnDestroy {
   locationString: string;
   locationTypeString: string;
   private isAlive: boolean;
-  private readonly undeterminedMessage = 'Undetermined';
 
   constructor(
     private locationService: LocationService,
@@ -31,12 +30,12 @@ export class LocationEditorComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private toasterService: ToasterService) {
-    this.location = new Location();
   }
 
   ngOnInit() {
     this.isAlive = true;
-    this.mapService.startLocationPinDraw();
+    this.location = new Location();
+
     this.route.params
       .takeWhile(() => this.isAlive)
       .subscribe(params => {
@@ -49,13 +48,12 @@ export class LocationEditorComponent implements OnInit, OnDestroy {
               if (location) {
                 this.location = location;
                 this.setlocationString();
-                this.setLocationTypeString();
                 this.mapService.showLocationsPositions([this.location]);
               }
             });
-        } else {
-          this.locationString = this.undeterminedMessage;
         }
+
+        this.mapService.startLocationPinDraw(this.location);
       });
 
     this.mapService.getLocationPinResult()
@@ -91,19 +89,15 @@ export class LocationEditorComponent implements OnInit, OnDestroy {
   }
 
   submit() {
-    if (this.locationString === this.undeterminedMessage) {
+    if (!this.location.latitude || !this.location.longitude) {
       this.toasterService.pop('error', 'Invalid Input', 'Please add the location pin on the map');
       return;
     }
 
     if (this.isEditable) {
-      if (this.didLocationChange) {
-        this.location.interestLevel = InterestLevel.Manual;
-      }
       this.locationService.updateLocation(this.location)
         .subscribe(() => this.router.navigate(['/locations']));
     } else {
-      this.location.interestLevel = InterestLevel.Manual;
       this.locationService.addLocation(this.location)
         .subscribe(() => this.router.navigate(['/locations']));
     }
@@ -111,13 +105,5 @@ export class LocationEditorComponent implements OnInit, OnDestroy {
 
   private setlocationString() {
     this.locationString = '(' + this.location.latitude + ' , ' + this.location.longitude + ' )';
-  }
-
-  private setLocationTypeString() {
-    if (this.location.interestLevel === InterestLevel.Manual) {
-      this.locationTypeString = 'Created/Edited Manually';
-    } else {
-      this.locationTypeString = 'Automatically Generated';
-    }
   }
 }

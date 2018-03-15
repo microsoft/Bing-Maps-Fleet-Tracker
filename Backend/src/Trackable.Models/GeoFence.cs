@@ -6,7 +6,7 @@ using Trackable.Models.Helpers;
 
 namespace Trackable.Models
 {
-    public class GeoFence : ModelBase<int>, ITaggedModel, INamedModel
+    public class GeoFence : ModelBase<string>, ITaggedModel, INamedModel
     {
         /// <summary>
         /// A user friendly name for the GeoFence
@@ -47,6 +47,7 @@ namespace Trackable.Models
         /// <summary>
         /// The ids of the assets constrained by this geo fence
         /// </summary>
+        [Mutable]
         public IEnumerable<string> AssetIds { get; set; }
 
         [Mutable]

@@ -188,6 +188,10 @@
     <Compile Include="Migrations\201802261213391_AddWebhooksToGeofences.Designer.cs">
       <DependentUpon>201802261213391_AddWebhooksToGeofences.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201803071221497_ResourceIdToString.cs" />
+    <Compile Include="Migrations\201803071221497_ResourceIdToString.Designer.cs">
+      <DependentUpon>201803071221497_ResourceIdToString.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlTypeHelper.cs" />
@@ -280,6 +284,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201802261213391_AddWebhooksToGeofences.resx">
       <DependentUpon>201802261213391_AddWebhooksToGeofences.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803071221497_ResourceIdToString.resx">
+      <DependentUpon>201803071221497_ResourceIdToString.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

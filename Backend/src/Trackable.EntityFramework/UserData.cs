@@ -1,14 +1,14 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Trackable.EntityFramework
 {
     [Table("Users")]
-    public class UserData : EntityBase<Guid>
+    public class UserData : EntityBase<string>, INamedEntity
     {
         [Required]
         [MaxLength(450)]
@@ -20,5 +20,7 @@ namespace Trackable.EntityFramework
         public string ClaimsId { get; set; }
 
         public RoleData Role { get; set; }
+
+        public ICollection<TokenData> Tokens { get; set; }
     }
 }

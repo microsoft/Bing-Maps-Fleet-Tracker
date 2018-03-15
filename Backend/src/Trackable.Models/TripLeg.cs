@@ -14,13 +14,13 @@ namespace Trackable.Models
         /// The Start Location ID.
         /// </summary>
         [Mutable]
-        public int StartLocationId { get; set; }
+        public string StartLocationId { get; set; }
 
         /// <summary>
         /// The End Location ID.
         /// </summary>
         [Mutable]
-        public int EndLocationId { get; set; }
+        public string EndLocationId { get; set; }
 
         public Location EndLocation { get; set; }
 

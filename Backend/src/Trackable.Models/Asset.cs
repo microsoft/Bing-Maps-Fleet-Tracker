@@ -2,19 +2,26 @@
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
+using Trackable.Models.Helpers;
 
 namespace Trackable.Models
 {
-    public class Asset : ModelBase<string>, ITaggedModel
+    public class Asset : ModelBase<string>, ITaggedModel, INamedModel
     {
-        public string TrackingDeviceId { get; set; }
-        
-        public string TrackingDeviceName { get; set; }
+        [Mutable]
+        public string Name { get; set; }
 
         public AssetType AssetType { get; set; }
 
+        [Mutable]
         public AssetProperties AssetProperties { get; set; }
 
+        [Mutable]
+        public string TrackingDeviceId { get; set; }
+
+        public TrackingDevice TrackingDevice { get; set; }
+
+        [Mutable]
         public IEnumerable<string> Tags { get; set; }
     }
 

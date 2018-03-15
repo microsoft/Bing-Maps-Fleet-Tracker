@@ -88,7 +88,7 @@ namespace Trackable.Web.Controllers
         /// <returns>The geofence</returns>
         // GET api/geofences/5
         [HttpGet("{id}")]
-        public async Task<GeoFenceDto> Get(int id)
+        public async Task<GeoFenceDto> Get(string id)
         {
             var result = await this.geoFenceService.GetAsync(id);
 
@@ -135,7 +135,7 @@ namespace Trackable.Web.Controllers
         /// <returns>The updated geofence</returns>
         // PUT api/geofences/1
         [HttpPut("{id}")]
-        public async Task<GeoFenceDto> Put(int id, [FromBody]GeoFenceDto geoFence)
+        public async Task<GeoFenceDto> Put(string id, [FromBody]GeoFenceDto geoFence)
         {
             var model = this.dtoMapper.Map<GeoFence>(geoFence);
 
@@ -151,7 +151,7 @@ namespace Trackable.Web.Controllers
         /// <returns>Ok response</returns>
         // DELETE api/geofences/5
         [HttpDelete("{id}")]
-        public async Task Delete(int id)
+        public async Task Delete(string id)
         {
             await this.geoFenceService.DeleteAsync(id);
         }

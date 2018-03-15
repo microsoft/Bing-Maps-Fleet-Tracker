@@ -29,21 +29,20 @@ enum SelectedAssetState {
   styleUrls: ['./asset-list.component.css']
 })
 export class AssetListComponent implements OnInit, OnDestroy {
-
-  assets: Observable<Asset[]>;
   points: Point[];
   trips: Trip[];
   filter: string;
   Roles = Roles;
 
+  assetsList: Asset[];
   selectedAsset: Asset;
   selectedAssetState: SelectedAssetState;
+
   private selectedDateRange: DateRange;
   private lastCalledFunction: (asset: Asset, filterSelected: Boolean) => void;
   private subscription: Subscription;
   private isDrawing = false;
   private isAlive: boolean;
-  private assetsList: Asset[];
 
   constructor(
     private assetService: AssetService,
@@ -54,13 +53,15 @@ export class AssetListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.assets = this.assetService.getAssets();
-    this.assets
+    this.assetService.getAssets()
       .takeWhile(() => this.isAlive)
       .skipWhile(assets => assets.length === 0)
-      .take(1)
       .subscribe(assets => {
-        this.assetsList = assets;
+        this.assetsList = assets.sort((a, b) => {
+          if (a.name < b.name) { return -1; }
+          if (a.name > b.name) { return 1; }
+          return 0;
+        });
         this.showAllAssets();
       });
   }
@@ -80,7 +81,7 @@ export class AssetListComponent implements OnInit, OnDestroy {
     } else {
       this.selectedAsset = asset;
       this.selectedAssetState = SelectedAssetState.PointsSelected;
-      this.toasterService.pop('info', '', 'Showing latest points of \" ' + this.selectedAsset.id + ' \"');
+      this.toasterService.pop('info', '', 'Showing latest points of \" ' + this.selectedAsset.name + ' \"');
       this.unsubscribe();
       this.subscription = this.assetService.getPoints(asset.id, this.selectedDateRange)
         .subscribe(points => {
@@ -98,7 +99,7 @@ export class AssetListComponent implements OnInit, OnDestroy {
       this.selectedAsset = asset;
       this.selectedAssetState = SelectedAssetState.ListSelected;
       this.showAllAssets();
-      this.toasterService.pop('info', '', 'Following asset ' + this.selectedAsset.id);
+      this.toasterService.pop('info', '', 'Following asset ' + this.selectedAsset.name);
     }
   }
 
@@ -108,10 +109,10 @@ export class AssetListComponent implements OnInit, OnDestroy {
       .subscribe(points => {
         this.mapsService.showAssetsPositions(points);
 
-        if (this.selectedAsset && !points[this.selectedAsset.id]) {
-          this.toasterService.pop('error', '', 'Can\'t find position of ' + this.selectedAsset.id);
+        if (this.selectedAsset && !points[this.selectedAsset.name]) {
+          this.toasterService.pop('error', '', 'Can\'t find position of ' + this.selectedAsset.name);
         } else if (this.selectedAsset) {
-          this.mapsService.showAsset([this.selectedAsset, points[this.selectedAsset.id]]);
+          this.mapsService.showAsset([this.selectedAsset, points[this.selectedAsset.name]]);
         }
       });
   }
@@ -126,7 +127,7 @@ export class AssetListComponent implements OnInit, OnDestroy {
     } else {
       this.selectedAsset = asset;
       this.selectedAssetState = SelectedAssetState.TripsSelected;
-      this.toasterService.pop('info', '', 'Showing latest trips of ' + this.selectedAsset.id);
+      this.toasterService.pop('info', '', 'Showing latest trips of ' + this.selectedAsset.name);
       this.unsubscribe();
       this.subscription = this.assetService.getTrips(asset.id, this.selectedDateRange)
         .subscribe(trips => {

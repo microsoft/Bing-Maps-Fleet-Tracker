@@ -4,26 +4,27 @@
 import { Point } from './point';
 
 export class Geofence {
-    id: number;
+    id: string;
     name: string;
     emailsToNotify: string[];
     webhooksToNotify: string[];
     cooldown: number;
-    fenceType: string;
+    fenceType: FenceType;
+    areaType: AreaType;
     fencePolygon: Point[];
     fenceCenter: Point;
     radiusInMeters: number;
-    areaType: AreaType;
     assetIds: string[];
+    tags: string[];
 }
 
 export enum FenceType {
-    Inbound,
-    Outbound
+    Inbound = <any>'Inbound',
+    Outbound = <any>'Outbound'
 }
 
 export enum AreaType {
-    Unknown,
-    Polygon,
-    Circular
+    Unknown = <any>'Unknown',
+    Polygon = <any>'Polygon',
+    Circular = <any>'Circular'
 }

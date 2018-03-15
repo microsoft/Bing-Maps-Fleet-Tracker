@@ -7,11 +7,11 @@ export interface TrackingPoint extends Point {
     id: number;
     time: number;
     provider: string;
-    locationProvider: number;
-    debug: boolean;
-    accuracy: number;
-    speed: number;
-    bearing: number;
+    locationProvider?: number;
+    accuracy?: number;
+    speed?: number;
+    bearing?: number;
+    altitude?: number;
     tripId: number;
     assetId: string;
     trackingDeviceId: string;

@@ -121,9 +121,10 @@ export class MapsComponent implements OnInit {
                     .getCurrentDrawEnd()
                     .subscribe(drawEnd => this.bingMapsService.endCurrentDraw());
 
-                this.mapsService.getLocationPinDraw().subscribe(() => {
+                this.mapsService.getLocationPinDraw().subscribe((location) => {
                     this.bingMapsService.drawLocationPin(
-                        this.mapsService.getLocationPinResultSubject()
+                        this.mapsService.getLocationPinResultSubject(),
+                        location
                     );
                 });
 
@@ -147,24 +148,29 @@ export class MapsComponent implements OnInit {
                     const mappedAssets = new Array<[Asset, TrackingPoint]>();
                     for (const k of Object.keys(positions)) {
                         const value = positions[k];
-                        const asset = assets.find(val => val.id === k);
-                        mappedAssets.push([asset, value]);
+                        const asset = assets.find(val => val.name === k);
+                        if (asset) {
+                            mappedAssets.push([asset, value]);
+                        }
                     }
 
                     this.bingMapsService.showAssets(
                         mappedAssets,
-                        !data[1] && lastPositionCall !== 'assets'
+                        !data[1] && lastPositionCall !== 'assets',
+                        !data[1]
                     );
 
                     lastPositionCall = 'assets';
                 });
 
-                this.mapsService.getDevicesPositions().subscribe(positions => {
+                this.mapsService.getDevicesPositions().subscribe(data => {
                     this.bingMapsService.showDevices(
-                        positions,
-                        lastPositionCall !== 'devcies'
+                        data[0],
+                        !data[1] && lastPositionCall !== 'devices',
+                        !data[1]
                     );
-                    lastPositionCall = 'devcies';
+
+                    lastPositionCall = 'devices';
                 });
 
                 this.mapsService.getLocationsPositions().subscribe(positions => {

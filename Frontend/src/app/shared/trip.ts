@@ -6,8 +6,6 @@ import { Location } from './location';
 
 export class Trip {
     id: number;
-    startLocationId: number;
-    endLocationId: number;
     startLocation: Location;
     endLocation: Location;
     assetId: string;
@@ -16,5 +14,4 @@ export class Trip {
     endTimeUtc: string;
     tripLegs: TripLeg[];
     durationInMinutes: number;
-    startTimeStampUtc: number;
 }
