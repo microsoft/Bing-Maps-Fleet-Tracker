@@ -98,7 +98,7 @@ namespace Trackable.Web.Controllers
         /// Get the number of times assets have visited a location
         /// </summary>
         /// <param name="id">The location id</param>
-        /// <returns>Dictionary containing asset ids vs visit count</returns>
+        /// <returns>Dictionary containing asset names vs visit count</returns>
         //GET api/locations/5/assetsCount
         [HttpGet("{id}/assetsCount")]
         public async Task<IDictionary<string, int>> GetAssetsCount(string id)

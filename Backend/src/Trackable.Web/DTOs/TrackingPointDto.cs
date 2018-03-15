@@ -63,7 +63,6 @@ namespace Trackable.Web.Dtos
         /// <summary>
         /// The id of the device this point is tied to
         /// </summary>
-        [Required]
         public string TrackingDeviceId { get; set; }
     }
 }
