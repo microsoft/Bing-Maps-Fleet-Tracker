@@ -23,8 +23,9 @@ namespace Trackable.Repositories
         public async Task<IDictionary<string, TrackingPoint>> GetDevicesLatestPositions()
         {
             return await this.Db.TrackingDevices
-                .Where(d => !d.Deleted && d.LatestPosition != null)
+                .AsNoTracking()
                 .Include(d => d.LatestPosition)
+                .Where(d => !d.Deleted && d.LatestPosition != null)
                 .ToDictionaryAsync(d => d.Name, d => this.ObjectMapper.Map<TrackingPoint>(d.LatestPosition));
         }
 

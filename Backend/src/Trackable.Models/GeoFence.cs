@@ -47,6 +47,7 @@ namespace Trackable.Models
         /// <summary>
         /// The ids of the assets constrained by this geo fence
         /// </summary>
+        [Mutable]
         public IEnumerable<string> AssetIds { get; set; }
 
         [Mutable]

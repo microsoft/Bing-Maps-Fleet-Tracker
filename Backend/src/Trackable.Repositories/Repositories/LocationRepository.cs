@@ -63,9 +63,10 @@ namespace Trackable.Repositories
         public async Task<IDictionary<string, int>> GetCountPerAssetAsync(string locationId)
         {
             return await this.Db.TripLegs
+                .AsNoTracking()
                 .Include(leg => leg.Trip)
                 .Where(leg => leg.StartLocationId == locationId || leg.EndLocationId == locationId)
-                .GroupBy(leg => leg.Trip.AssetId)
+                .GroupBy(leg => leg.Trip.Asset.Name)
                 .OrderByDescending(g => g.Count())
                 .ToDictionaryAsync(g => g.Key, g => g.Count());
         }

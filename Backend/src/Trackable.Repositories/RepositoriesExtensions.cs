@@ -35,6 +35,7 @@ namespace Trackable.Repositories
 
                 .AddSingleton<Profile, ModelMappingProfile>()
 
+                .AddScoped<GeoFenceAssetResolver>()
                 .AddScoped<AssetTrackingDeviceResolver>()
                 .AddScoped<TrackingDeviceAssetResolver>()
                 .AddScoped<TokenTrackingDeviceResolver>()

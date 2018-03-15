@@ -82,6 +82,22 @@ namespace Trackable.Repositories
                 .CountAsync();
         }
 
+        public override async Task DeleteAsync(string id)
+        {
+            var data = await this.FindAsync(id);
+
+            if (data == null)
+            {
+                throw new ResourceNotFoundException("Attempting to delete a resource that does not exist");
+            }
+
+            this.Db.Assets.Attach(data);
+            data.Deleted = true;
+            data.TrackingDevice = null;
+
+            await this.Db.SaveChangesAsync();
+        }
+
         protected override Expression<Func<AssetData, object>>[] Includes => new Expression<Func<AssetData, object>>[]
         {
             asset => asset.TrackingDevice,

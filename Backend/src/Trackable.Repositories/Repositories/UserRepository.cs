@@ -33,7 +33,7 @@ namespace Trackable.Repositories
         {
             model.ThrowIfNull(nameof(model));
 
-            var existingUser = await this.Db.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+            var existingUser = await this.Db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == model.Email);
 
             if (existingUser != null)
             {
@@ -42,12 +42,15 @@ namespace Trackable.Repositories
                     throw new DuplicateResourceException("A user already exists with this email");
                 }
 
+                this.Db.Users.Attach(existingUser);
+
                 existingUser.Deleted = false;
                 existingUser.Role = model.Role == null
                     ? await this.Db.Roles.SingleOrDefaultAsync(r => r.Name == UserRoles.Pending.ToString())
                     : await this.Db.Roles.SingleOrDefaultAsync(r => r.Id == model.Role.Id);
 
                 await this.Db.SaveChangesAsync();
+
                 return this.ObjectMapper.Map<User>(existingUser);
             }
 
@@ -60,8 +63,8 @@ namespace Trackable.Repositories
 
             var dataModel = ObjectMapper.Map<UserData>(model);
             dataModel.Role = roleData;
-            this.Db.Users.Add(dataModel);
 
+            this.Db.Users.Add(dataModel);
             await this.Db.SaveChangesAsync();
 
             return this.ObjectMapper.Map<User>(dataModel);
@@ -73,20 +76,21 @@ namespace Trackable.Repositories
 
             var roleData = await this.Db.Roles.SingleOrDefaultAsync(r => r.Id == model.Role.Id);
 
-            var modelData = await FindAsync(id);
+            var dataModel = await this.FindAsync(id);
+            this.Db.Users.Attach(dataModel);
 
-            UpdateData(modelData, model);
+            UpdateData(dataModel, model);
 
-            modelData.Role = roleData;
+            dataModel.Role = roleData;
 
             await this.Db.SaveChangesAsync();
 
-            return this.ObjectMapper.Map<User>(modelData);
+            return this.ObjectMapper.Map<User>(dataModel);
         }
 
         public async Task<bool> AnyAsync()
         {
-            return await this.Db.Users.AnyAsync();
+            return await this.Db.Users.AsNoTracking().AnyAsync();
         }
 
         protected override Expression<Func<UserData, object>>[] Includes => new Expression<Func<UserData, object>>[]

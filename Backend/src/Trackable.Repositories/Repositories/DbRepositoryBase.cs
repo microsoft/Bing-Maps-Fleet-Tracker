@@ -5,6 +5,7 @@ using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -70,7 +71,7 @@ namespace Trackable.Repositories
 
             await this.Db.SaveChangesAsync();
 
-            if(this.Includes != null)
+            if (this.Includes != null)
             {
                 data = await this.FindAsync(data.Id);
             }
@@ -107,7 +108,7 @@ namespace Trackable.Repositories
         /// </summary>
         /// <param name="model">The model ID.</param>
         /// <returns>The async task.</returns>
-        public async Task DeleteAsync(TKey id)
+        public virtual async Task DeleteAsync(TKey id)
         {
             var data = await this.FindAsync(id);
 
@@ -116,7 +117,9 @@ namespace Trackable.Repositories
                 throw new ResourceNotFoundException("Attempting to delete a resource that does not exist");
             }
 
+            this.Db.Set<TData>().Attach(data);
             data.Deleted = true;
+
             await this.Db.SaveChangesAsync();
         }
 
@@ -125,7 +128,7 @@ namespace Trackable.Repositories
         /// </summary>
         /// <param name="model">The model ID.</param>
         /// <returns>The model async task.</returns>
-        public async Task<TModel> GetAsync(TKey id)
+        public virtual async Task<TModel> GetAsync(TKey id)
         {
             var data = await this.FindAsync(id);
 
@@ -141,7 +144,7 @@ namespace Trackable.Repositories
         /// Gets all models asynchronously.
         /// </summary>
         /// <returns>The models async task.</returns>
-        public async Task<IEnumerable<TModel>> GetAllAsync()
+        public virtual async Task<IEnumerable<TModel>> GetAllAsync()
         {
             var data = await this.FindBy(t => true).ToListAsync();
 
@@ -162,6 +165,8 @@ namespace Trackable.Repositories
                 throw new ResourceNotFoundException("Attempting to update a resource that does not exist");
             }
 
+            this.Db.Set<TData>().Attach(data);
+
             UpdateData(data, model);
 
             await this.Db.SaveChangesAsync();
@@ -170,7 +175,7 @@ namespace Trackable.Repositories
             {
                 data = await this.FindAsync(data.Id);
             }
-            
+
             return ObjectMapper.Map<TModel>(data);
         }
 
@@ -181,7 +186,7 @@ namespace Trackable.Repositories
         /// <returns>The async task.</returns>
         public virtual async Task<IEnumerable<TModel>> UpdateAsync(IDictionary<TKey, TModel> models)
         {
-            var dataModels = await this.FindBy(item => models.Keys.Contains(item.Id)).ToListAsync();
+            var dataModels = await this.FindBy(d => models.Keys.Contains(d.Id)).ToListAsync();
 
             if (dataModels.Any(d => d == null))
             {
@@ -224,16 +229,17 @@ namespace Trackable.Repositories
         /// <returns>The found queryable.</returns>
         public IQueryable<TData> FindBy(Expression<Func<TData, bool>> predicate)
         {
-            var query = this.Db.Set<TData>()
+            var dbQuery = this.Db.Set<TData>()
+                .AsNoTracking()
                 .Where(d => !d.Deleted)
                 .Where(predicate);
 
             if (this.Includes != null)
             {
-                query = this.Includes.Aggregate(query, (current, include) => current.Include(include));
+                dbQuery = this.Includes.Aggregate(dbQuery, (current, include) => current.Include(include));
             }
 
-            return query;
+            return dbQuery;
         }
 
         /// <summary>
@@ -241,12 +247,13 @@ namespace Trackable.Repositories
         /// </summary>
         /// <param name="data">The data model.</param>
         /// <param name="model">The business model.</param>
-        public void UpdateData(TData data, TModel model)
+        protected void UpdateData(TData data, TModel model)
         {
+            // Generate business model from original data model
             var clonedModel = this.ObjectMapper.Map<TModel>(data);
 
+            // Mutate business model properties that have the mutable attribute
             var modelProperties = typeof(TModel).GetProperties();
-
             foreach (var property in modelProperties)
             {
                 var attributes = property.GetCustomAttributes();
@@ -256,13 +263,18 @@ namespace Trackable.Repositories
                 }
             }
 
+            // Data model generated from mutated business model
             var intermediaryData = this.ObjectMapper.Map<TData>(clonedModel);
 
+            // Get the names of properties mapped by automapper (model => data)
+            var propertyMap = this.ObjectMapper.ConfigurationProvider.FindTypeMapFor<TModel, TData>();
+            var mappedPropertyNames = propertyMap.GetPropertyMaps().Where(m => m.IsMapped()).Select(m => m.DestinationProperty.Name);
+
+            // Include only data model properties mapped by auto mapper
             var dataProperties = typeof(TData).GetProperties();
+            dataProperties = dataProperties.Where(p => mappedPropertyNames.Contains(p.Name)).ToArray();
 
-            // Exclude CreatedAt property
-            dataProperties = dataProperties.Where(p => p.Name != "CreatedAtTimeUtc").ToArray();
-
+            // Update data model values
             foreach (var property in dataProperties)
             {
                 property.SetValue(data, property.GetValue(intermediaryData));

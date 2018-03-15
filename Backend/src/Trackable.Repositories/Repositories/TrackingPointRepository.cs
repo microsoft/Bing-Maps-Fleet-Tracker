@@ -27,7 +27,8 @@ namespace Trackable.Repositories
         {
             var device = await this.Db.TrackingDevices
                 .Where(d => !d.Deleted)
-                .Include(d => d.Asset)
+                .Include(d => d.Asset.LatestPosition)
+                .Include(d => d.LatestPosition)
                 .SingleAsync(d => d.Id == model.TrackingDeviceId);
 
             if (device.Asset == null)
@@ -52,7 +53,8 @@ namespace Trackable.Repositories
 
             var devicesDictionary = await this.Db.TrackingDevices
                    .Where(d => !d.Deleted && deviceIds.Contains(d.Id))
-                   .Include(d => d.Asset)
+                   .Include(d => d.Asset.LatestPosition)
+                   .Include(d => d.LatestPosition)
                    .ToDictionaryAsync(d => d.Id, d => d);
 
             if (devicesDictionary.Count < devicePointsLookup.Count)
@@ -60,7 +62,7 @@ namespace Trackable.Repositories
                 throw new BadArgumentException("A Device Id does not exist");
             }
 
-            if(devicesDictionary.Any(d => d.Value.Asset == null))
+            if (devicesDictionary.Any(d => d.Value.Asset == null))
             {
                 throw new BadArgumentException("A Device is not linked to an asset");
             }
@@ -163,14 +165,25 @@ namespace Trackable.Repositories
         {
             var data = this.ObjectMapper.Map<TrackingPointData>(trackingPoint);
 
-            var addedData = this.Db.Set<TrackingPointData>().Add(data);
+            var addedData = this.Db.TrackingPoints.Add(data);
 
-            deviceData.LatestPosition = addedData;
-            deviceData.Asset.LatestPosition = addedData;
+            this.Db.TrackingDevices.Attach(deviceData);
+
+            var deviceLatestPointTime = deviceData?.LatestPosition?.DeviceTimestampUtc;
+            if (!deviceLatestPointTime.HasValue || trackingPoint.DeviceTimestampUtc > deviceLatestPointTime.Value)
+            {
+                deviceData.LatestPosition = addedData;
+            }
+
+            var assetLatestPointTime = deviceData?.Asset?.LatestPosition?.DeviceTimestampUtc;
+            if (!assetLatestPointTime.HasValue || trackingPoint.DeviceTimestampUtc > assetLatestPointTime.Value)
+            {
+                deviceData.Asset.LatestPosition = addedData;
+            }
 
             await this.Db.SaveChangesAsync();
 
-            return this.ObjectMapper.Map<TrackingPoint>(await this.FindAsync(addedData.Id));
+            return this.ObjectMapper.Map<TrackingPoint>(addedData);
         }
     }
 }

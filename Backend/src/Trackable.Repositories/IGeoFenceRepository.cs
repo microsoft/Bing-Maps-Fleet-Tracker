@@ -18,7 +18,5 @@ namespace Trackable.Repositories
         IDbTaggedRepository<string, GeoFenceData, GeoFence>
     {
         Task<Dictionary<GeoFence, bool>> GetByAssetIdWithIntersectionAsync(string assetId, IPoint[] points);
-
-        Task<GeoFence> UpdateAssetsAsync(GeoFence fence, IEnumerable<string> assetIds);
     }
 }

@@ -44,23 +44,6 @@ namespace Trackable.Repositories
             return base.AddAsync(models);
         }
 
-        public async Task<GeoFence> UpdateAssetsAsync(GeoFence fence, IEnumerable<string> assetIds)
-        {
-            var assets = await this.Db.Assets.Where(a => assetIds.Contains(a.Id)).ToListAsync();
-            var fenceData = await this.FindAsync(fence.Id);
-
-            fenceData.AssetDatas.Clear();
-
-            foreach (var asset in assets)
-            {
-                fenceData.AssetDatas.Add(asset);
-            }
-
-            await this.Db.SaveChangesAsync();
-
-            return this.ObjectMapper.Map<GeoFence>(fenceData);
-        }
-
         public async Task<Dictionary<GeoFence, bool>> GetByAssetIdWithIntersectionAsync(string assetId, IPoint[] points)
         {
             var pointsGeography = GeographyHelper.CreateDbMultiPoint(points);

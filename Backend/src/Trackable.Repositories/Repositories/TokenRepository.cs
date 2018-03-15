@@ -27,8 +27,9 @@ namespace Trackable.Repositories
             var activeTokens = await this.FindBy(t => t.TrackingDevice.Id == device.Id && t.IsActive)
                 .ToListAsync();
 
-            foreach(var token in activeTokens)
+            foreach (var token in activeTokens)
             {
+                this.Db.Tokens.Attach(token);
                 token.IsActive = false;
             }
 
@@ -42,6 +43,7 @@ namespace Trackable.Repositories
 
             foreach (var token in activeTokens)
             {
+                this.Db.Tokens.Attach(token);
                 token.IsActive = false;
             }
 

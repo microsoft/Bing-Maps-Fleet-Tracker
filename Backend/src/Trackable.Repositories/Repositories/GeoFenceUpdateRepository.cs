@@ -23,13 +23,15 @@ namespace Trackable.Repositories
         public async Task<IDictionary<string, GeoFenceUpdate>> GetByGeofenceIdsAsync(string assetId, IEnumerable<string> geofenceIds)
         {
             return await this.Db.GeoFenceUpdates
+                .AsNoTracking()
                 .Where(g => g.AssetDataId == assetId && geofenceIds.Contains(g.GeoFenceDataId))
                 .ToDictionaryAsync(r => r.GeoFenceDataId, r => this.ObjectMapper.Map<GeoFenceUpdate>(r));
         }
 
         public async Task UpdateStatusAsync(int updateId, NotificationStatus status)
         {
-            var geofenceUpdate = await this.Db.GeoFenceUpdates.SingleAsync(g => updateId == g.Id);
+            var geofenceUpdate = await this.FindAsync(updateId);
+            this.Db.GeoFenceUpdates.Attach(geofenceUpdate);
 
             if (geofenceUpdate == null)
             {

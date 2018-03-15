@@ -39,7 +39,7 @@ namespace Trackable.EntityFramework
 
         public DbSet<RoleData> Roles { get; set; }
 
-        public DbSet<GeoFenceData> Fences { get; set; }
+        public DbSet<GeoFenceData> GeoFences { get; set; }
 
         public DbSet<GeoFenceUpdateData> GeoFenceUpdates { get; set; }
 

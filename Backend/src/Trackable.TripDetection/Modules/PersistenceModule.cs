@@ -95,8 +95,6 @@ namespace Trackable.TripDetection.Components
 
             if (locations.Count > 0)
             {
-
-
                 var geocodeManager = new BatchGeocodeManager();
 
                 var res = await geocodeManager.Geocode(geocodeFeed, bingMapsKey);
@@ -112,10 +110,8 @@ namespace Trackable.TripDetection.Components
                         var loc = locations[int.Parse(entity.Id)];
                         loc.Address = entity.GeocodeResponse.First<GeocodeResponse>().Address.FormattedAddress;
                         loc.Name = entity.GeocodeResponse.First<GeocodeResponse>().Name;
-                        locationsDict.Add(loc.Id, loc);
+                        await locationRepository.UpdateAsync(loc.Id, loc);
                     }
-
-                    await locationRepository.UpdateAsync(locationsDict);
                 }
                 else
                 {
