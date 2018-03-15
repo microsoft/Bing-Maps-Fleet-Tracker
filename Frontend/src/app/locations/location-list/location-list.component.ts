@@ -62,10 +62,6 @@ export class LocationListComponent implements OnInit, OnDestroy {
     this.mapsService.showLocationsPositions(locationRange);
   }
 
-  getLocationName(location: Location) {
-    return this.locationService.normalizeLocationName(location);
-  }
-
   showLocation(location: Location) {
     if (location === this.selectedLocation) {
       this.selectedLocation = null;

@@ -14,7 +14,7 @@
     <mat-list-item *ngFor="let location of locations | filterList:filter" 
                   (click)="onSelected(location)" 
                   [class.active]="location == selectedLocation">
-      <span mat-line> {{getLocationName(location)}}</span>
+      <span mat-line> {{location.name}}</span>
     </mat-list-item>
   </mat-list>
 </div>

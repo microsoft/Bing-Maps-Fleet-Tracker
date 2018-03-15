@@ -31,12 +31,4 @@ export class LocationService {
   getLocationAssetsCount(location: Location): Observable<Map<string, number>> {
     return this.dataSevrice.getSingleNoCache<Map<string, number>>(`locations/${location.id}/assetsCount`);
   }
-
-  normalizeLocationName(location: Location) {
-    if (location.name === 'Auto-Generated Location') {
-      return 'Location ' + location.id;
-    } else {
-      return location.name;
-    }
-  }
 }

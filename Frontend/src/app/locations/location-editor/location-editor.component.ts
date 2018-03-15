@@ -23,7 +23,6 @@ export class LocationEditorComponent implements OnInit, OnDestroy {
   locationString: string;
   locationTypeString: string;
   private isAlive: boolean;
-  private readonly undeterminedMessage = 'Undetermined';
 
   constructor(
     private locationService: LocationService,
@@ -31,12 +30,12 @@ export class LocationEditorComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private toasterService: ToasterService) {
-    this.location = new Location();
   }
 
   ngOnInit() {
     this.isAlive = true;
-    this.mapService.startLocationPinDraw();
+    this.location = new Location();
+
     this.route.params
       .takeWhile(() => this.isAlive)
       .subscribe(params => {
@@ -52,9 +51,9 @@ export class LocationEditorComponent implements OnInit, OnDestroy {
                 this.mapService.showLocationsPositions([this.location]);
               }
             });
-        } else {
-          this.locationString = this.undeterminedMessage;
         }
+
+        this.mapService.startLocationPinDraw(this.location);
       });
 
     this.mapService.getLocationPinResult()
@@ -90,7 +89,7 @@ export class LocationEditorComponent implements OnInit, OnDestroy {
   }
 
   submit() {
-    if (this.locationString === this.undeterminedMessage) {
+    if (!this.location.latitude || !this.location.longitude) {
       this.toasterService.pop('error', 'Invalid Input', 'Please add the location pin on the map');
       return;
     }

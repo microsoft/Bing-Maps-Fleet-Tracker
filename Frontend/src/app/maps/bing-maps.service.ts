@@ -273,7 +273,7 @@ export class BingMapsService {
                     const pushpin = new Microsoft.Maps.Pushpin(event.location, {
                         color: this.genericColors[4]
                     });
-                    this.map.entities.push(pushpin);
+                    this.geofencesLayer.add(pushpin);
                 }
 
                 subject.next(tempGeofence.fencePolygon);
@@ -355,10 +355,14 @@ export class BingMapsService {
     /* END GEOFENCES FUNCTIONS */
 
     /* LOCATION FUNCTIONS */
-    drawLocationPin(subject: Subject<Location>) {
+    drawLocationPin(subject: Subject<Location>, location: Location) {
         this.load().then(() => {
             const tempLocation = new Location();
             tempLocation.name = 'New Location';
+
+            if (location && location.name) {
+                tempLocation.name = location.name;
+            }
 
             this.resetMap();
             this.locationsLayer.setVisible(true);
@@ -690,8 +694,6 @@ export class BingMapsService {
             });
             this.tripsLayer.add(line);
 
-            previousTripLeg = leg;
-
             // Draw a dotted line between trip leg stop locations, if they are not the same.
             if (previousTripLeg && previousTripLeg.endLocation.id !== leg.startLocation.id) {
                 const startPoint = new Microsoft.Maps.Location(
@@ -713,6 +715,8 @@ export class BingMapsService {
                 );
                 this.tripsLayer.add(dottedLine);
             }
+
+            previousTripLeg = leg;
         }
 
         this.centerMap(trip.startLocation);

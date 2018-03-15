@@ -10,25 +10,18 @@
     <mat-input-container>
       <input matInput placeholder="Name" [(ngModel)]="geofence.name" name="name" required>
     </mat-input-container>
-    <mat-input-container>
-      <input matInput placeholder="Emails To Notify" [(ngModel)]="joinedEmails" name="email">
-    </mat-input-container>
-    <mat-input-container>
-      <input matInput placeholder="Webhooks To Notify" [(ngModel)]="joinedWebhooks" name="webhook">
-    </mat-input-container>
-    <mat-input-container>
-      <input matInput placeholder="Cooldown in Minutes" [(ngModel)]="geofence.cooldown" name="cooldown" type="number" min="0" required>
-    </mat-input-container>
 
     <mat-input-container>
-      <mat-select placeholder="Geofence Area Type" [(ngModel)]="geofence.areaType" name="areaType" (change)="onAreaTypeChanged($event)" required>
+      <mat-select placeholder="Geofence Area Type" [(ngModel)]="geofence.areaType" name="areaType" (change)="onAreaTypeChanged($event)"
+        required>
         <mat-option [value]="AreaType.Polygon">Polygon</mat-option>
         <mat-option [value]="AreaType.Circular">Circular</mat-option>
       </mat-select>
     </mat-input-container>
 
     <mat-input-container *ngIf="geofence.areaType === AreaType.Circular">
-      <input matInput type="number" placeholder="Radius In Meters" [(ngModel)]="geofence.radiusInMeters" name="radiusInMeters" (change)="onRadiusChanged($event)" (keyup)="onRadiusChanged($event)" required>
+      <input matInput type="number" placeholder="Radius In Meters" [(ngModel)]="geofence.radiusInMeters" name="radiusInMeters"
+        (change)="onRadiusChanged($event)" (keyup)="onRadiusChanged($event)" required>
     </mat-input-container>
 
     <mat-input-container *ngIf="geofence.areaType === AreaType.Polygon">
@@ -38,10 +31,22 @@
     </mat-input-container>
 
     <mat-input-container>
+      <input matInput placeholder="Cooldown in Minutes" [(ngModel)]="geofence.cooldown" name="cooldown" type="number" min="0" required>
+    </mat-input-container>
+
+    <mat-input-container>
       <mat-select placeholder="Fence Type" [(ngModel)]="geofence.fenceType" name="fenceType" required>
         <mat-option [value]="FenceType.Inbound">Inbound</mat-option>
         <mat-option [value]="FenceType.Outbound">Outbound</mat-option>
       </mat-select>
+    </mat-input-container>
+
+    <mat-input-container>
+      <input matInput placeholder="Emails To Notify" [(ngModel)]="joinedEmails" name="email">
+    </mat-input-container>
+
+    <mat-input-container>
+      <input matInput placeholder="Webhooks To Notify" [(ngModel)]="joinedWebhooks" name="webhook">
     </mat-input-container>
 
     <h3>Available Assets:</h3>

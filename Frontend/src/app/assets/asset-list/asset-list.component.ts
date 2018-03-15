@@ -34,14 +34,15 @@ export class AssetListComponent implements OnInit, OnDestroy {
   filter: string;
   Roles = Roles;
 
+  assetsList: Asset[];
   selectedAsset: Asset;
   selectedAssetState: SelectedAssetState;
+
   private selectedDateRange: DateRange;
   private lastCalledFunction: (asset: Asset, filterSelected: Boolean) => void;
   private subscription: Subscription;
   private isDrawing = false;
   private isAlive: boolean;
-  private assetsList: Asset[];
 
   constructor(
     private assetService: AssetService,
@@ -55,7 +56,6 @@ export class AssetListComponent implements OnInit, OnDestroy {
     this.assetService.getAssets()
       .takeWhile(() => this.isAlive)
       .skipWhile(assets => assets.length === 0)
-      .take(1)
       .subscribe(assets => {
         this.assetsList = assets.sort((a, b) => {
           if (a.name < b.name) { return -1; }

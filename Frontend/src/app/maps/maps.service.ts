@@ -42,10 +42,10 @@ export class MapsService {
     private locationsPositions = new ReplaySubject<Location[]>();
     private locationPosition = new ReplaySubject<Location>();
     private locationPinDraw = new ReplaySubject<Location>();
-    private locationPinResult = new ReplaySubject<Location>();
+    private locationPinResult = new Subject<Location>();
     private itineraryPoint = new ReplaySubject<Point>();
     private locationSearchQuery = new ReplaySubject<string>();
-    private locationSearchResult = new ReplaySubject<Point>();
+    private locationSearchResult = new Subject<Point>();
 
     private routeColor: number;
 
@@ -107,8 +107,8 @@ export class MapsService {
         this.locationPosition.next(position);
     }
 
-    startLocationPinDraw() {
-        this.locationPinDraw.next(null);
+    startLocationPinDraw(location: Location) {
+        this.locationPinDraw.next(location);
     }
 
     endCurrentDraw() {

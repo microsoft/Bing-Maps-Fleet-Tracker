@@ -117,7 +117,7 @@ export class DispatchingEditorComponent implements OnInit, OnDestroy {
     this.dialogService.showLocationsDialog()
       .subscribe(location => {
         if (location) {
-          location.name = this.locationService.normalizeLocationName(location);
+          location.name = location.name + `(${this.pinsAdded.length + 1})`;
           this.pinsAdded.push(location);
           this.mapsService.resetDispatchingDraw(this.pinsAdded);
         }

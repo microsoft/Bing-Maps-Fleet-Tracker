@@ -121,9 +121,10 @@ export class MapsComponent implements OnInit {
                     .getCurrentDrawEnd()
                     .subscribe(drawEnd => this.bingMapsService.endCurrentDraw());
 
-                this.mapsService.getLocationPinDraw().subscribe(() => {
+                this.mapsService.getLocationPinDraw().subscribe((location) => {
                     this.bingMapsService.drawLocationPin(
-                        this.mapsService.getLocationPinResultSubject()
+                        this.mapsService.getLocationPinResultSubject(),
+                        location
                     );
                 });
 

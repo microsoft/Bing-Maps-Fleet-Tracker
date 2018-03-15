@@ -20,7 +20,7 @@
   <div *ngFor="let location of locations | filterList:filter | paginate: {itemsPerPage: singlePageSize, currentPage: index}"
     [class.active]="location === selectedLocation">
     <mat-list-item>
-      <h3 mat-line (click)="showLocation(location)"> {{getLocationName(location)}}</h3>
+      <h3 mat-line (click)="showLocation(location)"> {{location.name}}</h3>
       <span mat-line class="subtle" (click)="showLocation(location)">address: {{location.address}}</span>
       <a [appRoleLimiter]="Roles.Administrator" mat-icon-button mat-tooltip="Edit" [routerLink]="['/locations', location.id]">
         <mat-icon>mode_edit</mat-icon>
