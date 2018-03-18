@@ -36,7 +36,7 @@ Ensure that you have the Android SDK downloaded
 To download the native plugins and setup the cordova android project run:
 
 ``` Bash
-ionic cordova platform add android
+ionic cordova platform add android@6.4.0
 ```
 
 #### Android Build and run
@@ -51,6 +51,24 @@ To run the application on a device or emulator:
 
 ``` Bash
 ionic cordova run android
+```
+
+#### Android troubleshooting
+
+In some environments, building fresh clones may fail with the errors:
+
+``` Bash
+ERROR: In <declare-styleable> FontFamilyFont, unable to find attribute android:fontVariationSettings
+ERROR: In <declare-styleable> FontFamilyFont, unable to find attribute android:ttcIndex
+```
+
+To solve these issues, go to the `plugin/` directory, search for "com.android.support:support-v4:+" and replace it with "com.android.support:support-v4:27.1.0".
+
+Then remove and add the Android platform directory using the commands:
+
+``` Bash
+ionic cordova platform remove android
+ionic cordova platform add android@6.4.0
 ```
 
 ### iOS
