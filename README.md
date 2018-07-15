@@ -10,7 +10,7 @@ You can obtain a prebuilt apk of the Android client [here](https://github.com/Mi
 
 You can also build and run the project from source as detailed [here](#build-and-run).
 
-For a walkthrough of using the Bing Maps Fleet Tracker solution, see [WALKTHROUGH.md](https://github.com/Microsoft/Bing-Maps-Fleet-Tracker/blob/master/WALKTRHOUGH.md).
+For a walkthrough of using the Bing Maps Fleet Tracker solution, see [WALKTHROUGH.md](https://github.com/Microsoft/Bing-Maps-Fleet-Tracker/blob/master/WALKTHROUGH.md).
 
 ### Build and Run
 
