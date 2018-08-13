@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace Trackable.Models
 {
-    public class Point : IPoint
+    [Serializable]
+    public class Point : ModelBase<int> , IPoint
     {
         public Point()
         {

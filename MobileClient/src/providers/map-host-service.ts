@@ -1,17 +1,22 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
+/// <reference path="../../scripts/MicrosoftMaps/Modules/Directions.d.ts"/>
+
 
 import { Injectable } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { Logger } from 'angular2-logger/core';
 import { Network } from 'ionic-native';
 import { Http, Headers } from '@angular/http';
-
 import { SettingsService, Settings } from './settings-service';
 import { BingMapsService } from './bing-maps-service';
 import { BackgroundTrackerService } from './background-tracker-service';
-
 import 'rxjs/add/operator/toPromise';
+import { SignalrClientServiceProvider } from './signalr-client-service';
+import { Point } from '../shared/point';
+import { DispatchingParameters } from '../shared/dispatching-parameters';
+
+
 
 declare var navigator;
 
@@ -24,10 +29,12 @@ export class MapHostService {
   private mapElement: HTMLElement;
   private map: Microsoft.Maps.Map;
   private tracksLayer: Microsoft.Maps.Layer;
-
+  private dispatchLayer: Microsoft.Maps.Layer;
   private tracksLayerActive: boolean = true;
+  private dispatchLayerActive: boolean = true;
   private lastLocation;
-
+  private directionsManager: Microsoft.Maps.Directions.DirectionsManager;
+  private lastDispatch: DispatchingParameters;
   private onDevice;
   private isOnline;
   private deferMapsCreation = false;
@@ -41,7 +48,9 @@ export class MapHostService {
     private http: Http,
     private bingMapsService: BingMapsService,
     private settingsService: SettingsService,
-    private backgroundTrackerService: BackgroundTrackerService) {
+    private backgroundTrackerService: BackgroundTrackerService,
+    private signalrservice: SignalrClientServiceProvider,
+  ) {
 
     this.onDevice = this.platform.is('cordova');
   }
@@ -49,7 +58,6 @@ export class MapHostService {
   initialize(mapElement: HTMLElement) {
     this.isOnline = !this.onDevice || navigator.connection.type !== 'none';
     this.mapElement = mapElement;
-
     this.connectSub = Network.onConnect().subscribe(() => this.connected());
     this.disconnectSub = Network.onConnect().subscribe(() => this.disconnected());
 
@@ -76,6 +84,16 @@ export class MapHostService {
       });
     } else {
       alert('No location accuired yet!');
+    }
+  }
+
+  dispatchService() {
+    if (this.dispatchLayerActive) {
+      this.directionsManager.clearAll();
+      this.centerMap(this.lastLocation);
+      this.dispatchLayerActive = !this.dispatchLayerActive;
+    } else {
+      this.getDirections(this.lastDispatch);
     }
   }
 
@@ -118,9 +136,16 @@ export class MapHostService {
 
       this.tracksLayer = new Microsoft.Maps.Layer();
       this.map.layers.insert(this.tracksLayer);
-      this.startListening();
-    }).catch(() => {
-      this.logger.error('map creation request failed');;
+
+      this.dispatchLayer = new Microsoft.Maps.Layer();
+      this.map.layers.insert(this.dispatchLayer);
+
+      Microsoft.Maps.loadModule('Microsoft.Maps.Directions', () => {
+        this.directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
+        this.startListening();
+      });
+    }).catch((er) => {
+      this.logger.error('map creation request failed ' + er);;
     });
   }
 
@@ -139,6 +164,57 @@ export class MapHostService {
       this.markTrack(location);
       this.lastLocation = location;
     });
+  }
+
+  getDirections(params: DispatchingParameters){
+
+    this.dispatchLayerActive = true;
+    if(params == null)
+      return;
+      
+    this.directionsManager.clearAll();
+    this.lastDispatch = params;
+
+    this.directionsManager.addWaypoint(new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(this.lastLocation.latitude,this.lastLocation.longitude) }),0);  
+    this.centerMap(this.lastLocation);
+
+    params.wayPoints.forEach(pin => {
+      this.directionsManager.addWaypoint(new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(pin.latitude , pin.longitude) }));
+    });
+
+    this.directionsManager.setRequestOptions({
+      routeDraggable: false,
+      vehicleSpec: {
+        vehicleHeight: params.loadedHeight,
+        vehicleWidth: params.loadedWidth,
+        vehicleLength : params.loadedLength,
+        vehicleWeight: params.loadedWeight,
+        vehicleAvoidCrossWind: params.avoidCrossWind,
+        vehicleAvoidGroundingRisk: params.avoidGroundingRisk
+    }
+  });
+  
+      this.directionsManager.calculateDirections();
+  }
+
+  clearDirections(params: DispatchingParameters){
+      if(this.lastDispatch == params) {
+          this.lastDispatch = null;
+          this.directionsManager.clearAll();
+          this.centerMap(this.lastLocation);
+      }
+  }
+  
+  centerMap(point: Point, zoom = null) {
+    if (point) {
+      this.map.setView({
+        center: new Microsoft.Maps.Location(
+          point.latitude,
+          point.longitude
+        ),
+        zoom: zoom
+      });
+    }
   }
 
   private markTrack(location) {
@@ -177,8 +253,10 @@ export class MapHostService {
             }
           }
 
+          this.signalrservice.connect();
           return bingMapsKey;
         });
     })
+
   }
 }

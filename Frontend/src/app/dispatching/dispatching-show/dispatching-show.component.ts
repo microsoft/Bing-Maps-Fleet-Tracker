@@ -7,8 +7,8 @@ import { DispatchingService } from '../dispatching.service';
 import { MapsService } from '../../maps/maps.service';
 import { SpinnerService } from '../../core/spinner.service';
 import { ToasterService } from 'angular2-toaster';
-
 import { Point } from '../../shared/point';
+import { ShowOnDirtyErrorStateMatcher } from '../../../../node_modules/@angular/material';
 
 @Component({
   selector: 'app-dispatching-show',
@@ -47,5 +47,20 @@ export class DispatchingShowComponent implements OnInit {
 
   showItineraryPoint(index: number) {
     this.mapService.showItineraryPosition(this.directionPoints[index]);
+  }
+
+  pushNotification(){
+    
+    if(!this.noDirectionsAvailable)
+
+      this.dispatchingService.callSignalRAPI()
+      .subscribe(result => {
+       
+        if(result){
+          this.toasterService.pop('info', '','Successfully Dispatched to Mobile');
+        }else {
+          this.toasterService.pop('info', '', 'Failed to Dispatch to Mobile');
+                }
+      });
   }
 }

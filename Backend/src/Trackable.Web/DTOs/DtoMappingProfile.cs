@@ -16,7 +16,13 @@ namespace Trackable.Web.Dtos
             CreateMap<Asset, NestedAssetDto>()
                 .ReverseMap();
 
+            CreateMap<Dispatch, DispatchDto>()
+                .ReverseMap();
+
             CreateMap<AssetProperties, AssetPropertiesDto>()
+                .ReverseMap();
+
+            CreateMap<Point, PointDto>()
                 .ReverseMap();
 
             // Default to Polygon if AreaType not specified for backwards compatibility

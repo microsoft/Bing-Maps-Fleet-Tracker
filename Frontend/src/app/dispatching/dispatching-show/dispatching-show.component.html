@@ -8,6 +8,11 @@
   <span>Dispatch Directions </span>
 </mat-toolbar>
 
+<mat-toolbar>
+  <span> <button mat-raised-button class="dispatch-button" (click)="pushNotification()">Dispatch to Mobile</button>
+  </span>
+  </mat-toolbar>
+  
 <div class="no-directions-alert">
   <p *ngIf="noDirectionsAvailable">No Directions Available</p>
 </div>

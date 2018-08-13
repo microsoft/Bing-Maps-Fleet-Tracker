@@ -18,7 +18,7 @@ namespace Trackable.Repositories
         {
             return services
                 .AddDbContext(dbConnectionString, rootPath)
-
+                .AddTransient<IDispatchingRepository, DispatchingRepository>()
                 .AddTransient<IAssetRepository, AssetRepository>()
                 .AddTransient<ITrackingDeviceRepository, TrackingDeviceRepository>()
                 .AddTransient<ITrackingPointRepository, TrackingPointRepository>()

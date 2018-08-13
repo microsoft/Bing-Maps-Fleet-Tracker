@@ -7,7 +7,7 @@ import { SignallingService } from '../../providers/signalling-service';
 import { HomePage } from '../home/home';
 import { DebugPage } from '../debug/debug';
 import { SettingsPage } from '../settings/settings';
-
+import {DispatchingPage} from '../dispatching/dispatching';
 @Component({
   templateUrl: 'tabs.html'
 })
@@ -15,7 +15,8 @@ export class TabsPage {
 
   private tabs: Tab[] = [
     { page: HomePage, title: "Home", icon: "home" },
-    { page: SettingsPage, title: "Settings", icon: "settings" }
+    { page: SettingsPage, title: "Settings", icon: "settings" },
+    { page: DispatchingPage, title: "Dispatching", icon: "navigate" } 
   ];
 
   private settingsTabAdded = false;

@@ -66,5 +66,10 @@ namespace Trackable.Web.Auth
         {
             return user.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
         }
+
+        public static string ReadDeviceId(ClaimsPrincipal user)
+        {
+            return user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        }
     }
 }

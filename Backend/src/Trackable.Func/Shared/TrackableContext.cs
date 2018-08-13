@@ -25,6 +25,8 @@ namespace Trackable.Func.Shared
 
         public ITrackingPointRepository TrackingPointRepository { get; }
 
+        public IDispatchingRepository dispatchingRepository { get; }
+
         public IConfigurationRepository ConfigurationRepository { get; }
 
         public ITripRepository TripRepository { get; }
@@ -50,6 +52,8 @@ namespace Trackable.Func.Shared
                 this.ConfigurationRepository = RepositoryFactory.CreateConfigurationRepository(this.DbContext);
                 this.TripRepository = RepositoryFactory.CreateTripRepository(this.DbContext);
                 this.AssetRepository = RepositoryFactory.CreateAssetRepository(this.DbContext);
+                this.dispatchingRepository = RepositoryFactory.CreateDispatchingRepository(this.DbContext);
+
                 this.TripDetectorFactory = new TripDetectorFactory(
                     this.ConfigurationRepository,
                     this.TripRepository,

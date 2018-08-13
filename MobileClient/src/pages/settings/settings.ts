@@ -5,10 +5,10 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { Platform, ToastController } from 'ionic-angular';
 import { Logger } from 'angular2-logger/core';
-
 import { SettingsService, Settings } from '../../providers/settings-service';
 import { BackgroundTrackerService } from '../../providers/background-tracker-service';
 import { SignallingService } from '../../providers/signalling-service';
+import { SignalrClientServiceProvider } from '../../providers/signalr-client-service';
 
 declare var device;
 
@@ -31,7 +31,8 @@ export class SettingsPage {
     private settingsService: SettingsService,
     private signallingService: SignallingService,
     private backgroundTrackerService: BackgroundTrackerService,
-    private toastController: ToastController) {
+    private toastController: ToastController,
+    private signalr: SignalrClientServiceProvider) {
   }
 
   ngOnInit() {

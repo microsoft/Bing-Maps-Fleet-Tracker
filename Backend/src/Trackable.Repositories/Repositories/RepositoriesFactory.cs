@@ -13,6 +13,11 @@ namespace Trackable.Repositories
         {
             return new AssetRepository(context, mapper);
         }
+        public static IDispatchingRepository CreateDispatchingRepository(TrackableDbContext context)
+        {
+            return new DispatchingRepository(context, mapper);
+        }
+        
 
         public static IConfigurationRepository CreateConfigurationRepository(TrackableDbContext context)
         {

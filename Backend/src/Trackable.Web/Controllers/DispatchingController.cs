@@ -5,7 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using Trackable.Services;
+using Trackable.Web.Dtos;
+using Trackable.Models;
 
 namespace Trackable.Web.Controllers
 {
@@ -14,15 +17,19 @@ namespace Trackable.Web.Controllers
     {
         private readonly IDispatchingService dispatchingService;
         private readonly IAssetService assetService;
+        private readonly IMapper dtoMapper;
+
 
         public DispatchingController(
             ILoggerFactory loggerFactory,
             IDispatchingService dispatchingService,
-            IAssetService assetService)
+            IAssetService assetService,
+            IMapper dtoMapper)
             : base(loggerFactory)
         {
             this.dispatchingService = dispatchingService;
             this.assetService = assetService;
+            this.dtoMapper = dtoMapper;
         }
 
         /// <summary>
@@ -32,11 +39,11 @@ namespace Trackable.Web.Controllers
         /// <returns>Route results</returns>
         // Post api/dispatching
         [HttpPost]
-        public async Task<IEnumerable<DispatchingResults>> Post([FromBody]DispatchingParameters dispatchingParameters)
+        public async Task<IEnumerable<DispatchingResults>> Post([FromBody]DispatchDto dispatchingParameters)
         {
-            var asset = await this.assetService.GetAsync(dispatchingParameters.AssetID);
-
-            return await this.dispatchingService.CallRoutingAPI(dispatchingParameters, asset.AssetProperties);
+            var dispatchModel = this.dtoMapper.Map<Dispatch>(dispatchingParameters);
+            var asset = await this.assetService.GetAsync(dispatchingParameters.AssetId);
+            return await this.dispatchingService.CallRoutingAPI(dispatchModel, asset.AssetProperties);
         }
     }
 }

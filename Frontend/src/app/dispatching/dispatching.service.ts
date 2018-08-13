@@ -15,12 +15,16 @@ export class DispatchingService {
 
   private dispatchingResults: Observable<DispatchingResults[]>;
   private pinsAdded: Location[];
+  dispatchingParams: DispatchingParameters;
+  private dispatchNotificationResult: Observable<boolean>;
+
 
   constructor(
     private dataService: DataService,
     private router: Router) {}
 
   callDisaptchingAPI(dispatchingParameters: DispatchingParameters) {
+    this.dispatchingParams = dispatchingParameters;
     this.dispatchingResults = this.dataService.post<DispatchingParameters>('dispatching', dispatchingParameters);
     this.router.navigate(['/dispatching/show']);
   }
@@ -35,5 +39,10 @@ export class DispatchingService {
 
   savePinsAdded(pins: Location[]) {
     this.pinsAdded = pins;
+  }
+
+  callSignalRAPI() : Observable<boolean>{
+    this.dispatchNotificationResult =  this.dataService.post<DispatchingParameters>('sendPushNotification', this.dispatchingParams);
+    return this.dispatchNotificationResult;
   }
 }

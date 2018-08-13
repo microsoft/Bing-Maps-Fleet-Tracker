@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright(c) 2016 Microsoft Corporation. All rights reserved. 
+ * Copyright(c) 2017 Microsoft Corporation. All rights reserved. 
  * 
  * This code is licensed under the MIT License (MIT). 
  * 
@@ -46,6 +46,9 @@ declare module Microsoft.Maps.Directions {
 
         /** Transit directions are calculated. */
         transit,
+
+        /** Driving directions using truck attributes are calculationed. */
+        truck,
 
         /** Walking directions are calculated. */
         walking
@@ -228,8 +231,8 @@ declare module Microsoft.Maps.Directions {
         /** A boolean indicating whether the maneuver image is a road shield image. */
         isImageRoadShield: boolean;
 
-        /** The name of the maneuver image. */
-        maneuverImageName: string;
+        /** The type of maneuver being performed. */
+        maneuver: string;
 
         /** An array of strings, where each string is a hint to help determine when to move to the next direction step. Not all direction steps have hints. */
         postIntersectionHints: string[];
@@ -251,12 +254,36 @@ declare module Microsoft.Maps.Directions {
 
         /** The name of the transit line end. */
         transitTerminus: string;
+
+        /** An array of route warnings associated with this step. */
+        warnings: IDirectionsStepWarning[];
+    }
+
+    /** Represents a route direction warning, such as a traffic congestion warning. */
+    export interface IDirectionsStepWarning {
+        /** Where the warning starts. */
+        origin: string;
+
+        /** The severity of the warning. Values can be: Low Impact, Minor, Moderate, Serious or None. */
+        severity: string;
+
+        /** The warning text. */
+        text: string;
+
+        /** Where the warning ends. */
+        to: string;
+
+        /** The type of warning. A list of Warning type values can be found here: https://msdn.microsoft.com/en-us/library/hh441731.aspx */
+        warningType: string;
     }
 
     /** Represents a route. */
     export interface IRoute {
         /** The legs of the route. Each route leg represents the route between two waypoints. */
         routeLegs: IRouteLeg[];
+
+        /** An array of locations that makes up the path of the route. */
+        routePath: Location[];
     }
 
     /** Represents a leg of a route. A route leg is the part of the route between two stop waypoints. */
@@ -355,8 +382,7 @@ declare module Microsoft.Maps.Directions {
     /** Options that can be used to define a waypoint. */
     export interface IWaypointOptions {
         /** 
-        * The address string, business name, or search string of the waypoint. For example, the following strings are valid for this parameter: “Seattle”,
-        * “Microsoft”, “pizza”, or “pizza Seattle”. Either the address or location property must be specified.
+        * The address string of the waypoint. For example, the following strings are valid for this parameter: "Seattle", "1 Microsoft Way, Redmond, WA". Either the address or location property must be specified.
         */
         address?: string;
 
@@ -398,6 +424,9 @@ declare module Microsoft.Maps.Directions {
 
         /** The time to use when calculating the route. If this property is set to null, the current time is used */
         time?: Date;
+
+        /** Specifies the vehicle attributes to use when calculating a truck route. */
+        vehicleSpec?: IVehicleSpec;
     }
 
     /** Represents render options for a route. */
@@ -429,11 +458,120 @@ declare module Microsoft.Maps.Directions {
         /** A boolean indicating whether to display a warning about walking directions. Default: true */
         displayWalkingWarning?: boolean;
 
+        /** The polyline options that define how to draw the route line on the map, if the RouteMode is driving. */
+        drivingPolylineOptions?: IPolylineOptions;
+
+        /** The pushpin options that define how the first waypoint should be rendered. */
+        firstWaypointPushpinOptions?: IPushpinOptions;
+
         /** The DOM element inside which the directions itinerary will be rendered. */
         itineraryContainer?: HTMLElement;
 
+        /** The pushpin options that define how the last waypoint should be rendered. */
+        lastWaypointPushpinOptions?: IPushpinOptions;
+
         /** A boolean indicating whether to show the input panel. Default: false */
         showInputPanel?: boolean;
+
+        /** The options that define how to draw the route line on the map, if the RouteMode is transit. */
+        transitPolylineOptions?: IPolylineOptions;
+
+        /** The options that define how to draw the route line on the map, if the RouteMode is walking. */
+        walkingPolylineOptions?: IPolylineOptions;
+
+        /** The options that define the pushpin to use for all route waypoints by default. The first and last waypoints in the route will be overriden by firstWaypointPushpinOptions and lastWaypointPushpinOptions if set.  */
+        waypointPushpinOptions?: IPushpinOptions;
+    }
+
+    /** Specifies the vehicle attributes to use when calculating a truck route. */
+    export interface IVehicleSpec {
+        /**
+        * The unit of measurement of width, height, length. Can be one of the following values:
+        * •	meter or m [default]
+        * •	foot or ft
+        */
+        dimensionUnit?: string;
+
+        /**
+        * The unit of measurement of weight. Can be one of the following values:
+        * •	kilogram or kg [default]
+        * •	pound or lb
+        */
+        weightUnit?: string;
+
+        /** The height of the vehicle in the specified dimension units. */
+        vehicleHeight?: number;
+
+        /** The width of the vehicle in the specified dimension units. */
+        vehicleWidth?: number;
+
+        /** The length of the vehicle in the specified dimension units. */
+        vehicleLength?: number;
+        
+        /** The weight of the vehicle in the specified weight units. */
+        vehicleWeight?: number;
+
+        /** The number of axles. */
+        vehicleAxles?: number;
+
+        /** The number of trailers. */
+        vehicleTrailers?: number;
+
+        /** Indicates if the truck is pulling a semi-trailer. Semi-trailer restrictions are mostly used in North America. */
+        vehicleSemi?: boolean;
+
+        /** The maximum gradient the vehicle can drive measured in degrees. */
+        vehicleMaxGradient?: boolean;
+
+        /** The minimum required radius for the vehicle to turn in the specified dimension units. */
+        vehicleMinTurnRadius?: number;
+
+        /** Indicates if the vehicle shall avoid crosswinds. */
+        vehicleAvoidCrossWind?: boolean;
+
+        /** Indicates if the route shall avoid the risk of grounding. */
+        vehicleAvoidGroundingRisk?: boolean;
+
+        /**
+        * A comma separated and case-sensitive list of one or more hazardous materials for which the vehicle is transporting. Possible values and their aliases are:
+        *
+        * •	Combustable or C
+        * •	Corrosive or Cr
+        * •	Explosive or E
+        * •	Flammable or F
+        * •	FlammableSolid or FS
+        * •	Gas or G
+        * •	GoodsHarmfulToWater or WH
+        * •	Organic or O
+        * •	Other
+        * •	Poison or P
+        * •	PoisonousInhalation or PI
+        * •	Radioactive or R
+        * •	None
+        * 
+        * Example: "WH,R,Poison"
+        */
+        vehicleHazardousMaterials?: string;
+
+        /** 
+        * A comma separated and case-sensitive list of one or more hazardous materials for which the vehicle has a permit. Possible values and their aliases are: 
+        * 
+        * •	AllAppropriateForLoad
+        * •	Combustible or C 
+        * •	Corrosive or Cr 
+        * •	Explosive or E 
+        * •	Flammable or F 
+        * •	FlammableSolid or FS 
+        * •	Gas or G 
+        * •	Organic or O 
+        * •	Poison or P 
+        * •	PoisonousInhalation or PI 
+        * •	Radioactive or R 
+        * •	None
+        * 
+        * Example: "C,Explosive,Corrosive" 
+        */
+        vehicleHazardousPermits?: string;
     }
 
     /////////////////////////////////////
@@ -509,6 +647,11 @@ declare module Microsoft.Maps.Directions {
 
         /** Deletes the DirectionsManager object and releases any associated resources. */
         public dispose(): void;
+
+        /**
+         * Returns all current pushpins for the rendered route.This includes pushpins created by addWaypoint and viaPoints created due to drag and drop.
+         */
+        public getAllPushpins(): Pushpin[];	
 
         /**
          * Gets all the waypoints in the directions manager.

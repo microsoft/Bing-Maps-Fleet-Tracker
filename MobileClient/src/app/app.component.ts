@@ -7,6 +7,7 @@ import { StatusBar, Splashscreen } from 'ionic-native';
 import { Logger } from 'angular2-logger/core';
 
 import { TabsPage } from '../pages/tabs/tabs';
+import { SignalrClientServiceProvider } from '../providers/signalr-client-service'
 
 declare var hockeyapp;
 
@@ -21,7 +22,8 @@ export class MyApp {
 
   constructor(
     private platform: Platform,
-    private logger: Logger) {
+    private logger: Logger,
+    private signalr: SignalrClientServiceProvider) {
 
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.

@@ -166,6 +166,21 @@ namespace Trackable.Repositories
             CreateMap<Trip, TripData>()
                 .ForMember(dest => dest.TripLegDatas, opt => opt.MapFrom(src => src.TripLegs));
 
+            //Dispatching mapping            
+            CreateMap<DispatchData, Dispatch>()
+                .ForMember(dest => dest.WayPoints, opt => opt.MapFrom(src => src.Points));
+
+            CreateMap<Dispatch, DispatchData>()
+                .ForMember(dest => dest.Points, opt => opt.MapFrom(src => src.WayPoints));
+
+            //Dispatching Point mapping
+            CreateMap<DispatchPointData, Point>()
+                .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.Location.Latitude))
+                .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.Location.Longitude));
+
+            CreateMap<Point, DispatchPointData>()
+                .ForMember(dest => dest.Location, opt => opt.MapFrom(src => GeographyHelper.CreateDbPoint(src)));
+
             // User Mapping
             CreateMap<UserData, User>();
             CreateMap<User, UserData>();

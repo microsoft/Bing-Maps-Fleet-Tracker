@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
@@ -69,6 +68,8 @@ namespace Trackable.Web
             services
                 .AddAuthentication(cfg =>
                 {
+                    cfg.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    cfg.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                     cfg.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                     cfg.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                     cfg.DefaultSignOutScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -118,6 +119,7 @@ namespace Trackable.Web
             services
                 .AddAuthorization(options =>
                 {
+                    options.DefaultPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser().Build();
                     options.AddPolicy(UserRoles.Blocked, policy => policy.Requirements.Add(new RoleRequirement(UserRoles.Blocked)));
                     options.AddPolicy(UserRoles.Pending, policy => policy.Requirements.Add(new RoleRequirement(UserRoles.Pending)));
                     options.AddPolicy(UserRoles.DeviceRegistration, policy => policy.Requirements.Add(new RoleRequirement(UserRoles.DeviceRegistration)));
@@ -135,7 +137,7 @@ namespace Trackable.Web
                 .AddTransient<IAuthorizationHandler, RoleRequirementHandler>()
                 .AddScoped<ExceptionHandlerFilter>()
                 .AddTripDetection(Configuration["SubscriptionKeys:BingMaps"])
-                .AddSingleton<IHostedService, HostedInstrumentationService>()
+                .AddSingleton<Microsoft.Extensions.Hosting.IHostedService, HostedInstrumentationService>()
                 .AddSingleton<Profile, DtoMappingProfile>();
 
             // Add AutoMapper profiles
@@ -213,7 +215,9 @@ namespace Trackable.Web
             // Socket Management
             app.UseSignalR(routes =>
             {
-                routes.MapHub<DynamicHub>("deviceAddition");
+                routes.MapHub<DynamicHub>("/deviceAddition");
+                routes.MapHub<PushNotificationHub>("/dispatchingClient");
+
             });
 
             // Static files setup for angular website

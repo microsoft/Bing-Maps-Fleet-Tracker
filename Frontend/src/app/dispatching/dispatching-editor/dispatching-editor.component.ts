@@ -196,7 +196,7 @@ export class DispatchingEditorComponent implements OnInit, OnDestroy {
     if (this.showDirections) {
       this.dispatchingParameters.routeAttributes.push(RouteAttributes.ExcludeItinerary);
     }
-
+    this.dispatchingParameters.deviceID = this.selectedAsset.trackingDeviceId;
     this.dispatchingParameters.wayPoints = this.pinsAdded;
     this.dispatchingService.savePinsAdded(this.pinsAdded);
     this.mapsService.setRouteColor(this.colorSelected);

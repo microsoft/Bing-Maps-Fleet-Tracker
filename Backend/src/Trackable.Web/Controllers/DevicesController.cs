@@ -174,8 +174,7 @@ namespace Trackable.Web.Controllers
             var model = this.dtoMapper.Map<TrackingDevice>(device);
 
             var response = await this.deviceService.AddOrUpdateDeviceAsync(model);
-
-            await this.deviceAdditionHubContext.Clients.All.InvokeAsync("DeviceAdded", nonce);
+            await this.deviceAdditionHubContext.Clients.All.SendAsync("DeviceAdded", nonce);
 
             return Json(await this.tokenService.GetLongLivedDeviceToken(response, false));
         }

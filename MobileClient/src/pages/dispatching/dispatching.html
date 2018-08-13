@@ -1,0 +1,33 @@
+<!-- Copyright (c) Microsoft Corporation. All rights reserved.
+     Licensed under the MIT License. -->
+
+<ion-header>
+  <ion-navbar>
+    <ion-title>Dispatching</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+
+  <div>
+    
+    <ion-item *ngIf="noDispatches" type="text" > No dispaches yet </ion-item>
+
+    <ion-list>
+      <ion-item *ngFor="let dispatch of dispatches; let i= index">
+        <h1> Dispatch {{i+1}}</h1>
+        <h2 >Asset:</h2>
+        <p>{{dispatch.assetId}}</p>
+        <h3 >Departure Timing:</h3>
+        <p>{{dispatch.dateTime}}</p>
+        <h4>Optimized By:</h4>
+        <p>{{optimizeValue[dispatch.optimize]}}</p>
+        <button ion-button inline-block (click)="Navigate(dispatch)">Begin Navigation</button>
+        <button ion-button inline-block (click)="stopNavigate(dispatch)">Stop Navigation</button>
+      </ion-item>
+    </ion-list>
+
+  </div>
+
+</ion-content>

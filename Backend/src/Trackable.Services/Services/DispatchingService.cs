@@ -3,18 +3,25 @@
 
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Trackable.Common.Exceptions;
 using Trackable.Models;
+using Trackable.Repositories;
+
 
 namespace Trackable.Services
 {
-    class DispatchingService : IDispatchingService
+    class DispatchingService : CrudServiceBase<int, Dispatch, IDispatchingRepository>, IDispatchingService
     {
+
+        public static ConcurrentDictionary<string, string> dictionary = new ConcurrentDictionary<string, string>();
+
         private readonly string routingUrl;
         private readonly string bingMapsKey;
 
@@ -30,16 +37,23 @@ namespace Trackable.Services
             "PI", "WH", "Other", "None", "AllAppropriateForLoad"};
 
         private static HttpClient httpClient = new HttpClient();
+        private readonly ILogger logger;
 
 
-        public DispatchingService(IConfiguration configuration)
+        public DispatchingService(IConfiguration configuration,
+            ILoggerFactory loggerFactory,
+            IDispatchingRepository repository)
+            : base(repository)
         {
             this.routingUrl = "https://dev.virtualearth.net/REST/v1/Routes/Truck?";
             this.bingMapsKey = configuration["SubscriptionKeys:BingMaps"];
+            this.logger = loggerFactory.CreateLogger<DispatchingService>();
+
         }
 
-        public async Task<IEnumerable<DispatchingResults>> CallRoutingAPI(DispatchingParameters dispatchingParameters, AssetProperties assetProperties)
+        public async Task<IEnumerable<DispatchingResults>> CallRoutingAPI(Dispatch dispatchingParameters, AssetProperties assetProperties)
         {
+
             var url = $"{this.routingUrl}{GenerateURL(dispatchingParameters, assetProperties)}&key={this.bingMapsKey}";
             var response = await httpClient.GetAsync(url);
 
@@ -78,7 +92,7 @@ namespace Trackable.Services
             return result;
         }
 
-        public string GenerateURL(DispatchingParameters dispatchingParameters, AssetProperties assetProperties, bool isCarRoute = false)
+        public string GenerateURL(Dispatch dispatchingParameters, AssetProperties assetProperties, bool isCarRoute = false)
         {
             var strBuilder = new StringBuilder("routeAttributes=routePath");
 
@@ -564,6 +578,39 @@ namespace Trackable.Services
                 }
             }
             return "&vehicleHazardousPermits=" + string.Join(",", answer);
+        }
+
+        public void RegisterDeviceConnection(string deviceId, string connectionId)
+        {
+            dictionary.TryAdd(deviceId, connectionId);
+            
+        }
+
+        public string GetDeviceConnection(string deviceId)
+        {
+            string connectionId = null;
+            if (dictionary.TryGetValue(deviceId, out connectionId))
+            {
+                  return connectionId;
+            }
+
+            return null;
+        }
+
+        public void DeleteDeviceConnection(string deviceId)
+        {
+            string connectionId = null;
+            dictionary.TryRemove(deviceId, out connectionId);
+        }
+
+        public async override Task<Dispatch> AddAsync(Dispatch dispatch)
+        {
+            return await this.repository.AddAsync(dispatch);
+        }
+
+        public Task<IEnumerable<Dispatch>> GetByDeviceIdAsync(string deviceId)
+        {
+            return this.repository.GetByDeviceIdAsync(deviceId);
         }
     }
 }

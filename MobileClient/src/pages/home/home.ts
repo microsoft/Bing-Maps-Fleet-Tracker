@@ -19,10 +19,7 @@ declare var Connection: any;
 
 @Component({
   selector: 'page-home',
-  templateUrl: 'home.html',
-  providers: [
-    MapHostService
-  ]
+  templateUrl: 'home.html'
 })
 export class HomePage {
 
@@ -117,4 +114,8 @@ export class HomePage {
 
     togglePins() {
       this.mapHostService.togglePins();
+    }
+  
+    dispatchService(){
+      this.mapHostService.dispatchService();
     }}

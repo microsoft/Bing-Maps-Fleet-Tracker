@@ -33,8 +33,8 @@ namespace Trackable.Web.Auth
         {
             // Allow filters to override each other by taking only the last authorization filter
             var resoureContext = (AuthorizationFilterContext)context.Resource;
-            var lastFilter = (AuthorizeFilter)resoureContext.Filters.Last(f => f is AuthorizeFilter);
-            var filterRequirement = lastFilter.Policy.Requirements.FirstOrDefault() as RoleRequirement;
+            var lastFilter = (AuthorizeFilter)resoureContext?.Filters?.Last(f => f is AuthorizeFilter);
+            var filterRequirement = lastFilter?.Policy?.Requirements?.FirstOrDefault() as RoleRequirement;
 
             if (this.configuration.GetValue<bool>("Serving:BypassAuthentication"))
             {
@@ -47,7 +47,7 @@ namespace Trackable.Web.Auth
                 }));
             }
 
-            if (filterRequirement == null || filterRequirement != requirement)
+            if (filterRequirement != null && filterRequirement != requirement)
             {
                 context.Succeed(requirement);
                 return;
