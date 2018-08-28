@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 
 import { Component, OnInit } from '@angular/core';
-
 import { DispatchingService } from '../dispatching.service';
 import { MapsService } from '../../maps/maps.service';
 import { SpinnerService } from '../../core/spinner.service';
@@ -55,12 +54,13 @@ export class DispatchingShowComponent implements OnInit {
 
       this.dispatchingService.callSignalRAPI()
       .subscribe(result => {
-       
-        if(result){
+        if(result == 0){
           this.toasterService.pop('info', '','Successfully Dispatched to Mobile');
-        }else {
+        } else if (result == 1) {
+          this.toasterService.pop('info', '', 'Successfully Dispatched to Mobile , Mobile is currently offline');
+         } else if (result == 2) {
           this.toasterService.pop('info', '', 'Failed to Dispatch to Mobile');
-                }
+         }
       });
   }
 }

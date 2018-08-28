@@ -4,7 +4,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-
 import { DispatchingParameters } from './dispatching-parameters';
 import { DispatchingResults } from './dispatching-results';
 import { DataService } from '../core/data.service';
@@ -16,7 +15,7 @@ export class DispatchingService {
   private dispatchingResults: Observable<DispatchingResults[]>;
   private pinsAdded: Location[];
   dispatchingParams: DispatchingParameters;
-  private dispatchNotificationResult: Observable<boolean>;
+  private dispatchNotificationResult: Observable<DeviceState>;
 
 
   constructor(
@@ -41,8 +40,15 @@ export class DispatchingService {
     this.pinsAdded = pins;
   }
 
-  callSignalRAPI() : Observable<boolean>{
+  callSignalRAPI() : Observable<DeviceState>{
     this.dispatchNotificationResult =  this.dataService.post<DispatchingParameters>('sendPushNotification', this.dispatchingParams);
     return this.dispatchNotificationResult;
   }
+}
+
+export enum DeviceState
+{
+    Online,
+    Offline,
+    Invalid,
 }

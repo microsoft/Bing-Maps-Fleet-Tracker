@@ -49,22 +49,30 @@ namespace Trackable.Web.Controllers
         /// <param name="dispatchingParameters">The parameters required for dispatching</param>
         /// <returns>Boolean for operation success</returns>
         [HttpPost]
-        public async Task<Boolean> Post([FromBody]DispatchDto dispatchingParameters)
+        public async Task<DeviceState> Post([FromBody]DispatchDto dispatchingParameters)
         {
             if (dispatchingParameters.DeviceId == null)
-                return false;
+                return DeviceState.Invalid;
             
             var connectionId = this.dispatchingService.GetDeviceConnection(dispatchingParameters.DeviceId);
-            if (connectionId == null)
-                return false;
 
             var dispatchModel = this.dtoMapper.Map<Dispatch>(dispatchingParameters);
             var savedModel = await this.dispatchingService.AddAsync(dispatchModel);
 
+            if (connectionId == null)
+                return DeviceState.Offline;
+
             savedModel.DateTime = dispatchModel.DateTime;
             await hubContext.Clients.Client(connectionId).SendAsync("DispatchParameters", savedModel);
 
-            return true;
+            return DeviceState.Online;
         }
+    }
+
+    public enum DeviceState
+    {
+        Online,
+        Offline,
+        Invalid,
     }
 }
