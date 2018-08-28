@@ -46,8 +46,8 @@ export class DispatchingPage {
      this.maphost.getDirections(params);
   }
 
-  stopNavigate(params){
-    this.maphost.clearDirections(params);
+  TurnDispatchingOff(){
+    this.maphost.clearDirections();
   }
 }
 

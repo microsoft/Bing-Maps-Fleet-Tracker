@@ -197,12 +197,10 @@ export class MapHostService {
       this.directionsManager.calculateDirections();
   }
 
-  clearDirections(params: DispatchingParameters){
-      if(this.lastDispatch == params) {
-          this.lastDispatch = null;
-          this.directionsManager.clearAll();
-          this.centerMap(this.lastLocation);
-      }
+  clearDirections(){
+    this.lastDispatch = null;
+    this.directionsManager.clearAll();
+    this.centerMap(this.lastLocation);
   }
   
   centerMap(point: Point, zoom = null) {
