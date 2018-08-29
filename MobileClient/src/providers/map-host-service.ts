@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 /// <reference path="../../scripts/MicrosoftMaps/Modules/Directions.d.ts"/>
+/// <reference path="../../scripts/MicrosoftMaps/Modules/Search.d.ts"/>
 
 
 import { Injectable } from '@angular/core';
@@ -34,6 +35,7 @@ export class MapHostService {
   private dispatchLayerActive: boolean = true;
   private lastLocation;
   private directionsManager: Microsoft.Maps.Directions.DirectionsManager;
+  searchManager: Microsoft.Maps.Search.SearchManager;
   private lastDispatch: DispatchingParameters;
   private onDevice;
   private isOnline;
@@ -144,6 +146,11 @@ export class MapHostService {
         this.directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
         this.startListening();
       });
+
+      Microsoft.Maps.loadModule('Microsoft.Maps.Search', () => {
+        this.searchManager = new Microsoft.Maps.Search.SearchManager(map);
+      });
+
     }).catch((er) => {
       this.logger.error('map creation request failed ' + er);;
     });
@@ -166,20 +173,20 @@ export class MapHostService {
     });
   }
 
-  getDirections(params: DispatchingParameters){
+  getDirections(params: DispatchingParameters) {
 
     this.dispatchLayerActive = true;
-    if(params == null)
+    if (params == null)
       return;
-      
+
     this.directionsManager.clearAll();
     this.lastDispatch = params;
 
-    this.directionsManager.addWaypoint(new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(this.lastLocation.latitude,this.lastLocation.longitude) }),0);  
+    this.directionsManager.addWaypoint(new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(this.lastLocation.latitude, this.lastLocation.longitude) }), 0);
     this.centerMap(this.lastLocation);
 
     params.wayPoints.forEach(pin => {
-      this.directionsManager.addWaypoint(new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(pin.latitude , pin.longitude) }));
+      this.directionsManager.addWaypoint(new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(pin.latitude, pin.longitude) }));
     });
 
     this.directionsManager.setRequestOptions({
@@ -187,22 +194,22 @@ export class MapHostService {
       vehicleSpec: {
         vehicleHeight: params.loadedHeight,
         vehicleWidth: params.loadedWidth,
-        vehicleLength : params.loadedLength,
+        vehicleLength: params.loadedLength,
         vehicleWeight: params.loadedWeight,
         vehicleAvoidCrossWind: params.avoidCrossWind,
         vehicleAvoidGroundingRisk: params.avoidGroundingRisk
-    }
-  });
-  
-      this.directionsManager.calculateDirections();
+      }
+    });
+
+    this.directionsManager.calculateDirections();
   }
 
-  clearDirections(){
+  clearDirections() {
     this.lastDispatch = null;
     this.directionsManager.clearAll();
     this.centerMap(this.lastLocation);
   }
-  
+
   centerMap(point: Point, zoom = null) {
     if (point) {
       this.map.setView({

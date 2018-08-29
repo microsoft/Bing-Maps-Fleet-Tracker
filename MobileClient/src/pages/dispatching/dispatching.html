@@ -21,13 +21,13 @@
     <ion-list>
       <ion-item *ngFor="let dispatch of dispatches; let i= index">
         <h1> Dispatch {{i+1}}</h1>
-        <h2>Asset:</h2>
-        <p>{{dispatch.assetId}}</p>
         <h3>Departure Timing:</h3>
         <p>{{dispatch.dateTime}}</p>
         <h4>Optimized By:</h4>
         <p>{{optimizeValue[dispatch.optimize]}}</p>
-        <button ion-button inline-block (click)="Navigate(dispatch)">Begin Navigation</button>
+        <h4>Destination:</h4>
+        <p>{{targetLocations[i]}}</p>
+        <button ion-button inline-block (click)="Navigate(dispatch)">Start Navigation</button>
       </ion-item>
     </ion-list>
 

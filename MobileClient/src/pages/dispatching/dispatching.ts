@@ -20,7 +20,8 @@ export class DispatchingPage {
   private dispatches: DispatchingParameters[];
   private noDispatches: boolean;
   private optimizeValue: string[];
-  
+  private targetLocations: string[];
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -31,6 +32,7 @@ export class DispatchingPage {
     ) {
       this.optimizeValue = ["Time" , "Time Considering Traffic"];
       this.dispatches = [];
+      this.targetLocations = [];
   }
 
   ngOnInit() {
@@ -39,6 +41,7 @@ export class DispatchingPage {
     this.signalr.params.subscribe((params) => {
       this.noDispatches = false;
       this.dispatches.push(params);
+      this.CalculateTargetLocations(params);
     });
   }
 
@@ -48,6 +51,16 @@ export class DispatchingPage {
 
   TurnDispatchingOff(){
     this.maphost.clearDirections();
+  }
+  
+  CalculateTargetLocations(params : DispatchingParameters) {
+
+    var reverseGeocodeRequestOptions = {
+      location: new Microsoft.Maps.Location(params.wayPoints[params.wayPoints.length-1].latitude, params.wayPoints[params.wayPoints.length-1].longitude),
+      callback: (answer, userData) => this.targetLocations.push(answer.address.formattedAddress)
+    };
+    
+    this.maphost.searchManager.reverseGeocode(reverseGeocodeRequestOptions);
   }
 }
 
