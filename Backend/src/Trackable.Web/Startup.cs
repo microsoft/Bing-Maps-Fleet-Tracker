@@ -216,8 +216,7 @@ namespace Trackable.Web
             app.UseSignalR(routes =>
             {
                 routes.MapHub<DynamicHub>("/deviceAddition");
-                routes.MapHub<PushNotificationHub>("/dispatchingClient");
-
+                routes.MapHub<DispatchNotificationHub>("/dispatchingClient");
             });
 
             // Static files setup for angular website

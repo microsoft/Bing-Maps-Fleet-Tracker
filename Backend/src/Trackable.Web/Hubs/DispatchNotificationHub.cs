@@ -20,11 +20,11 @@ namespace Trackable.Web
     /// SignalR Service Hub
     /// </summary>
     [Authorize(AuthenticationSchemes = "Bearer", Policy = UserRoles.TrackingDevice)]
-    public class PushNotificationHub : Hub
+    public class DispatchNotificationHub : Hub
     {
         private readonly IDispatchingService dispatchingService;
 
-        public PushNotificationHub(IDispatchingService dispatchingService)
+        public DispatchNotificationHub(IDispatchingService dispatchingService)
         {
             this.dispatchingService = dispatchingService;
         }

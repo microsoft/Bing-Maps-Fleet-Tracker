@@ -27,7 +27,7 @@ export class DispatchingParameters {
     avoidGroundingRisk: boolean;
     hazardousMaterials: HazardousMaterial[];
     hazardousPermits: HazardousMaterial[];
-    deviceID: string;
+    deviceId: string;
 }
 
 export enum AvoidTypes {

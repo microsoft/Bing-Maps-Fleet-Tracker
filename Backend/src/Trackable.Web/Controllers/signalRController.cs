@@ -23,7 +23,7 @@ namespace Trackable.Web.Controllers
     [Route("api/sendPushNotification")]
     public class SignalRController
     {
-        private readonly IHubContext<PushNotificationHub> hubContext;
+        private readonly IHubContext<DispatchNotificationHub> hubContext;
         private readonly IDispatchingService dispatchingService;
         private readonly IAssetService assetService;
         private readonly ILogger logger;
@@ -32,7 +32,7 @@ namespace Trackable.Web.Controllers
         public SignalRController(
             IDispatchingService dispatchingService,
             IAssetService assetService,
-            IHubContext<PushNotificationHub> hubContext,
+            IHubContext<DispatchNotificationHub> hubContext,
             ILoggerFactory loggerFactory,
             IMapper dtoMapper)
         {
