@@ -46,7 +46,7 @@ export class SignalrClientServiceProvider {
       .catch(err => console.log('Error while establishing hub connection !' + err));
 
         this.hubConnection.on('DispatchParameters', (params : DispatchingParameters) => {
-        this.LocalNotification.sendNotification();
+        this.LocalNotification.sendNotification("Dispatching Service Began");
         this.paramsSubject.next(params);
      });
   }

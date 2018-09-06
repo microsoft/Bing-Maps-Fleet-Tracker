@@ -11,11 +11,11 @@ export class LocalNotificationProvider {
     private localNotifications: LocalNotifications) {
   }
 
-  public sendNotification(){
+  public sendNotification(message : string){
 
     this.localNotifications.schedule({
       id: 1,
-      text: 'Dispatching Service Began',
+      text: message,
       autoClear: true,
       launch: true,
       sticky: false,      
