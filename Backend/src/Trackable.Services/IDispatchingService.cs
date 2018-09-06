@@ -22,6 +22,5 @@ namespace Trackable.Services
         Task<Dispatch> AddAsync(Dispatch dispatch);
 
         Task<IEnumerable<Dispatch>> GetByDeviceIdAsync(string deviceId);
-
     }
 }

@@ -19,7 +19,6 @@ namespace Trackable.Web.Controllers
         private readonly IAssetService assetService;
         private readonly IMapper dtoMapper;
 
-
         public DispatchingController(
             ILoggerFactory loggerFactory,
             IDispatchingService dispatchingService,

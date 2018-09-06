@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
+
 /// <reference path="../../scripts/MicrosoftMaps/Modules/Directions.d.ts"/>
 /// <reference path="../../scripts/MicrosoftMaps/Modules/Search.d.ts"/>
-
 
 import { Injectable } from '@angular/core';
 import { Platform } from 'ionic-angular';
@@ -17,8 +17,6 @@ import { SignalrClientServiceProvider } from './signalr-client-service';
 import { Point } from '../shared/point';
 import { DispatchingParameters } from '../shared/dispatching-parameters';
 
-
-
 declare var navigator;
 
 @Injectable()
@@ -26,7 +24,6 @@ export class MapHostService {
 
   private readonly yellowSpeed = 4.4;
   private readonly greenSpeed = 13.4;
-
   private mapElement: HTMLElement;
   private map: Microsoft.Maps.Map;
   private tracksLayer: Microsoft.Maps.Layer;
@@ -40,7 +37,6 @@ export class MapHostService {
   private onDevice;
   private isOnline;
   private deferMapsCreation = false;
-
   private connectSub;
   private disconnectSub;
 
@@ -53,7 +49,6 @@ export class MapHostService {
     private backgroundTrackerService: BackgroundTrackerService,
     private signalrservice: SignalrClientServiceProvider,
   ) {
-
     this.onDevice = this.platform.is('cordova');
   }
 
@@ -174,7 +169,6 @@ export class MapHostService {
   }
 
   getDirections(params: DispatchingParameters) {
-
     this.dispatchLayerActive = true;
     if (params == null)
       return;
@@ -262,6 +256,5 @@ export class MapHostService {
           return bingMapsKey;
         });
     })
-
   }
 }

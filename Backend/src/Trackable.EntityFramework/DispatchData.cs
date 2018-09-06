@@ -1,4 +1,6 @@
-﻿
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +11,6 @@ namespace Trackable.EntityFramework
     [Table("Dispatches")]
     public class DispatchData : EntityBase<int>
     {
-       
         [Required]
         public string DeviceId { get; set; }
         

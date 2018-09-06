@@ -53,7 +53,6 @@ namespace Trackable.Func.Shared
                 this.TripRepository = RepositoryFactory.CreateTripRepository(this.DbContext);
                 this.AssetRepository = RepositoryFactory.CreateAssetRepository(this.DbContext);
                 this.dispatchingRepository = RepositoryFactory.CreateDispatchingRepository(this.DbContext);
-
                 this.TripDetectorFactory = new TripDetectorFactory(
                     this.ConfigurationRepository,
                     this.TripRepository,

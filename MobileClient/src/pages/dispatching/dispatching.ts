@@ -23,7 +23,6 @@ export class DispatchingPage {
   private finalDestinations: string[];
   private briefDestinations: string[];
 
-
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -39,7 +38,6 @@ export class DispatchingPage {
   }
 
   ngOnInit() {
-
     this.noDispatches = true;
     this.signalr.params.subscribe((params) => {
       this.noDispatches = false;
@@ -57,7 +55,6 @@ export class DispatchingPage {
   }
 
   CalculateTargetLocations(params: DispatchingParameters) {
-
     var reverseGeocodeRequestOptions = {
       location: new Microsoft.Maps.Location(params.wayPoints[params.wayPoints.length - 1].latitude, params.wayPoints[params.wayPoints.length - 1].longitude),
       callback: (answer, userData) => {
@@ -65,7 +62,6 @@ export class DispatchingPage {
          this.briefDestinations.push(answer.address.addressLine)
         }
     };
-
     this.maphost.searchManager.reverseGeocode(reverseGeocodeRequestOptions);
   }
 }

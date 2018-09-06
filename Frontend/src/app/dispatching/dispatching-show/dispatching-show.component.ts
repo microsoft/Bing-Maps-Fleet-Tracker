@@ -49,8 +49,7 @@ export class DispatchingShowComponent implements OnInit {
   }
 
   pushNotification(){
-    
-    if(!this.noDirectionsAvailable)
+        if(!this.noDirectionsAvailable)
 
       this.dispatchingService.callSignalRAPI()
       .subscribe(result => {

@@ -17,7 +17,6 @@ export class DispatchingService {
   dispatchingParams: DispatchingParameters;
   private dispatchNotificationResult: Observable<DeviceState>;
 
-
   constructor(
     private dataService: DataService,
     private router: Router) {}

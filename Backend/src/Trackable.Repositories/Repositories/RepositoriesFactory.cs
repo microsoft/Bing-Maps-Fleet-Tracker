@@ -18,7 +18,6 @@ namespace Trackable.Repositories
             return new DispatchingRepository(context, mapper);
         }
         
-
         public static IConfigurationRepository CreateConfigurationRepository(TrackableDbContext context)
         {
             return new ConfigurationRepository(context, mapper);

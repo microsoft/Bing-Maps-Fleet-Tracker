@@ -9,17 +9,14 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Trackable.Common.Exceptions;
 using Trackable.Models;
 using Trackable.Repositories;
-
 
 namespace Trackable.Services
 {
     class DispatchingService : CrudServiceBase<int, Dispatch, IDispatchingRepository>, IDispatchingService
     {
-
         public static ConcurrentDictionary<string, string> dictionary = new ConcurrentDictionary<string, string>();
 
         private readonly string routingUrl;
@@ -37,23 +34,17 @@ namespace Trackable.Services
             "PI", "WH", "Other", "None", "AllAppropriateForLoad"};
 
         private static HttpClient httpClient = new HttpClient();
-        private readonly ILogger logger;
-
 
         public DispatchingService(IConfiguration configuration,
-            ILoggerFactory loggerFactory,
             IDispatchingRepository repository)
             : base(repository)
         {
             this.routingUrl = "https://dev.virtualearth.net/REST/v1/Routes/Truck?";
             this.bingMapsKey = configuration["SubscriptionKeys:BingMaps"];
-            this.logger = loggerFactory.CreateLogger<DispatchingService>();
-
         }
 
         public async Task<IEnumerable<DispatchingResults>> CallRoutingAPI(Dispatch dispatchingParameters, AssetProperties assetProperties)
         {
-
             var url = $"{this.routingUrl}{GenerateURL(dispatchingParameters, assetProperties)}&key={this.bingMapsKey}";
             var response = await httpClient.GetAsync(url);
 
@@ -583,7 +574,6 @@ namespace Trackable.Services
         public void RegisterDeviceConnection(string deviceId, string connectionId)
         {
             dictionary.TryAdd(deviceId, connectionId);
-            
         }
 
         public string GetDeviceConnection(string deviceId)
@@ -593,7 +583,6 @@ namespace Trackable.Services
             {
                   return connectionId;
             }
-
             return null;
         }
 

@@ -7,19 +7,17 @@
       </ion-navbar>
     </ion-header>
     
-    
     <ion-content padding>
     
       <div>
-    
         <ion-item *ngIf="noDispatches" type="text"> No dispaches yet </ion-item>
         <ion-row center>
           <ion-col text-center>
             <button ion-button *ngIf="noDispatches == false" inline-block (click)="TurnDispatchingOff()">Turn Dispatching Off</button>
           </ion-col>
         </ion-row>
+
         <ion-list>
-    
           <ion-item *ngFor="let dispatch of dispatches; let i= index">
             <ion-card>
               <ion-card-content>
@@ -54,11 +52,8 @@
               </ion-card-content>
     
             </ion-card>
-    
           </ion-item>
-    
         </ion-list>
-    
       </div>
     
     </ion-content>

@@ -32,9 +32,7 @@ namespace Trackable.Repositories
                 .AddTransient<IAssetPropertiesRepository, AssetPropertiesRepository>()
                 .AddTransient<IInstrumentationRepository, InstrumentationRepository>()
                 .AddTransient<ITokenRepository, TokenRepository>()
-
                 .AddSingleton<Profile, ModelMappingProfile>()
-
                 .AddScoped<GeoFenceAssetResolver>()
                 .AddScoped<AssetTrackingDeviceResolver>()
                 .AddScoped<TrackingDeviceAssetResolver>()

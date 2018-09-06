@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,7 +17,6 @@ using Trackable.Web.Dtos;
 
 namespace Trackable.Web.Controllers
 {
-
     /// <summary>
     /// controls push notification
     /// </summary>
@@ -26,7 +28,6 @@ namespace Trackable.Web.Controllers
         private readonly IAssetService assetService;
         private readonly ILogger logger;
         private readonly IMapper dtoMapper;
-
 
         public SignalRController(
             IDispatchingService dispatchingService,
