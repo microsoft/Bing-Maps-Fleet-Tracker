@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import { Component, NgZone, ViewChild, ElementRef } from '@angular/core';
-import { NavController, ModalController, Platform } from 'ionic-angular';
+import { NavController, ModalController, Platform, ToastController } from 'ionic-angular';
 import { Network } from 'ionic-native';
 
 import { Logger } from 'angular2-logger/core';
@@ -44,7 +44,8 @@ export class HomePage {
     private backgroundTrackerService: BackgroundTrackerService,
     private mapHostService: MapHostService,
     public modalCtrl: ModalController,
-    private settingsSrvc: SettingsService) {  
+    private settingsSrvc: SettingsService,
+    private toastController: ToastController) {  
 
       this.onDevice = this.platform.is('cordova');
       this.platform.ready().then(() => {
@@ -82,7 +83,15 @@ export class HomePage {
     }
 
     continueInitialization() {
-      this.backgroundTrackerService.startTracking();
+      this.backgroundTrackerService.startTracking().then(() => {
+        if(!this.backgroundTrackerService.isTracking){
+          this.toastController.create({
+            message: 'Your Locations Settings is set to Off \n Please Enable Location to use this app',
+            duration: 5000,
+            position: 'middle'
+          }).present();
+        }
+      });
 
       this.mapHostInitialized = true;
       this.mapHostService.initialize(this.mapElement.nativeElement);

@@ -62,7 +62,7 @@ export class SettingsPage {
   }
 
   startService() {
-    this.backgroundTrackerService.startTracking();
+    let promise = this.backgroundTrackerService.startTracking();
 
     this.toastController.create({
       message: 'Starting tracking service',
@@ -70,7 +70,16 @@ export class SettingsPage {
       position: 'top'
     }).present();
 
-    this.trackingServiceRunning = this.backgroundTrackerService.isTracking;
+    promise.then((values) => {
+      this.trackingServiceRunning = this.backgroundTrackerService.isTracking;
+        if(!this.trackingServiceRunning){
+          this.toastController.create({
+            message: 'Your Locations Settings is set to Off \n Please Enable Location to use this app',
+            duration: 5000,
+            position: 'middle'
+          }).present();
+        }
+    });
   }
 
   stopService() {

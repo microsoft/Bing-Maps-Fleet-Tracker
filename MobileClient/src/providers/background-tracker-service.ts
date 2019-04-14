@@ -57,6 +57,27 @@ export class BackgroundTrackerService {
       return this.startPromise;
     }
 
+    let locationStatus;
+    let promise = new Promise(function(resolve, reject) {
+      // the function is executed automatically when the promise is constructed
+      backgroundGeolocation.isLocationEnabled(function (locationEnabled) {
+        if (locationEnabled) {
+          locationStatus = true;
+          console.log('[INFO] BackgroundGeolocation services enabled');
+          return locationEnabled
+        } else {
+          locationStatus = false;
+          console.log('[INFO] BackgroundGeolocation services diabled');
+          return locationEnabled
+  
+        }
+      }, function (error) {
+        locationStatus = false;
+        console.log("The following error occurred: " + error);
+        return error
+      });      // after 1 second signal that the job is done with the result "done"
+      setTimeout(() => resolve("done"), 1000);
+    });
     this.isTracking = true;
 
     let startFinished;
@@ -68,10 +89,12 @@ export class BackgroundTrackerService {
     let settingsPromise = this.settingsService.get(Settings.BackgroundOptions);
     let tokenPromise = this.settingsService.get(Settings.SecurityToken);
 
-    let allPromises = Promise.all([urlPromise, settingsPromise, tokenPromise]);
+    let allPromises = Promise.all([urlPromise, settingsPromise, tokenPromise, promise]);
 
     allPromises.then((values) => {
-
+      if(!locationStatus){
+        this.isTracking = false;
+      }
       let trackingUrl = values[0];
       let bgOptions = values[1];
       let token = values[2];
