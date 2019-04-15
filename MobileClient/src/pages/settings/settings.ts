@@ -71,12 +71,10 @@ export class SettingsPage {
     this.backgroundTrackerService.startTracking().then((values) => {
       this.trackingServiceRunning = this.backgroundTrackerService.isTracking;
         if(!this.trackingServiceRunning){
-          let locationToast = this.toastController.create({
+          this.toastController.create({
             message: 'Location Settings is currently turned off.\nPlease enable it to be able to continue.',
             duration: 5000,
             position: 'middle',
-            showCloseButton: true,
-            closeButtonText: 'Settings'
           }).present();  
         }
     });
