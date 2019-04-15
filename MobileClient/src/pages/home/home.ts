@@ -86,7 +86,7 @@ export class HomePage {
       this.backgroundTrackerService.startTracking().then(() => {
         if(!this.backgroundTrackerService.isTracking){
           this.toastController.create({
-            message: 'Your Locations Settings is set to Off \n Please Enable Location to use this app',
+            message: 'Location Settings is currently turned off.\nPlease enable it to be able to continue.',
             duration: 5000,
             position: 'middle'
           }).present();

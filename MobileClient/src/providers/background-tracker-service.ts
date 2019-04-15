@@ -57,26 +57,12 @@ export class BackgroundTrackerService {
       return this.startPromise;
     }
 
-    let locationStatus;
-    let promise = new Promise(function(resolve, reject) {
-      // the function is executed automatically when the promise is constructed
+    let locationPromise = new Promise(function(resolve) {
       backgroundGeolocation.isLocationEnabled(function (locationEnabled) {
-        if (locationEnabled) {
-          locationStatus = true;
-          console.log('[INFO] BackgroundGeolocation services enabled');
-          return locationEnabled
-        } else {
-          locationStatus = false;
-          console.log('[INFO] BackgroundGeolocation services diabled');
-          return locationEnabled
-  
-        }
+          resolve(locationEnabled)
       }, function (error) {
-        locationStatus = false;
-        console.log("The following error occurred: " + error);
-        return error
-      });      // after 1 second signal that the job is done with the result "done"
-      setTimeout(() => resolve("done"), 1000);
+        resolve(false)
+      }); 
     });
     this.isTracking = true;
 
@@ -89,15 +75,21 @@ export class BackgroundTrackerService {
     let settingsPromise = this.settingsService.get(Settings.BackgroundOptions);
     let tokenPromise = this.settingsService.get(Settings.SecurityToken);
 
-    let allPromises = Promise.all([urlPromise, settingsPromise, tokenPromise, promise]);
+    let allPromises = Promise.all([urlPromise, settingsPromise, tokenPromise, locationPromise]);
 
     allPromises.then((values) => {
-      if(!locationStatus){
-        this.isTracking = false;
-      }
+      
       let trackingUrl = values[0];
       let bgOptions = values[1];
       let token = values[2];
+      let locationStatus = values[3];
+
+      if(!locationStatus){
+        this.isTracking = false;
+        this.logger.info('[INFO] BackgroundGeolocation services diabled');
+      }else{
+        this.logger.info('[INFO] BackgroundGeolocation services enabled');
+      }
 
       if (!bgOptions) {
         this.logger.info('no bgOptions settings');
