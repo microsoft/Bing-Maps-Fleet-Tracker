@@ -57,6 +57,13 @@ export class BackgroundTrackerService {
       return this.startPromise;
     }
 
+    let locationPromise = new Promise(function(resolve) {
+      backgroundGeolocation.isLocationEnabled(function (locationEnabled) {
+          resolve(locationEnabled)
+      }, function (error) {
+        resolve(false)
+      }); 
+    });
     this.isTracking = true;
 
     let startFinished;
@@ -68,13 +75,21 @@ export class BackgroundTrackerService {
     let settingsPromise = this.settingsService.get(Settings.BackgroundOptions);
     let tokenPromise = this.settingsService.get(Settings.SecurityToken);
 
-    let allPromises = Promise.all([urlPromise, settingsPromise, tokenPromise]);
+    let allPromises = Promise.all([urlPromise, settingsPromise, tokenPromise, locationPromise]);
 
     allPromises.then((values) => {
-
+      
       let trackingUrl = values[0];
       let bgOptions = values[1];
       let token = values[2];
+      let locationStatus = values[3];
+
+      if(!locationStatus){
+        this.isTracking = false;
+        this.logger.info('[INFO] BackgroundGeolocation services diabled');
+      }else{
+        this.logger.info('[INFO] BackgroundGeolocation services enabled');
+      }
 
       if (!bgOptions) {
         this.logger.info('no bgOptions settings');

@@ -62,15 +62,23 @@ export class SettingsPage {
   }
 
   startService() {
-    this.backgroundTrackerService.startTracking();
-
-    this.toastController.create({
-      message: 'Starting tracking service',
-      duration: 3000,
-      position: 'top'
-    }).present();
-
-    this.trackingServiceRunning = this.backgroundTrackerService.isTracking;
+    this.backgroundTrackerService.startTracking().then((values) => {
+      this.trackingServiceRunning = this.backgroundTrackerService.isTracking;
+        if(!this.trackingServiceRunning){
+          this.toastController.create({
+            message: 'Location Services is disabled.\n Please enable it to continue.',
+            duration: 5000,
+            position: 'middle',
+          }).present();  
+        }
+        else{
+          this.toastController.create({
+            message: 'Starting tracking service',
+            duration: 3000,
+            position: 'top'
+          }).present();
+        }
+    });
   }
 
   stopService() {
