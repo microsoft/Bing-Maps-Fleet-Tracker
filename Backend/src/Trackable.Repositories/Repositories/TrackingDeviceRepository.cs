@@ -42,6 +42,8 @@ namespace Trackable.Repositories
             if (existingDeletedDevice != null)
             {
                 existingDeletedDevice.Deleted = false;
+                existingDeletedDevice.Name = trackingDevice.Name;
+                existingDeletedDevice.Version = trackingDevice.Version;
 
                 await this.Db.SaveChangesAsync();
 
