@@ -34,5 +34,23 @@ namespace Trackable.Repositories
             data => data.Asset,
             data => data.Tags
         };
+
+        public override async Task<TrackingDevice> AddAsync(TrackingDevice trackingDevice)
+        {
+            var existingDeletedDevice = await this.Db.TrackingDevices.SingleOrDefaultAsync(d => d.Id == trackingDevice.Id && d.Deleted);
+
+            if (existingDeletedDevice != null)
+            {
+                existingDeletedDevice.Deleted = false;
+                existingDeletedDevice.Name = trackingDevice.Name;
+                existingDeletedDevice.Version = trackingDevice.Version;
+
+                await this.Db.SaveChangesAsync();
+
+                return this.ObjectMapper.Map<TrackingDevice>(existingDeletedDevice);
+            }
+
+            return await base.AddAsync(trackingDevice);
+        }
     }
 }
