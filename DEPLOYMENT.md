@@ -19,13 +19,13 @@ Note: MSDN accounts cannot deploy to the West US region.
 5. You will need to create a Microsoft Application which will be used for authentication in your portal.
     1. Go to [Microsoft Application Portal](https://apps.dev.microsoft.com/?deeplink=/appList)
     2. Sign in with any Microsoft account
-    3. Click the `Add an app` button
-    4. Enter an application name of your choosing and click `create`.
-    5. Note down the `Application Id` field, as you will need to enter this in the Bing Maps Fleet Tracker Portal.
-    6. Click the `Generate New Password` button. Note down the secret specified here, as you will need to enter this in the Bing Maps Fleet Tracker Portal.
-    7. Click the `Add Platform` button and choose `Web`.
+    3. Click the `Add an app` button
+    4. Enter an application name of your choosing and click `create`.
+    5. Note down the `Application Id` field, as you will need to enter this in the Bing Maps Fleet Tracker Portal.
+    6. Click the `Generate New Password` button. Note down the secret specified here, as you will need to enter this in the Bing Maps Fleet Tracker Portal.
+    7. Click the `Add Platform` button and choose `Web`.
     8. Enter the Redirect Url as "https://{YOUR\_DEPLOYMENT\_NAME}.azurewebsites.net/signin-oidc".
-    9. Save the changes and return to the portal. Enter the `Application Id` and `Appliation Secret` that you noted down.
+    9. Save the changes and return to the portal. Enter the `Application Id` and `Appliation Secret` that you noted down.
 6. You have the option to enter a SendGrid Api Key and Email if you wish to use the geofence email notifications feature. You can sign up for SendGrid keys from the [SendGrid website](https://sendgrid.com/).
 7. Click the `Deploy` button and wait until the deployment finishes. You may view the resources being allocated by clicking on the `View in Azure` link.
 
