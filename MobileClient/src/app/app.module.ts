@@ -19,6 +19,7 @@ import { BackgroundTrackerService } from '../providers/background-tracker-servic
 import { SettingsService } from '../providers/settings-service';
 import { SignallingService } from '../providers/signalling-service';
 import { RegistrationService } from '../providers/registration-service';
+import { OpenNativeSettings } from '@ionic-native/open-native-settings/ngx'
 
 
 @NgModule({
@@ -52,7 +53,8 @@ import { RegistrationService } from '../providers/registration-service';
     SettingsService,
     SignallingService,
     RegistrationService,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    OpenNativeSettings
   ]
 })
 export class AppModule {}

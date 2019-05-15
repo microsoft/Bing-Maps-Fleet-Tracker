@@ -9,6 +9,7 @@ import { Logger } from 'angular2-logger/core';
 import { SettingsService, Settings } from '../../providers/settings-service';
 import { BackgroundTrackerService } from '../../providers/background-tracker-service';
 import { SignallingService } from '../../providers/signalling-service';
+import { OpenNativeSettings } from '@ionic-native/open-native-settings/ngx'
 
 declare var device;
 
@@ -31,7 +32,8 @@ export class SettingsPage {
     private settingsService: SettingsService,
     private signallingService: SignallingService,
     private backgroundTrackerService: BackgroundTrackerService,
-    private toastController: ToastController) {
+    private toastController: ToastController,
+    private openNativeSettings: OpenNativeSettings) {
   }
 
   ngOnInit() {
@@ -65,11 +67,21 @@ export class SettingsPage {
     this.backgroundTrackerService.startTracking().then((values) => {
       this.trackingServiceRunning = this.backgroundTrackerService.isTracking;
         if(!this.trackingServiceRunning){
-          this.toastController.create({
+          let toastController = this.toastController.create({
             message: 'Location Services is disabled.\n Please enable it to continue.',
             duration: 5000,
             position: 'middle',
-          }).present();  
+            showCloseButton: true,
+            closeButtonText: 'Settings'
+          });
+
+          toastController.onDidDismiss((data, role) => {
+            if (role == 'close') {
+                console.log("###################### Go to settings")
+                this.openNativeSettings.open("location");
+            }
+          });
+          toastController.present();
         }
         else{
           this.toastController.create({
