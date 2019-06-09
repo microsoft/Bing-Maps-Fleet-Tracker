@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "tar": ">=4.4.2",
-    "@ionic/app-scripts": "^3.2.3",
+    "@ionic/app-scripts": "^3.2.4",
     "typescript": "2.0.9"
   },
   "cordovaPlugins": [
