@@ -1,7 +1,7 @@
 /* Copyright (c) Microsoft Corporation. All rights reserved.
    Licensed under the MIT License. */
 
-mat-input-container {
+mat-form-field {
     font-size: 0.95em;
     margin: 10px 0 0 10px;
 }

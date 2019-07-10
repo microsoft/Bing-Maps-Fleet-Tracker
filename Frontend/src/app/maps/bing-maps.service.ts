@@ -4,8 +4,7 @@
 /// <reference path='../../../node_modules/bingmaps/types/MicrosoftMaps/Microsoft.Maps.All.d.ts' />
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { Observable ,  Subject } from 'rxjs';
 
 import { Asset, AssetType } from '../assets/asset';
 import { Point } from '../shared/point';
@@ -16,7 +15,7 @@ import { Location } from '../shared/location';
 import { TripService } from '../core/trip.service';
 import { LocationService } from '../locations/location.service';
 
-import 'rxjs/add/operator/map';
+
 import { TripLeg } from '../shared/trip-leg';
 
 @Injectable()

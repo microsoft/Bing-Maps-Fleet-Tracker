@@ -1,7 +1,7 @@
 /* Copyright (c) Microsoft Corporation. All rights reserved.
    Licensed under the MIT License. */
 
-mat-input-container {
+mat-form-field {
     font-size: 0.95em;
     margin: 10px 0 0 10px;
 }
@@ -21,17 +21,17 @@ mat-list-item {
     color: #ffffff;
 }
 
-.my-pagination /deep/ .ngx-pagination {
+.my-pagination ::ng-deep .ngx-pagination {
     font-size: 0.95em;
     padding: 20px 0 0 20px;
 }
 
-.my-pagination /deep/ .ngx-pagination .pagination-previous,
-.my-pagination /deep/ .ngx-pagination .pagination-next {
+.my-pagination ::ng-deep .ngx-pagination .pagination-previous,
+.my-pagination ::ng-deep .ngx-pagination .pagination-next {
     font-weight: bold;
 }
 
-.my-pagination /deep/ .ngx-pagination .current {
+.my-pagination ::ng-deep .ngx-pagination .current {
     background-color: #56A6B6;
     color: #FFFFFF;
 }

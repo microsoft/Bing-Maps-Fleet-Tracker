@@ -64,3 +64,18 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
  * Needed for: All but Chrome, Firefox, Microsoft Edge, IE11 and Safari 10
  */
 // import 'intl';  // Run `npm install --save intl`.
+
+
+/***************************************************************************************************
+ * Fix for the error "global is not defined" appears while starting the Frontend
+ */
+(window as any).global = window;
+var global = global || window;
+
+// (window as any).process = {
+//     env: { DEBUG: undefined },
+//   };
+import * as process from 'process';
+window['process'] = process;
+
+global.Buffer = global.Buffer || require('buffer').Buffer;

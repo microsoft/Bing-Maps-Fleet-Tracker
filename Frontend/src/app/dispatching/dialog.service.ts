@@ -2,8 +2,8 @@
 // Licensed under the MIT License.
 
 import { Injectable } from '@angular/core';
-import { MatDialogRef, MatDialog } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
 
 import { LocationDialogComponent } from './location-dialog/location-dialog.component';
 import { LocationService } from '../locations/location.service';

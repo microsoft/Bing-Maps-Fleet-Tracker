@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class SpinnerService {

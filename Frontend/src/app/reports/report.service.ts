@@ -2,9 +2,8 @@
 // Licensed under the MIT License.
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/map';
+import { Observable ,  Subject } from 'rxjs';
+
 
 import { Metric } from './metric';
 import { DataService } from '../core/data.service';

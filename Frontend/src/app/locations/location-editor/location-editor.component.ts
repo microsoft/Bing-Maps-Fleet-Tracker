@@ -3,7 +3,7 @@
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 import { Location, InterestLevel } from '../../shared/location';
 import { Point } from '../../shared/point';
@@ -80,7 +80,8 @@ export class LocationEditorComponent implements OnInit, OnDestroy {
   changeAddress(): void {
     const address = this.location.address;
     this.mapService.geocodeQuery(address);
-    this.mapService.getGeocodeResult().take(1).subscribe(point => {
+    var obs: any = this.mapService.getGeocodeResult()
+    obs.take(1).subscribe(point => {
       this.location.latitude = point.latitude;
       this.location.longitude = point.longitude;
       this.setlocationString();

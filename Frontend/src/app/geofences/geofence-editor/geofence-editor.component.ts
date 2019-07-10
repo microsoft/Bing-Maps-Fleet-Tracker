@@ -3,7 +3,7 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 import { Geofence, FenceType, AreaType } from '../../shared/geofence';
 import { Point } from '../../shared/point';
@@ -149,15 +149,15 @@ export class GeofenceEditorComponent implements OnInit, OnDestroy {
     });
 
     if (this.isEditable) {
+      console.log('inside if consition updating ')
       this.geofenceService.update(this.geofence)
         .subscribe(() => {
           this.router.navigate(['/geofences']);
         });
     } else {
-      this.geofenceService.add(this.geofence)
-        .subscribe(() => {
-          this.router.navigate(['/geofences']);
-        });
+      console.log('inside if consition adding ')
+      console.log(this.geofenceService.add(this.geofence))
+        
     }
   }
 

@@ -12,9 +12,9 @@
     </button>
 </mat-toolbar>
 
-<mat-input-container>
+<mat-form-field>
   <input matInput placeholder="Search ... " [(ngModel)]="filter" name="filter">
-</mat-input-container>
+</mat-form-field>
 
 <mat-list>
   <div *ngFor="let location of locations | filterList:filter | paginate: {itemsPerPage: singlePageSize, currentPage: index}"

@@ -2,8 +2,8 @@
 // Licensed under the MIT License.
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
-import { Subscription } from 'rxjs/Subscription';
+import { MatDialogRef } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 
 import { LocationService } from '../../locations/location.service';
 import { Location } from '../../shared/location';

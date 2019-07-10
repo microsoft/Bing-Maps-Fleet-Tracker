@@ -1,9 +1,10 @@
+
+import {of as observableOf,  Observable } from 'rxjs';
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
+
 
 @Injectable()
 export class MockDataService {
@@ -17,7 +18,7 @@ export class MockDataService {
     }
 
     get<T>(path: string): Observable<T> {
-        return Observable.of(this.data[path] as T);
+        return observableOf(this.data[path] as T);
     }
 
     post<T>(path: string, data: T) {

@@ -3,7 +3,7 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { ToasterService } from 'angular2-toaster';
 
 import { Asset, AssetType } from '../asset';
@@ -12,6 +12,7 @@ import { AssetProperties } from '../../shared/asset-properties';
 import { AssetService } from '../asset.service';
 import { Device } from '../../devices/device';
 import { DeviceService } from '../../devices/device.service';
+import 'rxjs/add/operator/takeWhile';
 
 @Component({
   selector: 'app-asset-editor-dialog',

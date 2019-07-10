@@ -1,8 +1,10 @@
+
+import {map} from 'rxjs/operators';
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { DateRange } from '../shared/date-range';
 import { DataService } from '../core/data.service';
@@ -34,14 +36,14 @@ export class DeviceService {
   }
 
   getPoints(id: string, dateRange?: DateRange): Observable<TrackingPoint[]> {
-    return this.dataService.get<TrackingPoint>(`devices/${id}/points`)
-      .map(points => {
+    return this.dataService.get<TrackingPoint>(`devices/${id}/points`).pipe(
+      map(points => {
         if (!dateRange) {
           return points;
         }
 
         return points.filter(p => p.time >= +dateRange.from && p.time <= +dateRange.to);
-      });
+      }));
   }
 
   getLatestPoints(): Observable<{ [key: string]: TrackingPoint }> {

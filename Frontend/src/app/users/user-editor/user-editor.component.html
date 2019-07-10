@@ -8,30 +8,30 @@
 
 <section>
   <form (submit)="submit()">
-    <mat-input-container *ngIf="!isAddingNew">
+    <mat-form-field *ngIf="!isAddingNew">
       <input matInput placeholder="Id" [(ngModel)]="user.id" name="id" disabled>
-    </mat-input-container>
+    </mat-form-field>
 
-    <mat-input-container>
+    <mat-form-field>
       <input matInput placeholder="Email" [(ngModel)]="user.email" name="email" [disabled]="!isAddingNew" [required]="isAddingNew">
-    </mat-input-container>
+    </mat-form-field>
 
-    <mat-input-container>
+    <mat-form-field>
       <input matInput placeholder="Name" [(ngModel)]="user.name" name="name" [disabled]="!isAddingNew" [required]="isAddingNew">
-    </mat-input-container>
+    </mat-form-field>
 
-    <mat-input-container *ngIf="!isAddingNew">
+    <mat-form-field *ngIf="!isAddingNew">
       <input matInput class="partial-input" placeholder="User Token" [(ngModel)]="userToken" name="token" disabled>
       <a class="partial-button" (click)="regenerateToken()">Regenerate</a>
-    </mat-input-container>
+    </mat-form-field>
 
-    <mat-input-container *ngIf="user.role.name !== 'Owner'"> 
+    <mat-form-field *ngIf="user.role.name !== 'Owner'"> 
       <mat-select placeholder="Role" [(ngModel)]="user.role.name" name="role" [required]="isAddingNew">
         <mat-option *ngFor="let role of roles" [value]="role.name">
           {{role.name}}
         </mat-option>
       </mat-select>
-    </mat-input-container>
+    </mat-form-field>
 
     <div class="pull-right">
       <a mat-raised-button [routerLink]="['/users']">Back</a>

@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 
 import { BingMapsService } from '../bing-maps.service';
 import { environment } from '../../../environments/environment';
@@ -19,7 +19,7 @@ import { TrackingPoint } from '../../shared/tracking-point';
     styleUrls: ['./maps.component.css']
 })
 export class MapsComponent implements OnInit {
-    @ViewChild('map') mapElement: ElementRef;
+    @ViewChild('map',{static: false}) mapElement: ElementRef;
 
     constructor(
         private bingMapsService: BingMapsService,

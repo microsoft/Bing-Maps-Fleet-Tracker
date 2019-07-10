@@ -3,8 +3,8 @@
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatDialog } from '@angular/material';
-import { Subscription } from 'rxjs/Subscription';
+import { MatDialog } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 
 import { AssetService } from '../../assets/asset.service';
 import { DialogService } from '../dialog.service';

@@ -3,7 +3,7 @@
 
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { DispatchingParameters } from './dispatching-parameters';
 import { DispatchingResults } from './dispatching-results';

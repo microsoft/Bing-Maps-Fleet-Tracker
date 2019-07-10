@@ -2,8 +2,7 @@
 // Licensed under the MIT License.
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable ,  Subscription } from 'rxjs';
 import { ToasterService } from 'angular2-toaster';
 
 import { Asset } from '../asset';
@@ -15,6 +14,10 @@ import { Point } from '../../shared/point';
 import { TrackingPoint } from '../../shared/tracking-point';
 import { Trip } from '../../shared/trip';
 import { Roles } from '../../shared/role';
+import 'rxjs/add/operator/takeWhile';
+import 'rxjs/add/operator/skipWhile';
+
+
 
 enum SelectedAssetState {
   ListSelected,

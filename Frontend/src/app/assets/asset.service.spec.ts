@@ -4,13 +4,16 @@
 /* tslint:disable:no-unused-variable */
 
 import { TestBed, inject } from '@angular/core/testing';
+// import { Observable } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 
 import { Asset } from './asset';
 import { AssetService } from './asset.service';
 import { DataService } from '../core/data.service';
 import { DeviceService } from '../devices/device.service';
 import { MockDataService } from '../../testing/mock-data.service';
+
 
 describe('AssetService', () => {
 

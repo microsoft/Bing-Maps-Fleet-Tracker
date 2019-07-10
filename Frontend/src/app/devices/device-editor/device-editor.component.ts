@@ -3,10 +3,11 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatDialog, MatDialogRef } from '@angular/material';
-import { Subscription } from 'rxjs/Subscription';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 import { ToasterService } from 'angular2-toaster';
-import { HubConnection } from '@aspnet/signalr-client';
+// import { HubConnection } from '@aspnet/signalr-client';
+import * as signalR from "@aspnet/signalr";
 import { UUID } from 'angular2-uuid';
 
 import { Roles } from '../../shared/role';
@@ -15,6 +16,10 @@ import { AssetService } from '../../assets/asset.service';
 import { Device } from '../device';
 import { DeviceService } from '../device.service';
 import { DeviceRegisterComponent } from '../device-register/device-register.component';
+
+
+
+
 
 @Component({
   selector: 'app-device-editor-dialog',
@@ -33,7 +38,7 @@ export class DeviceEditorComponent implements OnInit, OnDestroy {
   private assetsSubscription: Subscription;
   private deviceSubscription: Subscription;
   private nonce: string;
-  private hubConnection: HubConnection;
+  private hubConnection: signalR.HubConnection;
   private dialogRef: MatDialogRef<any>;
 
   constructor(
@@ -53,7 +58,8 @@ export class DeviceEditorComponent implements OnInit, OnDestroy {
       if (id) {
         this.isEditing = true;
         this.deviceSubscription = this.deviceService.getDevice(id).subscribe(device => this.device = device);
-        this.deviceService.getToken(id).take(1).subscribe(t => this.deviceToken = t);
+        var obs: any = this.deviceService.getToken(id)
+        obs.take(1).subscribe(t => this.deviceToken = t);
       } else {
         // Work around for the fact that angular doesnt see this in change detection
         setTimeout(() => this.openDialog(), 0);
@@ -71,7 +77,10 @@ export class DeviceEditorComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.hubConnection = new HubConnection(this.deviceService.getDeviceAdditionNotificationUrl());
+    // this.hubConnection = new HubConnection(this.deviceService.getDeviceAdditionNotificationUrl());
+    this.hubConnection =  new signalR.HubConnectionBuilder()
+    .withUrl(this.deviceService.getDeviceAdditionNotificationUrl())
+    .build();
 
     this.hubConnection.on('DeviceAdded', (data: any) => {
       if (data === this.nonce) {
