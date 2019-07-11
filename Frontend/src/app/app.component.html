@@ -14,7 +14,7 @@
 </section>
 
 <mat-sidenav-container>
-  <mat-sidenav #sidenav mode="side" opened="true" disableClose="true" [appRoleLimiter]="Roles.Viewer">
+  <mat-sidenav #sidenav mode="side" opened="true" disableClose="true" [appRoleLimiter]="Roles.Viewer" style="overflow-x: hidden!important;">
     <section class="side-content">
       <router-outlet ></router-outlet>
     </section>

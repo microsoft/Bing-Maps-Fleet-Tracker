@@ -56,3 +56,6 @@ h1 {
   margin-left: 5px!important;
 }
 
+.mat-drawer-inner-container{
+  width: 120%;
+}

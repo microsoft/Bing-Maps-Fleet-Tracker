@@ -156,7 +156,11 @@ export class GeofenceEditorComponent implements OnInit, OnDestroy {
         });
     } else {
       console.log('inside if consition adding ')
-      console.log(this.geofenceService.add(this.geofence))
+      this.geofenceService.add(this.geofence)
+        .subscribe(() => {
+          console.log('done adding')
+          this.router.navigate(['geofences']);
+        });
         
     }
   }

@@ -85,7 +85,7 @@ export class DataService {
         }
 
         const observable = this.authHttpService.post(url, data).pipe(
-            map(response => response.text() ? response : null));
+            map(response => typeof response != undefined ? response : null));
 
         observable
             .subscribe(d => cache.add(d), error => { });
@@ -96,7 +96,7 @@ export class DataService {
     put<T>(path: string, id: string | number, data: T, updateAll: boolean): Observable<any> {
         const cache = this.getCache(path);
         const url = this.getUrl(path, id);
-        const observable = this.authHttpService.put(url, data).pipe(map(response => response.text() ? response : null));
+        const observable = this.authHttpService.put(url, data).pipe(map(response =>typeof response != undefined ? response : null));
 
         observable
             .subscribe(d => {
