@@ -22,7 +22,19 @@ Any ionic application can be run on a browser for testing basic functionality. T
 ionic serve
 ```
 
-You should be greeted by a registration page in your browser. If this command fails to run, ensure all the prerequisites have been installed correctly. If this step succeeds, you are ready to run on an emulator or device.
+You should be greeted by a registration page in your browser. If this command fails to run, ensure all the prerequisites have been installed correctly. 
+
+If you click scan in the registration page, you will get error:
+
+Error: Uncaught (in promise): ReferenceError: 'cordova' is not defined ReferenceError: 'cordova' is not defined at Anonymous function (http://localhost:8100/build/main.js:371:13) at t.prototype.invoke (http://localhost:8100/build/polyfills.js:3:9008) at onInvoke (http://localhost:8100/build/vendor.js:30921:21) at t.prototype.invoke (http://localhost:8100/build/polyfills.js:3:9008) at e.prototype.run (http://localhost:8100/build/polyfills.js:3:6455) at Anonymous function (http://localhost:8100/build/polyfills.js:3:4574) at t.prototype.invokeTask (http://localhost:8100/build/polyfills.js:3:9614) at onInvokeTask (http://localhost:8100/build/vendor.js:30912:21) at t.prototype.invokeTask (http://localhost:8100/build/polyfills.js:3:9614) at e.prototype.runTask (http://localhost:8100/build/polyfills.js:3:7057) at s (http://localhost:8100/build/polyfills.js:3:4205) at Anonymous function (http://localhost:8100/build/polyfills.js:3:4612) at t.prototype.invokeTask (http://localhost:8100/build/polyfills.js:3:9614) at onInvokeTask (http://localhost:8100/build/vendor.js:30912:21) at t.prototype.invokeTask (http://localhost:8100/build/polyfills.js:3:9614) at e.prototype.runTask (http://localhost:8100/build/polyfills.js:3:7057) at i (http://localhost:8100/build/polyfills.js:3:3664) at invoke (http://localhost:8100/build/polyfills.js:3:10870) 
+
+If you click dismiss in the registration page, you will get error:
+
+Error: Error in ./RegistrationPage class RegistrationPage - inline template:40:2 caused by: Object doesn't support property or method 'dismiss' at DebugAppView.prototype._rethrowWithContext (http://localhost:8100/build/vendor.js:89149:17) at Anonymous function (http://localhost:8100/build/vendor.js:89162:17) at Anonymous function (http://localhost:8100/build/vendor.js:35817:9) at t.prototype.invokeTask (http://localhost:8100/build/polyfills.js:3:9614) at onInvokeTask (http://localhost:8100/build/vendor.js:30912:21) at t.prototype.invokeTask (http://localhost:8100/build/polyfills.js:3:9614) at e.prototype.runTask (http://localhost:8100/build/polyfills.js:3:7057) at invoke (http://localhost:8100/build/polyfills.js:3:10827)
+
+Those errors are expected.
+
+If this step succeeds, you are ready to run on an emulator or device.
 
 ### Android
 
@@ -62,7 +74,7 @@ ERROR: In <declare-styleable> FontFamilyFont, unable to find attribute android:f
 ERROR: In <declare-styleable> FontFamilyFont, unable to find attribute android:ttcIndex
 ```
 
-To solve these issues, go to the `plugin/` directory, search for "com.android.support:support-v4:+" and replace it with "com.android.support:support-v4:27.1.0".
+To solve these issues, go to the `plugin/` directory, search for "com.android.support:support-v4:+" and replace it with "com.android.support:support-v4:27.1.0". You will need to change that in two files: `build.gradle` and `barcodescanner.gradle`.
 
 Then remove and add the Android platform directory using the commands:
 
