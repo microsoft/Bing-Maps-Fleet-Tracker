@@ -83,9 +83,12 @@ ionic cordova platform remove android
 ionic cordova platform add android@6.4.0
 ```
 
+If you get errors like "Error occurred during initialization of VM. Could not reserve enough space for 2097152KB object heap", make sure your jvm is in the correct architecture. 
+
 ### iOS
 
 #### iOS Prerequisites
+
 
 * XCode 7 or higher
 * iOS 9
