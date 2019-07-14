@@ -409,10 +409,19 @@ export class BingMapsService {
                 newLocation.name = 'Pin' + '(' + (tempRoutePoints.length + 1) + ')';
                 newLocation.latitude = event.location.latitude;
                 newLocation.longitude = event.location.longitude;
+                console.log("inside bing-maps-service");
+                this.searchManager.reverseGeocode({
+                    location: event.location,
+                    callback: (placeResult: Microsoft.Maps.Search.IPlaceResult) => {
+                        newLocation.address = placeResult.address.formattedAddress;
+                        console.log(newLocation);
+                        this.showLocation(newLocation);
+                        tempRoutePoints.push(newLocation);
+                        subject.next(tempRoutePoints);
+                    }
+                });
 
-                this.showLocation(newLocation);
-                tempRoutePoints.push(newLocation);
-                subject.next(tempRoutePoints);
+                
             }
             );
         });
