@@ -91,4 +91,8 @@ export class LocationListComponent implements OnInit, OnDestroy {
         this.showTable = (this.assetsCount.length >= 1);
       });
   }
+
+  deleteLocation(location: Location) {
+    this.locationService.deleteLocation(location);
+  }
 }
