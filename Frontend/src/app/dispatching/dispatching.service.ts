@@ -9,6 +9,7 @@ import { DispatchingParameters } from './dispatching-parameters';
 import { DispatchingResults } from './dispatching-results';
 import { DataService } from '../core/data.service';
 import { Location } from '../shared/location';
+import { MapsService } from '../maps/maps.service';
 
 @Injectable()
 export class DispatchingService {
@@ -18,6 +19,7 @@ export class DispatchingService {
 
   constructor(
     private dataService: DataService,
+    private mapService: MapsService,
     private router: Router) {}
 
   callDisaptchingAPI(dispatchingParameters: DispatchingParameters) {
@@ -29,6 +31,10 @@ export class DispatchingService {
     return this.dispatchingResults;
   }
 
+  getDispatchingPinsResult(): Observable<any> {
+    return this.mapService.getDispatchingPinsResult()
+  }
+  
   getPinsAdded(): Location[] {
     return this.pinsAdded;
   }
