@@ -390,7 +390,7 @@ export class BingMapsService {
             );
         });
     }
-    
+
 
     drawDispatchingRoute(subject: Subject<Location[]>, initialLocations: Location[]) {
         this.load().then(() => {
@@ -425,7 +425,7 @@ export class BingMapsService {
                     }
                 });
 
-                
+
             }
             );
         });
@@ -447,7 +447,7 @@ export class BingMapsService {
                 const polyline = new Microsoft.Maps.Polyline(locations, {
                     strokeColor:
                         this.tripColors[colorIndex % this.tripColors.length],
-                    strokeThickness: Thickness 
+                    strokeThickness: Thickness
                 });
 
                 this.locationsLayer.add(polyline);

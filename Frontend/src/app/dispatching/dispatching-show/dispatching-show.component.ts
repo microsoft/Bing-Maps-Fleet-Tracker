@@ -11,8 +11,8 @@ import { ToasterService } from 'angular2-toaster';
 import { Point } from '../../shared/point';
 import { Location } from '../../shared/location';
 
-interface Route { 
-  directions: string[] 
+interface Route {
+  directions: string[]
   distances: string[]
   directionPoints: Point[]
   routePoint: Point[]
@@ -37,7 +37,7 @@ export class DispatchingShowComponent implements OnInit {
     directionPoints: [],
     routePoint: []
   };
-  
+
   viewAltRoute: boolean;
   noDirectionsAvailable: boolean;
   location: Location;
@@ -47,14 +47,14 @@ export class DispatchingShowComponent implements OnInit {
     private mapService: MapsService,
     private spinnerService: SpinnerService,
     private toasterService: ToasterService) {
-      this.spinnerService.start();
-    }
+    this.spinnerService.start();
+  }
 
   ngOnInit() {
     this.location = new Location();
     this.dispatchingService.getDispatchingResults()
       .subscribe(results => {
-        
+
         this.viewAltRoute = this.dispatchingService.getDispatchingParameters().getAlternativeCarRoute;
 
         this.mainRoute = {
@@ -63,7 +63,7 @@ export class DispatchingShowComponent implements OnInit {
           directionPoints: results[0].itineraryPoints,
           routePoint: results[0].routePoints,
         }
-        if (results[0].alternativeCarRoutePoints != null){
+        if (results[0].alternativeCarRoutePoints != null) {
           this.altRoute = {
             directions: results[0].alternativeCarRoutePoints[0].itineraryText,
             distances: results[0].alternativeCarRoutePoints[0].itineraryDistance,
@@ -71,7 +71,7 @@ export class DispatchingShowComponent implements OnInit {
             routePoint: results[0].alternativeCarRoutePoints[0].routePoints,
           }
         }
-        
+
         this.noDirectionsAvailable = this.mainRoute.directions.length === 0;
 
         this.renameDestinationsInDirections();
@@ -79,36 +79,37 @@ export class DispatchingShowComponent implements OnInit {
 
         this.mapService.showAlternativeResults(this.altRoute.routePoint);
         this.mapService.showDispatchingResults(this.mainRoute.routePoint, this.dispatchingService.getPinsAdded());
-        
-        this.spinnerService.stop(); }, error => {
+
+        this.spinnerService.stop();
+      }, error => {
         this.toasterService.pop('error', 'Error routing',
-        'An error has occured. Please make sure that the locations you are trying to route to are in the supported regions');
+          'An error has occured. Please make sure that the locations you are trying to route to are in the supported regions');
       });
 
 
-  } 
+  }
 
   toggleRoutes(item) {
     if (item.tab.textLabel === "Main Route") {
       console.log('main');
       this.mapService.showAlternativeResults(this.altRoute.routePoint);
       this.mapService.showDispatchingResults(this.mainRoute.routePoint, this.dispatchingService.getPinsAdded());
-        
+
     } else {
       this.mapService.showAlternativeResults(this.mainRoute.routePoint);
       this.mapService.showDispatchingResults(this.altRoute.routePoint, this.dispatchingService.getPinsAdded());
-        
+
     }
   }
 
-  private renameDestinationsInDirections(){
+  private renameDestinationsInDirections() {
     this.dispatchingService.getDispatchingPinsResult()
       .subscribe(location => {
         var directions = this.mainRoute.directions;
         var pinIndex = 1;
         for (var i = 0; i < directions.length && location.length > 0; i++) {
           var direction = directions[i];
-          if(direction.startsWith("Arrive at Stop")){
+          if (direction.startsWith("Arrive at Stop")) {
             directions[i] = "Arrive at Stop " + pinIndex + ": " + location[pinIndex].address
             pinIndex += 1;
           }
@@ -117,14 +118,14 @@ export class DispatchingShowComponent implements OnInit {
       });
   }
 
-  private renameDestinationsInAltDirections(){
+  private renameDestinationsInAltDirections() {
     this.dispatchingService.getDispatchingPinsResult()
       .subscribe(location => {
         var directions = this.altRoute.directions;
         var pinIndex = 1;
         for (var i = 0; i < directions.length && location.length > 0; i++) {
           var direction = directions[i];
-          if(direction.startsWith("Arrive at Stop")){
+          if (direction.startsWith("Arrive at Stop")) {
             directions[i] = "Arrive at Stop " + pinIndex + ": " + location[pinIndex].address
             pinIndex += 1;
           }
