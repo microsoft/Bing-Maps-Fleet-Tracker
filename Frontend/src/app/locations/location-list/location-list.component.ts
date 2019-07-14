@@ -97,8 +97,8 @@ export class LocationListComponent implements OnInit, OnDestroy {
     this.locationService.deleteLocation(location);
   }
 
-  openLocationDialog():void {
-    this.dialog.open(LocationsInfoDialogComponent, {  
+  openLocationDialog(): void {
+    this.dialog.open(LocationsInfoDialogComponent, {
       width: '600px',
     });
   }
