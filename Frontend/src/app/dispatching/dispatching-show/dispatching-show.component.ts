@@ -55,7 +55,6 @@ export class DispatchingShowComponent implements OnInit {
   private renameDestinationsInDirections(){
     this.dispatchingService.getDispatchingPinsResult()
       .subscribe(location => {
-        console.log(location);
         var directions = this.directions;
         var pinIndex = 1;
         for (var i = 0; i < directions.length; i++) {
