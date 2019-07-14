@@ -9,6 +9,8 @@ import { SpinnerService } from '../../core/spinner.service';
 import { ToasterService } from 'angular2-toaster';
 
 import { Point } from '../../shared/point';
+import { Location } from '../../shared/location';
+
 
 @Component({
   selector: 'app-dispatching-show',
@@ -21,6 +23,7 @@ export class DispatchingShowComponent implements OnInit {
   distances: string[];
   directionPoints: Point[];
   noDirectionsAvailable: boolean;
+  location: Location;
 
   constructor(
     private dispatchingService: DispatchingService,
@@ -31,17 +34,39 @@ export class DispatchingShowComponent implements OnInit {
     }
 
   ngOnInit() {
+    this.location = new Location();
     this.dispatchingService.getDispatchingResults()
       .subscribe(results => {
         this.directions = results[0].itineraryText;
         this.directionPoints = results[0].itineraryPoints;
         this.distances = results[0].itineraryDistance;
+        this.renameDestinationsInDirections();
         this.noDirectionsAvailable = this.directions.length === 0;
         this.mapService.showAlternativeResults(results[0].alternativeCarRoutePoints);
         this.mapService.showDispatchingResults(results[0].routePoints, this.dispatchingService.getPinsAdded());
         this.spinnerService.stop(); }, error => {
         this.toasterService.pop('error', 'Error routing',
         'An error has occured. Please make sure that the locations you are trying to route to are in the supported regions');
+      });
+
+
+  } 
+
+  private renameDestinationsInDirections(){
+    this.dispatchingService.getDispatchingPinsResult()
+      .subscribe(location => {
+        console.log(location);
+        var directions = this.directions;
+        var pinIndex = 1;
+        for (var i = 0; i < directions.length; i++) {
+          var direction = directions[i];
+          if(direction.startsWith("Arrive at Stop")){
+            directions[i] = "Arrive at Stop " + pinIndex + ": " + location[pinIndex].address
+
+            pinIndex += 1;
+          }
+        }
+        this.directions = directions;
       });
   }
 
