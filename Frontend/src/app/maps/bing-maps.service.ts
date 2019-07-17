@@ -390,6 +390,7 @@ export class BingMapsService {
             );
         });
     }
+    
 
 
     drawDispatchingRoute(subject: Subject<Location[]>, initialLocations: Location[]) {

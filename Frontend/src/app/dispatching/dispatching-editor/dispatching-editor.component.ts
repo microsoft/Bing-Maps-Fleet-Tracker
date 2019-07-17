@@ -211,8 +211,8 @@ export class DispatchingEditorComponent implements OnInit, OnDestroy {
     this.mapsService.resetDispatchingDraw(this.pinsAdded);
   }
 
-  openDispatchingInfoDialog(): void{
-    this.dialog.open(DispatchingInfoDialogComponent, {  
+  openDispatchingInfoDialog(): void {
+    this.dialog.open(DispatchingInfoDialogComponent, {
       width: '600px',
     });
   }
