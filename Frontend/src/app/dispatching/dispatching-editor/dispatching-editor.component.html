@@ -9,15 +9,24 @@
   <form (submit)="showRoute()">
 
     <div>
-      <mat-form-field class="partial-input">
+      <!-- <mat-input-container class="partial-input">
         <input matInput placeholder="Number of Points (Max 20)" [(ngModel)]="pinsAdded.length" name="waypoints" disabled>
-      </mat-form-field>
+      </mat-input-container> -->
       <button mat-icon-button mat-tooltip='Reset Points' (click)="clearPoints()" type="button">
         <mat-icon>undo</mat-icon>
       </button>
-      <button mat-icon-button mat-tooltip='Add Location' (click)="openDialog()" type="button" [disabled]="pinsAdded.length >= 20">
+      <!-- <button mat-icon-button mat-tooltip='Add Location' (click)="openDialog()" type="button" [disabled]="pinsAdded.length >= 20">
         <mat-icon>add_circle</mat-icon>
-      </button>
+      </button> -->
+      <button mat-button [matMenuTriggerFor]="afterMenu" type="button" >Number of Points {{pinsAdded.length}} (Max 20)</button>
+      <mat-menu #afterMenu="matMenu">
+        <span class="mat-row-item" *ngFor="let pin of pinsAdded" >
+          <p class="mat-row-text">{{pin.name}}</p>
+          <a mat-icon-button mat-tooltip="Delete pin" (click)="delete_pin(pin.name)">
+              <mat-icon>delete_forever</mat-icon>
+          </a>
+        </span>
+      </mat-menu> 
     </div>
 
     <mat-form-field>
