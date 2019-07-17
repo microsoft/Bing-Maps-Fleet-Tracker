@@ -16,12 +16,10 @@
       <!-- <mat-input-container class="partial-input">
         <input matInput placeholder="Number of Points (Max 20)" [(ngModel)]="pinsAdded.length" name="waypoints" disabled>
       </mat-input-container> -->
-
+      
       <div style="display: flex; justify-content: space-between; width:100%;">
-        <button mat-button [matMenuTriggerFor]="afterMenu" type="button">Number of Points {{pinsAdded.length}} (Max
-          20)</button>
-        <button mat-icon-button mat-tooltip='Add Location' (click)="openDialog()" type="button"
-          [disabled]="pinsAdded.length >= 20">
+        <button mat-button [matMenuTriggerFor]="afterMenu" type="button" >Number of Points {{pinsAdded.length}} (Max 20)</button>
+        <button mat-icon-button mat-tooltip='Add Location' (click)="openDialog()" type="button" [disabled]="pinsAdded.length >= 20">
           <mat-icon>add_circle</mat-icon>
         </button>
         <button mat-icon-button mat-tooltip='Reset Points' (click)="clearPoints()" type="button">
@@ -31,9 +29,8 @@
       <mat-menu #afterMenu="matMenu">
         <span class="mat-row-item" *ngFor="let pin of pinsAdded">
           <p class="mat-row-text">{{pin.name}}</p>
-          <a mat-icon-button style="margin-top:auto;margin-bottom:auto" mat-tooltip="Delete pin"
-            (click)="delete_pin(pin.name)">
-            <mat-icon>delete_forever</mat-icon>
+          <a mat-icon-button style="margin-top:auto;margin-bottom:auto" mat-tooltip="Delete pin" (click)="delete_pin(pin.name)">
+              <mat-icon>delete_forever</mat-icon>
           </a>
         </span>
       </mat-menu>
