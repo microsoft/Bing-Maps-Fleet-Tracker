@@ -11,6 +11,8 @@ import { AssetService } from '../../assets/asset.service';
 import { GeofenceService } from '../geofence.service';
 import { MapsService } from '../../maps/maps.service';
 import { takeWhile } from 'rxjs/operators';
+import { GeofencesInfoDialogComponent } from '../geofences-info-dialog/geofences-info-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-geofence-list',
@@ -28,7 +30,8 @@ export class GeofenceListComponent implements OnInit, OnDestroy {
   constructor(
     private geofenceService: GeofenceService,
     private assetService: AssetService,
-    private mapsService: MapsService) { }
+    private mapsService: MapsService,
+    public dialog: MatDialog) { }
 
   ngOnInit() {
     this.isAlive = true;
@@ -61,5 +64,11 @@ export class GeofenceListComponent implements OnInit, OnDestroy {
 
   deleteGeofence(geofence: Geofence) {
     this.geofenceService.remove(geofence);
+  }
+
+  openGeoDialog():void {
+    this.dialog.open(GeofencesInfoDialogComponent, {  
+      width: '600px',
+    });
   }
 }

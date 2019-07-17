@@ -11,12 +11,14 @@ import { DialogService } from './dialog.service';
 import { DispatchingShowComponent } from './dispatching-show/dispatching-show.component';
 import { LocationDialogComponent } from './location-dialog/location-dialog.component';
 import { MatMenuModule} from '@angular/material/menu';
+import { DispatchingInfoDialogComponent } from './dispatching-info-dialog/dispatching-info-dialog.component';
 
 @NgModule({
   declarations: [
     routedComponenets,
     DispatchingShowComponent,
-    LocationDialogComponent
+    LocationDialogComponent,
+    DispatchingInfoDialogComponent
   ],
   imports: [
     CommonModule,
@@ -29,7 +31,8 @@ import { MatMenuModule} from '@angular/material/menu';
     DialogService
   ],
   entryComponents: [
-    LocationDialogComponent
+    LocationDialogComponent,
+    DispatchingInfoDialogComponent
   ],
   exports: [
     LocationDialogComponent

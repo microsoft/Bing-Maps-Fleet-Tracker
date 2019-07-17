@@ -35,6 +35,7 @@ import {
   HazardousMaterialOptions,
   HazardousPermitOptions
 } from '../dispatching-editor-options';
+import { DispatchingInfoDialogComponent } from '../dispatching-info-dialog/dispatching-info-dialog.component';
 
 @Component({
   selector: 'app-dispatching-editor',
@@ -81,7 +82,8 @@ export class DispatchingEditorComponent implements OnInit, OnDestroy {
     private dispatchingService: DispatchingService,
     private locationService: LocationService,
     private mapsService: MapsService,
-    private toasterService: ToasterService) {
+    private toasterService: ToasterService,
+    public dialog: MatDialog) {
     this.resetAllData();
   }
 
@@ -207,5 +209,11 @@ export class DispatchingEditorComponent implements OnInit, OnDestroy {
   delete_pin(name: string) {
     this.pinsAdded = this.pinsAdded.filter(item => item.name !== name);
     this.mapsService.resetDispatchingDraw(this.pinsAdded);
+  }
+
+  openDispatchingInfoDialog(): void{
+    this.dialog.open(DispatchingInfoDialogComponent, {  
+      width: '600px',
+    });
   }
 }

@@ -7,7 +7,7 @@
   <button mat-icon-button mat-tooltip="Add New User" [routerLink]="['/users/new']">
     <mat-icon>add_circle</mat-icon>
   </button>
-  <button mat-icon-button>
+  <button mat-icon-button (click)="openUsersDialog()">
     <mat-icon>info</mat-icon>
   </button>
 </mat-toolbar>

@@ -11,6 +11,8 @@ import { Point } from '../../shared/point';
 import { Roles } from '../../shared/role';
 import { AssetService } from '../../assets/asset.service';
 import { takeWhile } from 'rxjs/operators';
+import { LocationsInfoDialogComponent } from '../locations-info-dialog/locations-info-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-location-list',
@@ -32,7 +34,8 @@ export class LocationListComponent implements OnInit, OnDestroy {
   constructor(
     private locationService: LocationService,
     private assetService: AssetService,
-    private mapsService: MapsService) { }
+    private mapsService: MapsService,
+    public dialog: MatDialog) { }
 
   ngOnInit() {
     this.isAlive = true;
@@ -92,5 +95,11 @@ export class LocationListComponent implements OnInit, OnDestroy {
 
   deleteLocation(location: Location) {
     this.locationService.deleteLocation(location);
+  }
+
+  openLocationDialog():void {
+    this.dialog.open(LocationsInfoDialogComponent, {  
+      width: '600px',
+    });
   }
 }

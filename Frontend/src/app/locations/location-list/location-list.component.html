@@ -7,9 +7,9 @@
   <a mat-icon-button mat-tooltip="Add New Location" [routerLink]="['/locations/new']">
     <mat-icon>add_circle</mat-icon>
   </a>
-  <button mat-icon-button mat-tooltip="Info">
+  <button mat-icon-button mat-tooltip="Info" (click)="openLocationDialog()">
       <mat-icon>info</mat-icon>
-    </button>
+  </button>
 </mat-toolbar>
 
 <mat-form-field>

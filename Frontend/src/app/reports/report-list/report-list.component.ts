@@ -6,6 +6,8 @@ import { Observable, Subscription } from 'rxjs';
 
 import { Metric } from '../metric';
 import { ReportService } from '../report.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ReportsInfoDialogComponent } from '../reports-info-dialog/reports-info-dialog.component';
 
 
 @Component({
@@ -21,7 +23,8 @@ export class ReportListComponent implements OnInit, OnDestroy {
 
   selectedMetric: Metric;
 
-  constructor(private reportService: ReportService) { }
+  constructor(private reportService: ReportService,
+    public dialog: MatDialog) { }
 
   ngOnInit() {
     this.metrics = this.reportService.getAllMetrics();
@@ -39,5 +42,11 @@ export class ReportListComponent implements OnInit, OnDestroy {
   selectMetric(metric: Metric) {
     this.selectedMetric = metric;
     this.reportService.setSelectedMetric(metric);
+  }
+
+  openReportsDialog(): void {
+    this.dialog.open(ReportsInfoDialogComponent, {  
+      width: '600px',
+    });
   }
 }

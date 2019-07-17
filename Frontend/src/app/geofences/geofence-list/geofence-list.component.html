@@ -7,9 +7,9 @@
   <a mat-icon-button mat-tooltip="Add New Geofence" [routerLink]="['/geofences/new']">
     <mat-icon>add_circle</mat-icon>
   </a>
-  <button mat-icon-button>
-      <mat-icon>info</mat-icon>
-    </button>
+  <button mat-icon-button (click)="openGeoDialog()">
+    <mat-icon>info</mat-icon>
+  </button>
 </mat-toolbar>
 
 <mat-form-field>
