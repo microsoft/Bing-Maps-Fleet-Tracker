@@ -57,7 +57,7 @@ export class DispatchingShowComponent implements OnInit {
       .subscribe(location => {
         var directions = this.directions;
         var pinIndex = 1;
-        for (var i = 0; i < directions.length; i++) {
+        for (var i = 0; i < directions.length && i > location.length; i++) {
           var direction = directions[i];
           if(direction.startsWith("Arrive at Stop")){
             directions[i] = "Arrive at Stop " + pinIndex + ": " + location[pinIndex].address
