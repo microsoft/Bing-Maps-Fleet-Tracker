@@ -46,3 +46,16 @@ h1 {
   height: 28px;
   padding: 10px 16px;
 }
+
+.mat-button {
+  width: 100%;
+}
+
+.mat-row-item {
+  display: flex;
+}
+
+.mat-row-text {
+  margin-left: 10px;
+  margin: auto;
+}
