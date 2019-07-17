@@ -48,11 +48,12 @@ h1 {
 }
 
 .mat-button {
-  width: 100%;
+      width: 100%;
 }
 
 .mat-row-item {
   display: flex;
+  justify-content: space-between;
 }
 
 .mat-row-text {
