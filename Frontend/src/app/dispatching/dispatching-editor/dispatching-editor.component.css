@@ -49,6 +49,7 @@ h1 {
 
 .mat-button {
       width: 100%;
+      padding: 0;
 }
 
 .mat-row-item {
@@ -57,6 +58,6 @@ h1 {
 }
 
 .mat-row-text {
-  margin-left: 10px;
-  margin: auto;
+  margin-left: 15px;
+  margin-right: 25px;
 }
