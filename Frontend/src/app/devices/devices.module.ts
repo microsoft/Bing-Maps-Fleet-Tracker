@@ -7,15 +7,18 @@ import { SharedModule } from '../shared/shared.module';
 import { DevicesRoutingModule, routedComponents } from './devices-routing.module';
 import { DeviceService } from './device.service';
 import { DeviceRegisterComponent } from './device-register/device-register.component';
+import { DevicesInfoDialogComponent } from './devices-info-dialog/devices-info-dialog.component';
 
 
 @NgModule({
   declarations: [
     routedComponents,
-    DeviceRegisterComponent
+    DeviceRegisterComponent,
+    DevicesInfoDialogComponent
   ],
   entryComponents: [
-    DeviceRegisterComponent
+    DeviceRegisterComponent,
+    DevicesInfoDialogComponent
   ],
   imports: [
     DevicesRoutingModule,

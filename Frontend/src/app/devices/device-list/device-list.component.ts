@@ -11,6 +11,8 @@ import { Device } from '../device';
 import { DeviceService } from '../device.service';
 import { MapsService } from '../../maps/maps.service';
 import { Roles } from '../../shared/role';
+import { MatDialog } from '@angular/material/dialog';
+import { DevicesInfoDialogComponent } from '../devices-info-dialog/devices-info-dialog.component';
 
 enum SelectedDeviceState {
   ListSelected,
@@ -36,7 +38,8 @@ export class DeviceListComponent implements OnInit, OnDestroy {
   constructor(
     private deviceService: DeviceService,
     private mapsService: MapsService,
-    private toasterService: ToasterService) { }
+    private toasterService: ToasterService,
+    public dialog: MatDialog) { }
 
   ngOnInit() {
     this.devices = this.deviceService.getDevices();
@@ -93,6 +96,12 @@ export class DeviceListComponent implements OnInit, OnDestroy {
       this.subscription = this.deviceService.getPoints(device.id, this.selectedDateRange)
         .subscribe(points => this.mapsService.showPoints(points));
     }
+  }
+
+  openDevicesDialog(): void {
+    this.dialog.open(DevicesInfoDialogComponent, {  
+      width: '600px',
+    });
   }
 
   timeFilterChange(range) {
