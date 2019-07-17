@@ -2,7 +2,9 @@
 // Licensed under the MIT License.
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable ,  Subscription } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { ToasterService } from 'angular2-toaster';
 
 import { Asset } from '../asset';
@@ -17,6 +19,7 @@ import { Roles } from '../../shared/role';
 import 'rxjs/add/operator/takeWhile';
 import 'rxjs/add/operator/skipWhile';
 
+import { AssetInfoDialogComponent } from '../asset-info-dialog/asset-info-dialog.component';
 
 
 enum SelectedAssetState {
@@ -51,7 +54,8 @@ export class AssetListComponent implements OnInit, OnDestroy {
     private assetService: AssetService,
     private locationService: LocationService,
     private mapsService: MapsService,
-    private toasterService: ToasterService) {
+    private toasterService: ToasterService,
+    public dialog: MatDialog) {
     this.isAlive = true;
   }
 
@@ -160,6 +164,12 @@ export class AssetListComponent implements OnInit, OnDestroy {
       this.mapsService.endCurrentDraw();
       this.isDrawing = false;
     }
+  }
+
+  openInfoDialog(): void {
+    this.dialog.open(AssetInfoDialogComponent, {  
+      width: '600px',
+    });
   }
 
   isAssetListSeleceted() {

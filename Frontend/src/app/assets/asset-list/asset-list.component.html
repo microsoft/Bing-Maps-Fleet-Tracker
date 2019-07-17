@@ -7,7 +7,7 @@
   <a [appRoleLimiter]="Roles.Administrator" mat-icon-button mat-tooltip="Add New Asset" [routerLink]="['/assets/new']">
     <mat-icon>add_circle</mat-icon>
   </a>
-  <button mat-icon-button>
+  <button mat-icon-button (click)="openInfoDialog()">
     <mat-icon>info</mat-icon>
   </button>
 </mat-toolbar>
