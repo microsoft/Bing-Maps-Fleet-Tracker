@@ -18,8 +18,6 @@ import { Trip } from '../../shared/trip';
 import { Roles } from '../../shared/role';
 
 import { takeWhile, skipWhile } from 'rxjs/operators';
-
-
 import { AssetInfoDialogComponent } from '../asset-info-dialog/asset-info-dialog.component';
 
 
@@ -168,7 +166,7 @@ export class AssetListComponent implements OnInit, OnDestroy {
   }
 
   openInfoDialog(): void {
-    this.dialog.open(AssetInfoDialogComponent, {  
+    this.dialog.open(AssetInfoDialogComponent, {
       width: '600px',
     });
   }
