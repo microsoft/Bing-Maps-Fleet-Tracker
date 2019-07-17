@@ -201,4 +201,9 @@ export class DispatchingEditorComponent implements OnInit, OnDestroy {
     this.dispatchingService.savePinsAdded(this.pinsAdded);
     this.mapsService.setRouteColor(this.colorSelected);
   }
+
+  delete_pin(name: string) {
+    this.pinsAdded = this.pinsAdded.filter(item => item.name !== name);
+    this.mapsService.resetDispatchingDraw(this.pinsAdded);
+  }
 }

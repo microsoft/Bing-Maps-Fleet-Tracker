@@ -26,6 +26,7 @@ export class BingMapsService {
     private readonly greenSpeed = 13.4;
     private readonly geofenceGreenBlue = 'rgba(86,182,145,0.4)';
     private readonly geofencePink = 'rgba(233,87,148,0.4)';
+    pinCount = 1;
 
     private map: Microsoft.Maps.Map;
     private loadPromise: Promise<void>;
@@ -387,6 +388,7 @@ export class BingMapsService {
             );
         });
     }
+    
 
     drawDispatchingRoute(subject: Subject<Location[]>, initialLocations: Location[]) {
         this.load().then(() => {
@@ -399,13 +401,16 @@ export class BingMapsService {
 
             if (initialLocations) {
                 this.showDispatchingRoutePins(tempRoutePoints);
+            } else {
+                this.pinCount = 1;
             }
 
             this.drawHandlerId = Microsoft.Maps.Events.addHandler(this.map, 'click', e => {
                 const event = e as Microsoft.Maps.IMouseEventArgs;
 
                 const newLocation = new Location();
-                newLocation.name = 'Pin' + '(' + (tempRoutePoints.length + 1) + ')';
+                newLocation.name = 'Pin' + '(' + (this.pinCount) + ')';
+                this.pinCount += 1;
                 newLocation.latitude = event.location.latitude;
                 newLocation.longitude = event.location.longitude;
                 this.searchManager.reverseGeocode({
