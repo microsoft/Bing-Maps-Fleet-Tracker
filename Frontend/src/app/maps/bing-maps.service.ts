@@ -18,6 +18,7 @@ import { LocationService } from '../locations/location.service';
 
 import { TripLeg } from '../shared/trip-leg';
 
+
 @Injectable()
 export class BingMapsService {
     private readonly genericColors = ['#56A6B6', '#464E50', '#56B691', '#BF8B8A', '#E95794'];
@@ -178,7 +179,7 @@ export class BingMapsService {
             this.geofencesLayer.setVisible(true);
             this.geofencesLayer.clear();
 
-            let lastGeofencePolygon;
+            let lastGeofencePolygon = new Array<Microsoft.Maps.Location>();
             for (const geofence of geofences) {
                 lastGeofencePolygon = this.showGeofencePolygon(geofence, this.geofenceGreenBlue, this.genericColors[0]);
             }
