@@ -61,7 +61,6 @@ export class DispatchingShowComponent implements OnInit {
           var direction = directions[i];
           if(direction.startsWith("Arrive at Stop")){
             directions[i] = "Arrive at Stop " + pinIndex + ": " + location[pinIndex].address
-
             pinIndex += 1;
           }
         }
