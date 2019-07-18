@@ -20,6 +20,7 @@ import { TripLeg } from '../shared/trip-leg';
 import { takeWhile } from 'rxjs/operators';
 
 
+
 @Injectable()
 export class BingMapsService {
     private readonly genericColors = ['#56A6B6', '#464E50', '#56B691', '#BF8B8A', '#E95794'];
