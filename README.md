@@ -4,7 +4,7 @@ Bing Maps Fleet Tracker is a fleet management solution based on the Bing Maps AP
 
 ## Getting Started
 
-There are two parts of the set-up process:
+There are two parts to the set-up process:
 1. Set up the backend services and administration portal
 2. Set up the mobile client
 
