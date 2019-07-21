@@ -67,7 +67,7 @@ namespace Trackable.Services
                 content = await response.Content.ReadAsStringAsync();
                 apiResult = JObject.Parse(content);
 
-                var alternativePath = ExtractAlternativeDispatchingResult(apiResult);
+                var alternativePath = ExtractDispatchingResults(apiResult);
 
                 foreach (var dispatchingResult in result)
                 {
