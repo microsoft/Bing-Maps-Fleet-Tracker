@@ -37,7 +37,6 @@ export class DispatchingShowComponent implements OnInit {
     directionPoints: [],
     routePoint: []
   };
-
   viewAltRoute: boolean;
   noDirectionsAvailable: boolean;
   location: Location;
@@ -54,7 +53,6 @@ export class DispatchingShowComponent implements OnInit {
     this.location = new Location();
     this.dispatchingService.getDispatchingResults()
       .subscribe(results => {
-
         this.viewAltRoute = this.dispatchingService.getDispatchingParameters().getAlternativeCarRoute;
 
         this.mainRoute = {
@@ -63,7 +61,7 @@ export class DispatchingShowComponent implements OnInit {
           directionPoints: results[0].itineraryPoints,
           routePoint: results[0].routePoints,
         }
-        if (results[0].alternativeCarRoutePoints != null) {
+        if (results[0].alternativeCarRoutePoints.length > 0) {
           this.altRoute = {
             directions: results[0].alternativeCarRoutePoints[0].itineraryText,
             distances: results[0].alternativeCarRoutePoints[0].itineraryDistance,
@@ -71,7 +69,6 @@ export class DispatchingShowComponent implements OnInit {
             routePoint: results[0].alternativeCarRoutePoints[0].routePoints,
           }
         }
-
         this.noDirectionsAvailable = this.mainRoute.directions.length === 0;
 
         this.renameDestinationsInDirections();
