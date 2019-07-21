@@ -15,6 +15,7 @@ import { MapsService } from '../maps/maps.service';
 export class DispatchingService {
 
   private dispatchingResults: Observable<DispatchingResults[]>;
+  private dispatchingParameters: DispatchingParameters;
   private pinsAdded: Location[];
 
   constructor(
@@ -23,6 +24,7 @@ export class DispatchingService {
     private router: Router) {}
 
   callDisaptchingAPI(dispatchingParameters: DispatchingParameters) {
+    this.dispatchingParameters = dispatchingParameters;
     this.dispatchingResults = this.dataService.post<DispatchingParameters>('dispatching', dispatchingParameters);
     this.router.navigate(['/dispatching/show']);
   }
@@ -37,6 +39,10 @@ export class DispatchingService {
   
   getPinsAdded(): Location[] {
     return this.pinsAdded;
+  }
+
+  getDispatchingParameters(): DispatchingParameters{
+    return this.dispatchingParameters;
   }
 
   savePinsAdded(pins: Location[]) {
