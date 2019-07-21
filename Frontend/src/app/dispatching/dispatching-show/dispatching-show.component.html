@@ -8,15 +8,42 @@
   <span>Dispatch Directions </span>
 </mat-toolbar>
 
-<div class="no-directions-alert">
-  <p *ngIf="noDirectionsAvailable">No Directions Available</p>
-</div>
+<div>
+  <mat-tab-group (selectedTabChange)="toggleRoutes($event)">
+    <mat-tab label="Main Route"> 
 
-<mat-list flex>
-  <mat-list-item class="item-custom" *ngFor="let direction of directions; let i = index">
-    <div class="mat-list-text" (click)=showItineraryPoint(i)>
-      <h3>{{direction}}</h3>
-      <span>Distance: {{distances[i]}}</span>
-    </div>
-  </mat-list-item>
-</mat-list>
+      <div class="no-directions-alert">
+        <p *ngIf="noDirectionsAvailable">No Directions Available</p>
+      </div>
+      
+      <mat-list flex>
+        <mat-list-item class="item-custom" *ngFor="let direction of mainRoute.directions; let i = index">
+          <div class="mat-list-text" (click)="showItineraryPoint(mainRoute.directionPoints[i])">
+            <h3>{{direction}}</h3>
+            <span>Distance: {{mainRoute.distances[i]}}</span>
+          </div>
+        </mat-list-item>
+      </mat-list>
+
+    </mat-tab>
+
+    
+    <mat-tab *ngIf="viewAltRoute" label="Alternative Route">
+
+      <div class="no-directions-alert">
+        <p *ngIf="noDirectionsAvailable">No Directions Available</p>
+      </div>
+      
+      <mat-list flex>
+        <mat-list-item class="item-custom" *ngFor="let direction of altRoute.directions; let i = index">
+          <div class="mat-list-text" (click)="showItineraryPoint(altRoute.directionPoints[i])">
+            <h3>{{direction}}</h3>
+            <span>Distance: {{altRoute.distances[i]}}</span>
+          </div>
+        </mat-list-item>
+      </mat-list>
+
+    </mat-tab>
+  </mat-tab-group>
+  
+</div>

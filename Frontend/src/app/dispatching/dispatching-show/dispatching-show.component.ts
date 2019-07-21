@@ -11,6 +11,12 @@ import { ToasterService } from 'angular2-toaster';
 import { Point } from '../../shared/point';
 import { Location } from '../../shared/location';
 
+interface Route { 
+  directions: string[] 
+  distances: string[]
+  directionPoints: Point[]
+  routePoint: Point[]
+}
 
 @Component({
   selector: 'app-dispatching-show',
@@ -19,9 +25,20 @@ import { Location } from '../../shared/location';
 })
 export class DispatchingShowComponent implements OnInit {
 
-  directions: string[];
-  distances: string[];
-  directionPoints: Point[];
+  mainRoute: Route = {
+    directions: [],
+    distances: [],
+    directionPoints: [],
+    routePoint: []
+  };
+  altRoute: Route = {
+    directions: [],
+    distances: [],
+    directionPoints: [],
+    routePoint: []
+  };
+  
+  viewAltRoute: boolean;
   noDirectionsAvailable: boolean;
   location: Location;
 
@@ -37,13 +54,32 @@ export class DispatchingShowComponent implements OnInit {
     this.location = new Location();
     this.dispatchingService.getDispatchingResults()
       .subscribe(results => {
-        this.directions = results[0].itineraryText;
-        this.directionPoints = results[0].itineraryPoints;
-        this.distances = results[0].itineraryDistance;
+        
+        this.viewAltRoute = this.dispatchingService.getDispatchingParameters().getAlternativeCarRoute;
+
+        this.mainRoute = {
+          directions: results[0].itineraryText,
+          distances: results[0].itineraryDistance,
+          directionPoints: results[0].itineraryPoints,
+          routePoint: results[0].routePoints,
+        }
+        if (results[0].alternativeCarRoutePoints.length > 0){
+          this.altRoute = {
+            directions: results[0].alternativeCarRoutePoints[0].itineraryText,
+            distances: results[0].alternativeCarRoutePoints[0].itineraryDistance,
+            directionPoints: results[0].alternativeCarRoutePoints[0].itineraryPoints,
+            routePoint: results[0].alternativeCarRoutePoints[0].routePoints,
+          }
+        }
+        
+        this.noDirectionsAvailable = this.mainRoute.directions.length === 0;
+
         this.renameDestinationsInDirections();
-        this.noDirectionsAvailable = this.directions.length === 0;
-        this.mapService.showAlternativeResults(results[0].alternativeCarRoutePoints);
-        this.mapService.showDispatchingResults(results[0].routePoints, this.dispatchingService.getPinsAdded());
+        this.renameDestinationsInAltDirections();
+
+        this.mapService.showAlternativeResults(this.altRoute.routePoint);
+        this.mapService.showDispatchingResults(this.mainRoute.routePoint, this.dispatchingService.getPinsAdded());
+        
         this.spinnerService.stop(); }, error => {
         this.toasterService.pop('error', 'Error routing',
         'An error has occured. Please make sure that the locations you are trying to route to are in the supported regions');
@@ -52,10 +88,23 @@ export class DispatchingShowComponent implements OnInit {
 
   } 
 
+  toggleRoutes(item) {
+    if (item.tab.textLabel === "Main Route") {
+      console.log('main');
+      this.mapService.showAlternativeResults(this.altRoute.routePoint);
+      this.mapService.showDispatchingResults(this.mainRoute.routePoint, this.dispatchingService.getPinsAdded());
+        
+    } else {
+      this.mapService.showAlternativeResults(this.mainRoute.routePoint);
+      this.mapService.showDispatchingResults(this.altRoute.routePoint, this.dispatchingService.getPinsAdded());
+        
+    }
+  }
+
   private renameDestinationsInDirections(){
     this.dispatchingService.getDispatchingPinsResult()
       .subscribe(location => {
-        var directions = this.directions;
+        var directions = this.mainRoute.directions;
         var pinIndex = 1;
         for (var i = 0; i < directions.length && location.length > 0; i++) {
           var direction = directions[i];
@@ -64,11 +113,27 @@ export class DispatchingShowComponent implements OnInit {
             pinIndex += 1;
           }
         }
-        this.directions = directions;
+        this.mainRoute.directions = directions;
       });
   }
 
-  showItineraryPoint(index: number) {
-    this.mapService.showItineraryPosition(this.directionPoints[index]);
+  private renameDestinationsInAltDirections(){
+    this.dispatchingService.getDispatchingPinsResult()
+      .subscribe(location => {
+        var directions = this.altRoute.directions;
+        var pinIndex = 1;
+        for (var i = 0; i < directions.length && location.length > 0; i++) {
+          var direction = directions[i];
+          if(direction.startsWith("Arrive at Stop")){
+            directions[i] = "Arrive at Stop " + pinIndex + ": " + location[pinIndex].address
+            pinIndex += 1;
+          }
+        }
+        this.altRoute.directions = directions;
+      });
+  }
+
+  showItineraryPoint(p) {
+    this.mapService.showItineraryPosition(p);
   }
 }
