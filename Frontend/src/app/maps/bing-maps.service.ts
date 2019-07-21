@@ -431,7 +431,7 @@ export class BingMapsService {
         });
     }
 
-    showDispatchingRoute(points: Point[], clearMap: boolean, colorIndex: number): void {
+    showDispatchingRoute(points: Point[], clearMap: boolean, colorIndex: number, Thickness: number): void {
         this.load().then(() => {
             if (clearMap) {
                 this.locationsLayer.clear();
@@ -447,7 +447,7 @@ export class BingMapsService {
                 const polyline = new Microsoft.Maps.Polyline(locations, {
                     strokeColor:
                         this.tripColors[colorIndex % this.tripColors.length],
-                    strokeThickness: 2
+                    strokeThickness: Thickness 
                 });
 
                 this.locationsLayer.add(polyline);

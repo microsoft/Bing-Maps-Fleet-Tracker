@@ -10,7 +10,7 @@ import { DispatchingService } from './dispatching.service';
 import { DialogService } from './dialog.service';
 import { DispatchingShowComponent } from './dispatching-show/dispatching-show.component';
 import { LocationDialogComponent } from './location-dialog/location-dialog.component';
-import { MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule, MatTabsModule} from '@angular/material';
 import { DispatchingInfoDialogComponent } from './dispatching-info-dialog/dispatching-info-dialog.component';
 
 @NgModule({
@@ -24,7 +24,8 @@ import { DispatchingInfoDialogComponent } from './dispatching-info-dialog/dispat
     CommonModule,
     SharedModule,
     DispatchingRoutingModule,
-    MatMenuModule
+    MatMenuModule,
+    MatTabsModule
   ],
   providers: [
     DispatchingService,

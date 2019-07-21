@@ -8,5 +8,5 @@ export class DispatchingResults {
     itineraryPoints: Point[];
     itineraryDistance: string[];
     routePoints: Point[];
-    alternativeCarRoutePoints: Point[];
+    alternativeCarRoutePoints: DispatchingResults[];
 }
