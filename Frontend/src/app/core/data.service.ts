@@ -31,7 +31,7 @@ export class DataService {
         const url = this.getUrl(path);
 
         this.authHttpService.get(url).pipe(
-            map(response => response as T[]))
+            map(response => response as unknown as T[]))
             .subscribe(data => {
                 cache.set(data);
                 this.spinnerService.stop();
