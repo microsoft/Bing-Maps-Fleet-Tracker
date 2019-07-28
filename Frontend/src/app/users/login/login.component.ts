@@ -15,7 +15,11 @@ import { ReportService } from '../../reports/report.service';
 import { SettingsService } from '../../core/settings.service';
 import { InstrumentationApprovalComponent } from '../instrumentation-approval/instrumentation-approval.component';
 
+<<<<<<< HEAD
 import 'rxjs/add/operator/take'; 
+=======
+import 'rxjs/add/operator/take';
+>>>>>>> dd515cf66f9bb1a3b188ef7661bcc4af6883908e
 
 @Component({
   selector: 'app-login',
