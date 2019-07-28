@@ -28,10 +28,12 @@ export class DataService {
         const cache = this.getCache<T>(path);
         const url = this.getUrl(path);
 
-        this.authHttpService.get<T[]>(url).subscribe(data => {
-            cache.set(data);
-            this.spinnerService.stop();
-        },
+        this.authHttpService.get(url).pipe(
+            map(response => response as unknown as T[]))
+            .subscribe(data => {
+                cache.set(data);
+                this.spinnerService.stop();
+            },
             error => this.spinnerService.stop());
 
         return cache.getItems();
