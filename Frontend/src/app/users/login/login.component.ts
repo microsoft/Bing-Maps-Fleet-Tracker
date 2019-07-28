@@ -15,6 +15,8 @@ import { ReportService } from '../../reports/report.service';
 import { SettingsService } from '../../core/settings.service';
 import { InstrumentationApprovalComponent } from '../instrumentation-approval/instrumentation-approval.component';
 
+import 'rxjs/add/operator/take';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
