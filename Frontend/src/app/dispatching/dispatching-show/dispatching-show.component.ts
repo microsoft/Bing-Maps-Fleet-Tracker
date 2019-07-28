@@ -63,7 +63,7 @@ export class DispatchingShowComponent implements OnInit {
           directionPoints: results[0].itineraryPoints,
           routePoint: results[0].routePoints,
         }
-        if (results[0].alternativeCarRoutePoints.length > 0){
+        if (results[0].alternativeCarRoutePoints != null){
           this.altRoute = {
             directions: results[0].alternativeCarRoutePoints[0].itineraryText,
             distances: results[0].alternativeCarRoutePoints[0].itineraryDistance,
