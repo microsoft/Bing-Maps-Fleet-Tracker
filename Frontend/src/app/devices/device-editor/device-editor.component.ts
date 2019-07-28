@@ -58,8 +58,7 @@ export class DeviceEditorComponent implements OnInit, OnDestroy {
       if (id) {
         this.isEditing = true;
         this.deviceSubscription = this.deviceService.getDevice(id).subscribe(device => this.device = device);
-        var obs: any = this.deviceService.getToken(id)
-        obs.take(1).subscribe(t => this.deviceToken = t);
+        this.deviceService.getToken(id).take(1).subscribe(t => this.deviceToken = t);
       } else {
         // Work around for the fact that angular doesnt see this in change detection
         setTimeout(() => this.openDialog(), 0);
@@ -77,10 +76,9 @@ export class DeviceEditorComponent implements OnInit, OnDestroy {
         }
       });
 
-    // this.hubConnection = new HubConnection(this.deviceService.getDeviceAdditionNotificationUrl());
     this.hubConnection =  new signalR.HubConnectionBuilder()
-    .withUrl(this.deviceService.getDeviceAdditionNotificationUrl())
-    .build();
+      .withUrl(this.deviceService.getDeviceAdditionNotificationUrl())
+      .build();
 
     this.hubConnection.on('DeviceAdded', (data: any) => {
       if (data === this.nonce) {

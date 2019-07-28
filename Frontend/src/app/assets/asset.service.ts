@@ -1,12 +1,10 @@
-
-import {map} from 'rxjs/operators';
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-
+import {map} from 'rxjs/operators';
 import { Asset } from './asset';
 import { DataService } from '../core/data.service';
 import { DateRange } from '../shared/date-range';

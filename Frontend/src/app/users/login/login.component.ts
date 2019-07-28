@@ -15,6 +15,8 @@ import { ReportService } from '../../reports/report.service';
 import { SettingsService } from '../../core/settings.service';
 import { InstrumentationApprovalComponent } from '../instrumentation-approval/instrumentation-approval.component';
 
+import 'rxjs/add/operator/take'; 
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -69,8 +71,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             }
             );
 
-          var obs : any = this.settingsService.getInstrumentationApproval()
-          obs.take(1).subscribe(val => {
+          this.settingsService.getInstrumentationApproval().take(1).subscribe(val => {
             if (val == null) {
               this.dialog.open(InstrumentationApprovalComponent, {
                 width: '70%',

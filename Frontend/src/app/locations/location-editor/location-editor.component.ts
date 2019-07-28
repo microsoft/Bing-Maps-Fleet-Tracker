@@ -80,8 +80,7 @@ export class LocationEditorComponent implements OnInit, OnDestroy {
   changeAddress(): void {
     const address = this.location.address;
     this.mapService.geocodeQuery(address);
-    var obs: any = this.mapService.getGeocodeResult()
-    obs.take(1).subscribe(point => {
+    this.mapService.getGeocodeResult().take(1).subscribe(point => {
       this.location.latitude = point.latitude;
       this.location.longitude = point.longitude;
       this.setlocationString();

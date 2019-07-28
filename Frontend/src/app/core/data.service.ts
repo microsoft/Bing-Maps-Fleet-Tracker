@@ -1,5 +1,5 @@
 
-import {map} from 'rxjs/operators';
+
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
@@ -8,6 +8,7 @@ import { Observable ,  Subject ,  BehaviorSubject } from 'rxjs';
 import { Cache } from './cache';
 import { AuthorizedHttpService } from './authorized-http.service';
 import { SpinnerService } from './spinner.service';
+import {map} from 'rxjs/operators';
 
 import { EnvironmentSettings, EnvironmentSettingsService } from './environment-settings.service';
 
@@ -30,7 +31,7 @@ export class DataService {
         const url = this.getUrl(path);
 
         this.authHttpService.get(url).pipe(
-            map(response => response as unknown as T[]))
+            map(response => response as T[]))
             .subscribe(data => {
                 cache.set(data);
                 this.spinnerService.stop();

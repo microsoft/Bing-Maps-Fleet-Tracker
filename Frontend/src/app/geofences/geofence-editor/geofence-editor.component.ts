@@ -149,16 +149,13 @@ export class GeofenceEditorComponent implements OnInit, OnDestroy {
     });
 
     if (this.isEditable) {
-      console.log('inside if consition updating ')
       this.geofenceService.update(this.geofence)
         .subscribe(() => {
           this.router.navigate(['/geofences']);
         });
     } else {
-      console.log('inside if consition adding ')
       this.geofenceService.add(this.geofence)
         .subscribe(() => {
-          console.log('done adding')
           this.router.navigate(['geofences']);
         });
         
