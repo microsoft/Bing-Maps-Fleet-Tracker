@@ -17,15 +17,15 @@ Note: MSDN accounts cannot deploy to the West US region.
 3. Enter a name for your deployment in the `Deployment Name` field. Availability of the name will be checked.
 4. You are required to enter a valid `Bing Maps Subscription Key` for usage in the map controls and geocoding. You can obtain a bing maps key by following this [article](https://msdn.microsoft.com/en-us/library/ff428642.aspx).
 5. You will need to create a Microsoft Application which will be used for authentication in your portal.
-    1. Go to [Microsoft Application Portal](https://apps.dev.microsoft.com/?deeplink=/appList)
+    1. Go to [Microsoft Application Portal](https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade)
     2. Sign in with any Microsoft account
-    3. Click the `Add an app` button
-    4. Enter an application name of your choosing and click `create`.
-    5. Note down the `Application Id` field, as you will need to enter this in the Bing Maps Fleet Tracker Portal.
-    6. Click the `Generate New Password` button. Note down the secret specified here, as you will need to enter this in the Bing Maps Fleet Tracker Portal.
-    7. Click the `Add Platform` button and choose `Web`.
-    8. Enter the Redirect Url as "https://{YOUR\_DEPLOYMENT\_NAME}.azurewebsites.net/signin-oidc".
-    9. Save the changes and return to the portal. Enter the `Application Id` and `Appliation Secret` that you noted down.
+    3. Go to App Registration page and Click the `Add new registration` button
+    4. Enter an application name of your choosing and select supported account types
+    5. Choose `web` under Redirect URL and enter Redirect URL as "https://{YOUR\_DEPLOYMENT\_NAME}.azurewebsites.net/signin-oidc"
+    6. Click `Register` button
+    7. Click the application you just created and note down the `Application Id` field, as you will need to enter this in the Bing Maps Fleet Tracker Portal.
+    8. Click the `Certificates & secrets` button on the left and click the `+ New client secret` button. Give the secret a description, choose its expiration date and then click `add`. Note down the secret specified here, as you will need to enter this in the Bing Maps Fleet Tracker Portal.
+    9. Return to the portal. Enter the `Application Id` and `Appliation Secret` that you noted down.
 6. You have the option to enter a SendGrid Api Key and Email if you wish to use the geofence email notifications feature. You can sign up for SendGrid keys from the [SendGrid website](https://sendgrid.com/).
 7. Click the `Deploy` button and wait until the deployment finishes. You may view the resources being allocated by clicking on the `View in Azure` link.
 
