@@ -14,8 +14,9 @@ import { Point } from '../../shared/point';
 import { TrackingPoint } from '../../shared/tracking-point';
 import { Trip } from '../../shared/trip';
 import { Roles } from '../../shared/role';
-import 'rxjs/add/operator/takeWhile';
-import 'rxjs/add/operator/skipWhile';
+
+import { takeWhile, skipWhile } from 'rxjs/operators';
+
 
 
 
@@ -56,9 +57,9 @@ export class AssetListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.assetService.getAssets()
-      .takeWhile(() => this.isAlive)
-      .skipWhile(assets => assets.length === 0)
+    this.assetService.getAssets().pipe(
+      takeWhile(() => this.isAlive),
+      skipWhile(assets => assets.length === 0))
       .subscribe(assets => {
         this.assetsList = assets.sort((a, b) => {
           if (a.name < b.name) { return -1; }

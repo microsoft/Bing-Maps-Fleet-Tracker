@@ -30,9 +30,7 @@ export class DataService {
         const cache = this.getCache<T>(path);
         const url = this.getUrl(path);
 
-        this.authHttpService.get(url).pipe(
-            map(response => response as T[]))
-            .subscribe(data => {
+        this.authHttpService.get<T[]>(url).subscribe(data => {
                 cache.set(data);
                 this.spinnerService.stop();
             },
@@ -44,8 +42,7 @@ export class DataService {
     getNoCache<T>(path: string): Observable<T[]> {
         const url = this.getUrl(path);
 
-        const observable = this.authHttpService.get(url).pipe(
-            map(response => response as unknown as T[]));
+        const observable = this.authHttpService.get<T[]>(url);
 
         return observable;
     }
@@ -53,8 +50,7 @@ export class DataService {
     getSingleNoCache<T>(path: string): Observable<T> {
         const url = this.getUrl(path);
 
-        const observable = this.authHttpService.get(url).pipe(
-            map(response => response as unknown as T));
+        const observable = this.authHttpService.get<T>(url);
 
         return observable;
     }
@@ -64,8 +60,7 @@ export class DataService {
         const url = this.getUrl(path, id);
         const subject = new BehaviorSubject<T>(cache.get(id) as T);
 
-        this.authHttpService.get(url).pipe(
-            map(response => response as unknown as T))
+        this.authHttpService.get<T>(url)
             .subscribe(data => { cache.update(data); subject.next(data); }, error => subject.error(error));
 
         return subject.asObservable();

@@ -12,7 +12,7 @@ import { AssetProperties } from '../../shared/asset-properties';
 import { AssetService } from '../asset.service';
 import { Device } from '../../devices/device';
 import { DeviceService } from '../../devices/device.service';
-import 'rxjs/add/operator/takeWhile';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-asset-editor-dialog',
@@ -43,14 +43,14 @@ export class AssetEditorComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.isAlive = true;
 
-    this.route.params
-      .takeWhile(() => this.isAlive)
+    this.route.params.pipe(
+      takeWhile(() => this.isAlive))
       .subscribe(params => {
         const id = params['id'];
         if (id) {
           this.isEditable = true;
-          this.assetService.getAsset(id)
-            .takeWhile(() => this.isAlive)
+          this.assetService.getAsset(id).pipe(
+            takeWhile(() => this.isAlive))
             .subscribe(asset => {
               this.asset = asset;
               this.assetProperties = this.asset.assetProperties;
@@ -58,8 +58,8 @@ export class AssetEditorComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.deviceService.getDevices()
-      .takeWhile(() => this.isAlive)
+    this.deviceService.getDevices().pipe(
+      takeWhile(() => this.isAlive))
       .subscribe(devices => this.devices = devices);
   }
 

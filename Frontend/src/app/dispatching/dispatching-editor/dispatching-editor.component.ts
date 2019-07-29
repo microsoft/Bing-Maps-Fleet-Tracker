@@ -16,6 +16,8 @@ import { ToasterService } from 'angular2-toaster';
 import { Location } from '../../shared/location';
 import { Asset, AssetType } from '../../assets/asset';
 
+import { takeWhile } from 'rxjs/operators';
+
 import {
   DistanceUnit,
   DimensionUnit,
@@ -85,24 +87,24 @@ export class DispatchingEditorComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isAlive = true;
-    this.mapsService.getDispatchingPinsResult()
-      .takeWhile(() => this.isAlive)
+    this.mapsService.getDispatchingPinsResult().pipe(
+      takeWhile(() => this.isAlive))
       .subscribe(result => {
         if (result.length) {
           this.pinsAdded = result;
         }
       });
 
-    this.assetService.getAssets()
-      .takeWhile(() => this.isAlive)
+    this.assetService.getAssets().pipe(
+      takeWhile(() => this.isAlive))
       .subscribe(assets => {
         if (!this.assets && assets.length) {
           this.assets = assets;
         }
       });
 
-    this.assetService.getLatestPoints()
-      .takeWhile(() => this.isAlive)
+    this.assetService.getLatestPoints().pipe(
+      takeWhile(() => this.isAlive))
       .subscribe(points => {
         this.mapsService.showAssetsPositions(points, true);
       });

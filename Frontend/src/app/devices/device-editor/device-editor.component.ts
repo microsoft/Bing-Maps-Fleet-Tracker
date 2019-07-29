@@ -17,7 +17,7 @@ import { Device } from '../device';
 import { DeviceService } from '../device.service';
 import { DeviceRegisterComponent } from '../device-register/device-register.component';
 
-
+import { take } from 'rxjs/operators';
 
 
 
@@ -58,7 +58,7 @@ export class DeviceEditorComponent implements OnInit, OnDestroy {
       if (id) {
         this.isEditing = true;
         this.deviceSubscription = this.deviceService.getDevice(id).subscribe(device => this.device = device);
-        this.deviceService.getToken(id).take(1).subscribe(t => this.deviceToken = t);
+        this.deviceService.getToken(id).pipe(take(1)).subscribe(t => this.deviceToken = t);
       } else {
         // Work around for the fact that angular doesnt see this in change detection
         setTimeout(() => this.openDialog(), 0);

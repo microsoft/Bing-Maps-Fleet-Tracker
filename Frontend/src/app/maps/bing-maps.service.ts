@@ -17,6 +17,7 @@ import { LocationService } from '../locations/location.service';
 
 
 import { TripLeg } from '../shared/trip-leg';
+import { takeWhile } from 'rxjs/operators';
 
 @Injectable()
 export class BingMapsService {
@@ -233,7 +234,7 @@ export class BingMapsService {
             // Stop subscribing to updates if the drawHandler is changed
             const currentDrawHandlerId = this.drawHandlerId;
             radius
-                .takeWhile(() => currentDrawHandlerId === this.drawHandlerId)
+                .pipe(takeWhile(() => currentDrawHandlerId === this.drawHandlerId))
                 .subscribe(r => {
                     tempGeofence.radiusInMeters = r;
                     if (tempGeofence.fenceCenter && tempGeofence.fenceCenter.latitude && tempGeofence.fenceCenter.longitude) {

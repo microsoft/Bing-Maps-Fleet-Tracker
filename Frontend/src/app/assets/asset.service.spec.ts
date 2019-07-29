@@ -11,7 +11,7 @@ import { DataService } from '../core/data.service';
 import { DeviceService } from '../devices/device.service';
 import { MockDataService } from '../../testing/mock-data.service';
 
-import 'rxjs/add/observable/of';
+import { of } from 'rxjs';
 
 describe('AssetService', () => {
 
@@ -39,21 +39,21 @@ describe('AssetService', () => {
 
   it('should call dataService.get("assets") in getAssets', inject([AssetService, DataService],
     (service, dataService) => {
-      spyOn(dataService, 'get').and.returnValue(Observable.of({}));
+      spyOn(dataService, 'get').and.returnValue(of({}));
       service.getAssets().subscribe(result => { });
       expect(dataService.get).toHaveBeenCalledWith('assets');
     }));
 
   it('should call dataService.get("assets/5/points") in getPoints', inject([AssetService, DataService],
     (service, dataService) => {
-      spyOn(dataService, 'get').and.returnValue(Observable.of({}));
+      spyOn(dataService, 'get').and.returnValue(of({}));
       service.getPoints('5').subscribe(result => { });
       expect(dataService.get).toHaveBeenCalledWith('assets/5/points');
     }));
 
   it('should call dataService.get("assets/5/trips") in getTrips', inject([AssetService, DataService],
     (service, dataService) => {
-      spyOn(dataService, 'get').and.returnValue(Observable.of({}));
+      spyOn(dataService, 'get').and.returnValue(of({}));
       service.getTrips('5').subscribe(result => { });
       expect(dataService.get).toHaveBeenCalledWith('assets/5/trips');
     }));

@@ -10,6 +10,7 @@ import { Point } from '../../shared/point';
 import { LocationService } from '../location.service';
 import { ToasterService } from 'angular2-toaster';
 import { MapsService } from '../../maps/maps.service';
+import { takeWhile, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-location-editor',
@@ -36,14 +37,12 @@ export class LocationEditorComponent implements OnInit, OnDestroy {
     this.isAlive = true;
     this.location = new Location();
 
-    this.route.params
-      .takeWhile(() => this.isAlive)
+    this.route.params.pipe(takeWhile(() => this.isAlive))
       .subscribe(params => {
         const id = params['id'];
         if (id) {
           this.isEditable = true;
-          this.locationService.getLocation(id)
-            .takeWhile(() => this.isAlive)
+          this.locationService.getLocation(id).pipe(takeWhile(() => this.isAlive))
             .subscribe(location => {
               if (location) {
                 this.location = location;
@@ -56,8 +55,7 @@ export class LocationEditorComponent implements OnInit, OnDestroy {
         this.mapService.startLocationPinDraw(this.location);
       });
 
-    this.mapService.getLocationPinResult()
-      .takeWhile(() => this.isAlive)
+    this.mapService.getLocationPinResult().pipe(takeWhile(() => this.isAlive))
       .subscribe(location => {
         if (this.location.latitude !== location.latitude || this.location.longitude !== location.longitude) {
           this.didLocationChange = true;
@@ -80,7 +78,7 @@ export class LocationEditorComponent implements OnInit, OnDestroy {
   changeAddress(): void {
     const address = this.location.address;
     this.mapService.geocodeQuery(address);
-    this.mapService.getGeocodeResult().take(1).subscribe(point => {
+    this.mapService.getGeocodeResult().pipe(take(1)).subscribe(point => {
       this.location.latitude = point.latitude;
       this.location.longitude = point.longitude;
       this.setlocationString();

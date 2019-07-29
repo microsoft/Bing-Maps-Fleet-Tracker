@@ -15,7 +15,7 @@ import { ReportService } from '../../reports/report.service';
 import { SettingsService } from '../../core/settings.service';
 import { InstrumentationApprovalComponent } from '../instrumentation-approval/instrumentation-approval.component';
 
-import 'rxjs/add/operator/take'; 
+import { skipWhile, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.userSubscription = this.authService.loginOrGetUser()
-      .skipWhile(v => v === null)
+      .pipe(skipWhile(v => v === null))
       .subscribe(value => {
         this.loggedInUser = value;
         this.link = this.authService.getLogoutUrl();
@@ -71,7 +71,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             }
             );
 
-          this.settingsService.getInstrumentationApproval().take(1).subscribe(val => {
+          this.settingsService.getInstrumentationApproval().pipe(take(1)).subscribe(val => {
             if (val == null) {
               this.dialog.open(InstrumentationApprovalComponent, {
                 width: '70%',

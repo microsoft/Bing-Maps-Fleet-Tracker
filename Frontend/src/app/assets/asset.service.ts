@@ -11,9 +11,8 @@ import { DateRange } from '../shared/date-range';
 import { TrackingPoint } from '../shared/tracking-point';
 import { Trip } from '../shared/trip';
 
-import 'rxjs/add/observable/interval';
-import 'rxjs/add/operator/mergeMap'
-import 'rxjs/add/operator/startWith';
+import { interval } from 'rxjs';
+import { startWith, flatMap } from 'rxjs/operators';
 
 @Injectable()
 export class AssetService {
@@ -53,12 +52,12 @@ export class AssetService {
   }
 
   getLatestPoints(): Observable<{ [key: string]: TrackingPoint }> {
-    return Observable
-      .interval(3 * 1000)
-      .startWith(0)
-      .flatMap(() => {
+    return interval(3 * 1000).pipe(
+      startWith(0),
+      flatMap(() => {
         return this.dataService.getSingleNoCache<{ [key: string]: TrackingPoint }>(`assets/all/positions`);
-      });
+      })
+    )
   }
 
   getTrips(id: string, dateRange?: DateRange): Observable<Trip[]> {
