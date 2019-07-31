@@ -11,14 +11,9 @@
 
 <section>
   <form (submit)="showRoute()">
-
     <div>
-      <!-- <mat-input-container class="partial-input">
-        <input matInput placeholder="Number of Points (Max 20)" [(ngModel)]="pinsAdded.length" name="waypoints" disabled>
-      </mat-input-container> -->
-      
       <div style="display: flex; justify-content: space-between; width:100%;">
-        <button mat-button [matMenuTriggerFor]="afterMenu" type="button" >Number of Points {{pinsAdded.length}} (Max 20)</button>
+        <button mat-button (click)="togglePinsList()" type="button" >Number of Points {{pinsAdded.length}} (Max 20)</button>
         <button mat-icon-button mat-tooltip='Add Location' (click)="openDialog()" type="button" [disabled]="pinsAdded.length >= 20">
           <mat-icon>add_circle</mat-icon>
         </button>
@@ -26,14 +21,18 @@
           <mat-icon>undo</mat-icon>
         </button>
       </div>
-      <mat-menu #afterMenu="matMenu">
-        <span class="mat-row-item" *ngFor="let pin of pinsAdded" >
-          <p class="mat-row-text">{{pin.name}}</p>
-          <a mat-icon-button style="margin-top:auto;margin-bottom:auto" mat-tooltip="Delete pin" (click)="delete_pin(pin.name)">
-              <mat-icon>delete_forever</mat-icon>
-          </a>
-        </span>
-      </mat-menu> 
+      <div cdkDropList *ngIf="this.showPinsList" class="pins-list" (cdkDropListDropped)="drop($event)">
+        <div class="pins-list-box" *ngFor="let pin of pinsAdded" cdkDrag>
+          <span>
+            {{pin.name}}
+          </span>
+          <span>
+              <a mat-icon-button style="margin-top:auto;margin-bottom:auto" mat-tooltip="Delete pin" (click)="delete_pin(pin.name)">
+                  <mat-icon>delete_forever</mat-icon>
+              </a>
+          </span>
+        </div>
+      </div>
     </div>
 
     <mat-form-field>
