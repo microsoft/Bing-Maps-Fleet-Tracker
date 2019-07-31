@@ -12,6 +12,7 @@ import { DispatchingShowComponent } from './dispatching-show/dispatching-show.co
 import { LocationDialogComponent } from './location-dialog/location-dialog.component';
 import { MatMenuModule, MatTabsModule} from '@angular/material';
 import { DispatchingInfoDialogComponent } from './dispatching-info-dialog/dispatching-info-dialog.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { DispatchingInfoDialogComponent } from './dispatching-info-dialog/dispat
     SharedModule,
     DispatchingRoutingModule,
     MatMenuModule,
-    MatTabsModule
+    MatTabsModule,
+    DragDropModule
   ],
   providers: [
     DispatchingService,

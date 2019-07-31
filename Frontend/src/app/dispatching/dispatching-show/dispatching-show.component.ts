@@ -68,11 +68,11 @@ export class DispatchingShowComponent implements OnInit {
             directionPoints: results[0].alternativeCarRoutePoints[0].itineraryPoints,
             routePoint: results[0].alternativeCarRoutePoints[0].routePoints,
           }
+          this.renameDestinationsInAltDirections();
         }
         this.noDirectionsAvailable = this.mainRoute.directions.length === 0;
 
         this.renameDestinationsInDirections();
-        this.renameDestinationsInAltDirections();
 
         this.mapService.showAlternativeResults(this.altRoute.routePoint);
         this.mapService.showDispatchingResults(this.mainRoute.routePoint, this.dispatchingService.getPinsAdded());

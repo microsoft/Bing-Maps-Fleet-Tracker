@@ -12,7 +12,7 @@ import { DispatchingService } from '../dispatching.service';
 import { LocationService } from '../../locations/location.service';
 import { MapsService } from '../../maps/maps.service';
 import { ToasterService } from 'angular2-toaster';
-
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Location } from '../../shared/location';
 import { Asset, AssetType } from '../../assets/asset';
 
@@ -73,6 +73,7 @@ export class DispatchingEditorComponent implements OnInit, OnDestroy {
   showHazardMaterialList: boolean;
   showHazardPermitList: boolean;
   showResultsList: boolean;
+  showPinsList: boolean;
 
   private isAlive: boolean;
 
@@ -211,8 +212,16 @@ export class DispatchingEditorComponent implements OnInit, OnDestroy {
     this.mapsService.resetDispatchingDraw(this.pinsAdded);
   }
 
-  openDispatchingInfoDialog(): void {
-    this.dialog.open(DispatchingInfoDialogComponent, {
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.pinsAdded, event.previousIndex, event.currentIndex);
+  }
+
+  togglePinsList() {
+    this.showPinsList = this.showPinsList? false:true;
+  }
+
+  openDispatchingInfoDialog(): void{
+    this.dialog.open(DispatchingInfoDialogComponent, {  
       width: '600px',
     });
   }
