@@ -106,7 +106,7 @@ export class DispatchingShowComponent implements OnInit {
         var pinIndex = 1;
         for (var i = 0; i < directions.length && location.length > 0; i++) {
           var direction = directions[i];
-          if (direction.startsWith("Arrive at Stop")) {
+          if(direction.startsWith("Arrive at Stop: Y")){
             directions[i] = "Arrive at Stop " + pinIndex + ": " + location[pinIndex].address
             pinIndex += 1;
           }
