@@ -14,16 +14,16 @@ import { Location } from '../shared/location';
 export class DialogService {
 
   constructor(private dialog: MatDialog,
-  private locationService: LocationService) { }
+    private locationService: LocationService) { }
 
   showLocationsDialog(): Observable<Location> {
 
     let dialogRef: MatDialogRef<LocationDialogComponent>;
     dialogRef = this.dialog.open(LocationDialogComponent);
-    dialogRef.componentInstance.locationSubscription =  this.locationService.getLocations()
-    .subscribe(locations => {
-      dialogRef.componentInstance.locations = locations;
-    });
+    dialogRef.componentInstance.locationSubscription = this.locationService.getLocations()
+      .subscribe(locations => {
+        dialogRef.componentInstance.locations = locations;
+      });
 
     return dialogRef.afterClosed();
   }

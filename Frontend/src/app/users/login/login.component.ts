@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable ,  Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ToasterService } from 'angular2-toaster';
 import { Toast } from 'angular2-toaster';
 import { MatDialog } from '@angular/material/dialog';

@@ -4,7 +4,7 @@
 /// <reference path='../../../node_modules/bingmaps/types/MicrosoftMaps/Microsoft.Maps.All.d.ts' />
 
 import { Injectable } from '@angular/core';
-import { Observable ,  Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 import { Asset, AssetType } from '../assets/asset';
 import { Point } from '../shared/point';
@@ -103,15 +103,15 @@ export class BingMapsService {
 
         this.loadPromise = new Promise<
             void
-            >((resolve: Function, reject: Function) => {
-                window[mapsCallback] = () => {
-                    resolve();
-                };
-                script.onerror = (error: Event) => {
-                    console.error('maps script error' + error);
-                    reject(error);
-                };
-            });
+        >((resolve: Function, reject: Function) => {
+            window[mapsCallback] = () => {
+                resolve();
+            };
+            script.onerror = (error: Event) => {
+                console.error('maps script error' + error);
+                reject(error);
+            };
+        });
 
         document.body.appendChild(script);
 

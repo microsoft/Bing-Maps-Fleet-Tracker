@@ -14,13 +14,13 @@ import { SharedModule } from '../shared/shared.module';
     MapsComponent
   ],
   imports: [
-      SharedModule
+    SharedModule
   ],
   providers: [
     BingMapsService, MapsService
   ],
   exports: [
-      MapsComponent
+    MapsComponent
   ]
 })
 export class MapsModule { }

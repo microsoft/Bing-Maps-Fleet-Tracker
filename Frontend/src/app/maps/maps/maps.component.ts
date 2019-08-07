@@ -19,7 +19,7 @@ import { TrackingPoint } from '../../shared/tracking-point';
     styleUrls: ['./maps.component.css']
 })
 export class MapsComponent implements OnInit {
-    @ViewChild('map',{static: false}) mapElement: ElementRef;
+    @ViewChild('map', { static: false }) mapElement: ElementRef;
 
     constructor(
         private bingMapsService: BingMapsService,

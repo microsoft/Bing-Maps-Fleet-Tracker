@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import { Injectable } from '@angular/core';
-import { Observable ,  Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 
 import { Metric } from './metric';

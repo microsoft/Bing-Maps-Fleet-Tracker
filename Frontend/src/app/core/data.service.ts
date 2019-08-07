@@ -1,14 +1,12 @@
-
-
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 import { Injectable } from '@angular/core';
-import { Observable ,  Subject ,  BehaviorSubject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { Cache } from './cache';
 import { AuthorizedHttpService } from './authorized-http.service';
 import { SpinnerService } from './spinner.service';
-import {map} from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { EnvironmentSettings, EnvironmentSettingsService } from './environment-settings.service';
 
@@ -31,9 +29,9 @@ export class DataService {
         const url = this.getUrl(path);
 
         this.authHttpService.get<T[]>(url).subscribe(data => {
-                cache.set(data);
-                this.spinnerService.stop();
-            },
+            cache.set(data);
+            this.spinnerService.stop();
+        },
             error => this.spinnerService.stop());
 
         return cache.getItems();
@@ -92,7 +90,7 @@ export class DataService {
     put<T>(path: string, id: string | number, data: T, updateAll: boolean): Observable<any> {
         const cache = this.getCache(path);
         const url = this.getUrl(path, id);
-        const observable = this.authHttpService.put(url, data).pipe(map(response =>typeof response != undefined ? response : null));
+        const observable = this.authHttpService.put(url, data).pipe(map(response => typeof response != undefined ? response : null));
 
         observable
             .subscribe(d => {

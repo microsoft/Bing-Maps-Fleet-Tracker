@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import { HttpClient } from '@angular/common/http';
-import { Observable ,  BehaviorSubject ,  Subject } from 'rxjs';
+import { Observable, BehaviorSubject, Subject } from 'rxjs';
 
 
 export class Cache<T> {

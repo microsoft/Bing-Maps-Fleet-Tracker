@@ -12,10 +12,10 @@ export class SpinnerService {
   constructor() { }
 
   start() {
-      this.spinning = true;
+    this.spinning = true;
   }
 
   stop() {
-      this.spinning = false;
+    this.spinning = false;
   }
 }

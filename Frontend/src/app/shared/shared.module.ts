@@ -37,7 +37,7 @@ import 'hammerjs';
     TimeFilterComponent,
     TripListComponent,
     RoleLimiterDirective
-    ],
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

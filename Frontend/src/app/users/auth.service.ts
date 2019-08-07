@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import { Injectable } from '@angular/core';
-import { Observable ,  BehaviorSubject ,  Subject } from 'rxjs';
+import { Observable, BehaviorSubject, Subject } from 'rxjs';
 import { EnvironmentSettings, EnvironmentSettingsService } from '../core/environment-settings.service';
 
 import { DataService } from '../core/data.service';
@@ -14,7 +14,7 @@ export class AuthService {
   loggedInUser: BehaviorSubject<User> = null;
 
   constructor(private dataService: DataService,
-    private envSettingsService: EnvironmentSettingsService) {  }
+    private envSettingsService: EnvironmentSettingsService) { }
 
   public getLoggedInUser() {
     if (this.loggedInUser == null) {
@@ -27,7 +27,7 @@ export class AuthService {
 
   public loginOrGetUser() {
     const observable = this.getLoggedInUser();
-    observable.subscribe(d => {},
+    observable.subscribe(d => { },
       e => {
         if (e.status === 401) {
           this.login();

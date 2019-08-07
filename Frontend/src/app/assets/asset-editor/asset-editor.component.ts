@@ -35,9 +35,9 @@ export class AssetEditorComponent implements OnInit, OnDestroy {
     private assetService: AssetService,
     private deviceService: DeviceService,
     private toasterService: ToasterService) {
-      this.asset = new Asset();
-      this.asset.assetType = AssetType.Car;
-      this.assetProperties = new AssetProperties();
+    this.asset = new Asset();
+    this.asset.assetType = AssetType.Car;
+    this.assetProperties = new AssetProperties();
   }
 
   ngOnInit() {

@@ -1,5 +1,5 @@
 
-import {map} from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
@@ -28,7 +28,7 @@ export class SettingsService {
     getSubscriptionKey(key: SubscriptionKeys): Observable<SubscriptionKey> {
         return this.dataService
             .getNoCache<SubscriptionKey>('settings/subscriptionkeys').pipe(
-            map(results => results[key.toString()]));
+                map(results => results[key.toString()]));
     }
 
     getVersionInfo() {

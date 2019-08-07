@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable ,  Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 import { Geofence, FenceType } from '../../shared/geofence';
 import { Asset } from '../../assets/asset';

@@ -158,7 +158,7 @@ export class GeofenceEditorComponent implements OnInit, OnDestroy {
         .subscribe(() => {
           this.router.navigate(['geofences']);
         });
-        
+
     }
   }
 

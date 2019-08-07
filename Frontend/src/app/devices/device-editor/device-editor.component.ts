@@ -6,7 +6,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { ToasterService } from 'angular2-toaster';
-// import { HubConnection } from '@aspnet/signalr-client';
 import * as signalR from "@aspnet/signalr";
 import { UUID } from 'angular2-uuid';
 
@@ -76,7 +75,7 @@ export class DeviceEditorComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.hubConnection =  new signalR.HubConnectionBuilder()
+    this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(this.deviceService.getDeviceAdditionNotificationUrl())
       .build();
 

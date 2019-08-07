@@ -3,7 +3,7 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable ,  Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { ToasterService } from 'angular2-toaster';
 
 @Injectable()
@@ -13,12 +13,12 @@ export class AuthorizedHttpService {
         private toasterService: ToasterService) {
     }
 
-    public get<t>(path: string): Observable<t> {
+    public get<T>(path: string): Observable<T> {
         const subject = new Subject<any>();
 
-        this.http.get<t>(path, { withCredentials: true })
+        this.http.get<T>(path, { withCredentials: true })
             .subscribe(
-                data => subject.next(data), 
+                data => subject.next(data),
                 error => {
                     this.authErrorHandler(error);
                     subject.error(error);

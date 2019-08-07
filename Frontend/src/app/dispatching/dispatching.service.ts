@@ -18,7 +18,7 @@ export class DispatchingService {
 
   constructor(
     private dataService: DataService,
-    private router: Router) {}
+    private router: Router) { }
 
   callDisaptchingAPI(dispatchingParameters: DispatchingParameters) {
     this.dispatchingResults = this.dataService.post<DispatchingParameters>('dispatching', dispatchingParameters);
