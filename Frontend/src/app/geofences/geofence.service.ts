@@ -8,7 +8,7 @@ import { Geofence } from '../shared/geofence';
 
 @Injectable()
 export class GeofenceService {
-  constructor(private dataService: DataService) {  }
+  constructor(private dataService: DataService) { }
 
   public getAll() {
     return this.dataService.get<Geofence>('geofences');

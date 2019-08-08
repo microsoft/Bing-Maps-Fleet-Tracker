@@ -11,67 +11,67 @@
 
 <section>
   <form (submit)="submit()">
-    <mat-input-container *ngIf="isEditable">
+    <mat-form-field *ngIf="isEditable">
       <input matInput placeholder="Asset Id" [(ngModel)]="asset.id" disabled name="id">
-    </mat-input-container>
+    </mat-form-field>
 
-    <mat-input-container>
+    <mat-form-field>
       <input matInput placeholder="Asset Name" [(ngModel)]="asset.name" name="name" required>
-    </mat-input-container>
+    </mat-form-field>
 
-    <mat-input-container>
+    <mat-form-field>
       <mat-select placeholder="Asset Type" [(ngModel)]="asset.assetType" name="assetType" [disabled]="isEditable" required>
         <mat-option [value]="AssetType.Car">Car</mat-option>
         <mat-option [value]="AssetType.Truck">Truck</mat-option>
       </mat-select>
-    </mat-input-container>
+    </mat-form-field>
 
-    <mat-input-container>
+    <mat-form-field>
       <mat-select placeholder="Linked Device" [(ngModel)]="asset.trackingDeviceId" name="trackingDeviceId">
         <mat-option *ngFor="let device of devices" [value]="device.id">
           {{device.name}}
         </mat-option>
       </mat-select>
-    </mat-input-container>
+    </mat-form-field>
 
     <div *ngIf="asset.assetType == AssetType.Truck" class="truck-container">
-      <mat-input-container>
+      <mat-form-field>
         <input matInput placeholder="Asset Height (m)" [(ngModel)]="assetProperties.assetHeight" name="height" type="number" step="any"
           min="1.0">
-      </mat-input-container>
+      </mat-form-field>
 
-      <mat-input-container>
+      <mat-form-field>
         <input matInput placeholder="Asset Width (m)" [(ngModel)]="assetProperties.assetWidth" name="width" type="number" step="any"
           min="1.0">
-      </mat-input-container>
+      </mat-form-field>
 
-      <mat-input-container>
+      <mat-form-field>
         <input matInput placeholder="Asset Length (m)" [(ngModel)]="assetProperties.assetLength" name="length" type="number" step="any"
           min="1.0">
-      </mat-input-container>
+      </mat-form-field>
 
-      <mat-input-container>
+      <mat-form-field>
         <input matInput placeholder="Asset Weight (kg)" [(ngModel)]="assetProperties.assetWeight" name="weight" type="number" step="any"
           min="1.0">
-      </mat-input-container>
+      </mat-form-field>
 
-      <mat-input-container>
+      <mat-form-field>
         <input matInput placeholder="Asset Axels" [(ngModel)]="assetProperties.assetAxels" name="axels" type="number" step="1">
-      </mat-input-container>
+      </mat-form-field>
 
-      <mat-input-container>
+      <mat-form-field>
         <input matInput placeholder="Asset Trailers" [(ngModel)]="assetProperties.assetTrailers" name="trailers" type="number" step="1">
-      </mat-input-container>
+      </mat-form-field>
 
-      <mat-input-container>
+      <mat-form-field>
         <input matInput placeholder="Asset Max Gradient (degrees)" [(ngModel)]="assetProperties.assetMaxGradient" name="gradient"
           type="number" min="0" max="90">
-      </mat-input-container>
+      </mat-form-field>
 
-      <mat-input-container>
+      <mat-form-field>
         <input matInput placeholder="Asset Min Turn Radius (degrees)" [(ngModel)]="assetProperties.assetMinTurnRadius" name="radius"
           type="number" min="0" max="180">
-      </mat-input-container>
+      </mat-form-field>
 
       <mat-checkbox [(ngModel)]="assetProperties.assetSemi" name="semi">Semi-trailer Truck</mat-checkbox>
     </div>

@@ -8,17 +8,17 @@
 
 <section>
   <form (submit)="submit()">
-    <mat-input-container>
+    <mat-form-field>
       <input matInput placeholder="Name" [(ngModel)]="location.name" name="name" required>
-    </mat-input-container>
+    </mat-form-field>
 
-    <mat-input-container>
+    <mat-form-field>
       <input matInput placeholder="Address" [(ngModel)]="location.address" (change)="changeAddress()" name="address">
-    </mat-input-container>
+    </mat-form-field>
 
-    <mat-input-container>
+    <mat-form-field>
       <input matInput placeholder="Location Pin" [(ngModel)]="locationString" name="locationPin" disabled required>
-    </mat-input-container>
+    </mat-form-field>
 
     <div class="pull-right">
       <a mat-raised-button [routerLink]="['/locations']">Back</a>

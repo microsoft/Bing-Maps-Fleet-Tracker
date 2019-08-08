@@ -4,8 +4,18 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatSidenavModule, MatInputModule, MatIconModule, MatRadioModule, MatListModule, MatSelectModule, MatToolbarModule,
-         MatOptionModule, MatCheckboxModule, MatTooltipModule, MatButtonModule, MatLineModule, MatDialogModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatOptionModule, MatLineModule } from '@angular/material/core';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Routes, RouterModule } from '@angular/router';
 import { MyDateRangePickerModule } from 'mydaterangepicker';
@@ -27,7 +37,7 @@ import 'hammerjs';
     TimeFilterComponent,
     TripListComponent,
     RoleLimiterDirective
-    ],
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

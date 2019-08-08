@@ -9,9 +9,9 @@
   <form (submit)="showRoute()">
 
     <div>
-      <mat-input-container class="partial-input">
+      <mat-form-field class="partial-input">
         <input matInput placeholder="Number of Points (Max 20)" [(ngModel)]="pinsAdded.length" name="waypoints" disabled>
-      </mat-input-container>
+      </mat-form-field>
       <button mat-icon-button mat-tooltip='Reset Points' (click)="clearPoints()" type="button">
         <mat-icon>undo</mat-icon>
       </button>
@@ -20,13 +20,13 @@
       </button>
     </div>
 
-    <mat-input-container>
+    <mat-form-field>
       <mat-select placeholder="Asset" [(ngModel)]="selectedAsset" name="assetId" required="true">
         <mat-option *ngFor="let asset of assets" [value]="asset" (click)="checkSelected(asset)">
           {{asset.name}}
         </mat-option>
       </mat-select>
-    </mat-input-container>
+    </mat-form-field>
 
     <mat-list class="additional-options">
       <h1>Additional Options</h1>
@@ -81,31 +81,31 @@
       </mat-list-item>
       <mat-list *ngIf="showLoadedAssetPropList" class="sub-list">
         <mat-list-item>
-          <mat-input-container>
+          <mat-form-field>
             <input matInput placeholder="Loaded Asset Height (m)" [(ngModel)]="dispatchingParameters.loadedHeight" name="height" type="number"
               step="any" min="1.0">
-          </mat-input-container>
+          </mat-form-field>
         </mat-list-item>
 
         <mat-list-item>
-          <mat-input-container>
+          <mat-form-field>
             <input matInput placeholder="Loaded Asset Width (m)" [(ngModel)]="dispatchingParameters.loadedWidth" name="width" type="number"
               step="any" min="1.0">
-          </mat-input-container>
+          </mat-form-field>
         </mat-list-item>
 
         <mat-list-item>
-          <mat-input-container>
+          <mat-form-field>
             <input matInput placeholder="Loaded Asset Length (m)" [(ngModel)]="dispatchingParameters.loadedLength" name="length" type="number"
               step="any" min="1.0">
-          </mat-input-container>
+          </mat-form-field>
         </mat-list-item>
 
         <mat-list-item>
-          <mat-input-container>
+          <mat-form-field>
             <input matInput placeholder="Loaded Asset Weight (kg)" [(ngModel)]="dispatchingParameters.loadedWeight" name="weight" type="number"
               step="any" min="1.0">
-          </mat-input-container>
+          </mat-form-field>
         </mat-list-item>
       </mat-list>
 
@@ -160,39 +160,39 @@
           <mat-checkbox [(ngModel)]="dispatchingParameters.getAlternativeCarRoute" name="showAlt">Show Alternative Car Route</mat-checkbox>
         </mat-list-item>
         <mat-list-item class="select-with-padding">
-          <mat-input-container>
+          <mat-form-field>
             <mat-select placeholder="Route Color" [(ngModel)]="colorSelected" name="colorselected">
               <mat-option *ngFor="let color of routeColors; let i = index" [value]="i">
                 {{color}}
               </mat-option>
             </mat-select>
-          </mat-input-container>
+          </mat-form-field>
         </mat-list-item>
         <mat-list-item class="select-with-padding">
-          <mat-input-container>
+          <mat-form-field>
             <mat-select placeholder="Distance Unit" [(ngModel)]="dispatchingParameters.distanceUnit" name="distanceUnit">
               <mat-option [value]="DistanceUnit.Kilometer">Kilometer</mat-option>
               <mat-option [value]="DistanceUnit.Mile">Mile</mat-option>
             </mat-select>
-          </mat-input-container>
+          </mat-form-field>
         </mat-list-item>
 
         <mat-list-item class="select-with-padding">
-          <mat-input-container>
+          <mat-form-field>
             <mat-select placeholder="Weight Unit" [(ngModel)]="dispatchingParameters.weightUnit" name="weightUnit">
               <mat-option [value]="WeightUnit.Kilogram">Kilogram</mat-option>
               <mat-option [value]="WeightUnit.Pound">Pound</mat-option>
             </mat-select>
-          </mat-input-container>
+          </mat-form-field>
         </mat-list-item>
 
         <mat-list-item class="select-with-padding">
-          <mat-input-container>
+          <mat-form-field>
             <mat-select placeholder="Dimension Unit" [(ngModel)]="dispatchingParameters.dimensionUnit" name="dimensionUnit">
               <mat-option [value]="DimensionUnit.Meter">Meter</mat-option>
               <mat-option [value]="DimensionUnit.Foot">Foot</mat-option>
             </mat-select>
-          </mat-input-container>
+          </mat-form-field>
         </mat-list-item>
       </mat-list>
 

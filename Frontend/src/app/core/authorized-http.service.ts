@@ -1,33 +1,34 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-import { Http, Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { Observable, Subject } from 'rxjs';
 import { ToasterService } from 'angular2-toaster';
 
 @Injectable()
 export class AuthorizedHttpService {
     constructor(
-        private http: Http,
+        private http: HttpClient,
         private toasterService: ToasterService) {
     }
 
-    public get(path: string): Observable<Response> {
-        const subject = new Subject<Response>();
+    public get<T>(path: string): Observable<T> {
+        const subject = new Subject<any>();
 
-        this.http.get(path, { withCredentials: true })
-            .subscribe(data => subject.next(data), error => {
-                this.authErrorHandler(error);
-                subject.error(error);
-            });
+        this.http.get<T>(path, { withCredentials: true })
+            .subscribe(
+                data => subject.next(data),
+                error => {
+                    this.authErrorHandler(error);
+                    subject.error(error);
+                });
 
         return subject.asObservable();
     }
 
     public put(path: string, dataToUse): Observable<Response> {
-        const subject = new Subject<Response>();
+        const subject = new Subject<any>();
 
         this.http.put(path, dataToUse, { withCredentials: true })
             .subscribe(data => subject.next(data), error => {
@@ -39,7 +40,7 @@ export class AuthorizedHttpService {
     }
 
     public post(path: string, dataToUse): Observable<Response> {
-        const subject = new Subject<Response>();
+        const subject = new Subject<any>();
 
         this.http.post(path, dataToUse, { withCredentials: true })
             .subscribe(data => subject.next(data), error => {
@@ -51,7 +52,7 @@ export class AuthorizedHttpService {
     }
 
     public delete(path: string): Observable<Response> {
-        const subject = new Subject<Response>();
+        const subject = new Subject<any>();
 
         this.http.delete(path, { withCredentials: true })
             .subscribe(data => subject.next(data), error => {

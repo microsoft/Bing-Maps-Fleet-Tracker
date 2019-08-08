@@ -4,8 +4,7 @@
 /// <reference path='../../../node_modules/bingmaps/types/MicrosoftMaps/Microsoft.Maps.All.d.ts' />
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { Observable, Subject } from 'rxjs';
 
 import { Asset, AssetType } from '../assets/asset';
 import { Point } from '../shared/point';
@@ -16,8 +15,9 @@ import { Location } from '../shared/location';
 import { TripService } from '../core/trip.service';
 import { LocationService } from '../locations/location.service';
 
-import 'rxjs/add/operator/map';
+
 import { TripLeg } from '../shared/trip-leg';
+import { takeWhile } from 'rxjs/operators';
 
 @Injectable()
 export class BingMapsService {
@@ -103,15 +103,15 @@ export class BingMapsService {
 
         this.loadPromise = new Promise<
             void
-            >((resolve: Function, reject: Function) => {
-                window[mapsCallback] = () => {
-                    resolve();
-                };
-                script.onerror = (error: Event) => {
-                    console.error('maps script error' + error);
-                    reject(error);
-                };
-            });
+        >((resolve: Function, reject: Function) => {
+            window[mapsCallback] = () => {
+                resolve();
+            };
+            script.onerror = (error: Event) => {
+                console.error('maps script error' + error);
+                reject(error);
+            };
+        });
 
         document.body.appendChild(script);
 
@@ -234,7 +234,7 @@ export class BingMapsService {
             // Stop subscribing to updates if the drawHandler is changed
             const currentDrawHandlerId = this.drawHandlerId;
             radius
-                .takeWhile(() => currentDrawHandlerId === this.drawHandlerId)
+                .pipe(takeWhile(() => currentDrawHandlerId === this.drawHandlerId))
                 .subscribe(r => {
                     tempGeofence.radiusInMeters = r;
                     if (tempGeofence.fenceCenter && tempGeofence.fenceCenter.latitude && tempGeofence.fenceCenter.longitude) {

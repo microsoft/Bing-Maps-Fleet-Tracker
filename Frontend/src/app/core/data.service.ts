@@ -2,15 +2,14 @@
 // Licensed under the MIT License.
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { Cache } from './cache';
 import { AuthorizedHttpService } from './authorized-http.service';
 import { SpinnerService } from './spinner.service';
+import { map } from 'rxjs/operators';
 
 import { EnvironmentSettings, EnvironmentSettingsService } from './environment-settings.service';
-import 'rxjs/add/operator/map';
+
 
 @Injectable()
 export class DataService {
@@ -29,12 +28,10 @@ export class DataService {
         const cache = this.getCache<T>(path);
         const url = this.getUrl(path);
 
-        this.authHttpService.get(url)
-            .map(response => response.json() as T[])
-            .subscribe(data => {
-                cache.set(data);
-                this.spinnerService.stop();
-            },
+        this.authHttpService.get<T[]>(url).subscribe(data => {
+            cache.set(data);
+            this.spinnerService.stop();
+        },
             error => this.spinnerService.stop());
 
         return cache.getItems();
@@ -43,8 +40,7 @@ export class DataService {
     getNoCache<T>(path: string): Observable<T[]> {
         const url = this.getUrl(path);
 
-        const observable = this.authHttpService.get(url)
-            .map(response => response.json() as T[]);
+        const observable = this.authHttpService.get<T[]>(url);
 
         return observable;
     }
@@ -52,8 +48,7 @@ export class DataService {
     getSingleNoCache<T>(path: string): Observable<T> {
         const url = this.getUrl(path);
 
-        const observable = this.authHttpService.get(url)
-            .map(response => response.json() as T);
+        const observable = this.authHttpService.get<T>(url);
 
         return observable;
     }
@@ -63,8 +58,7 @@ export class DataService {
         const url = this.getUrl(path, id);
         const subject = new BehaviorSubject<T>(cache.get(id) as T);
 
-        this.authHttpService.get(url)
-            .map(response => response.json() as T)
+        this.authHttpService.get<T>(url)
             .subscribe(data => { cache.update(data); subject.next(data); }, error => subject.error(error));
 
         return subject.asObservable();
@@ -84,8 +78,8 @@ export class DataService {
             });
         }
 
-        const observable = this.authHttpService.post(url, data)
-            .map(response => response.text() ? response.json() : null);
+        const observable = this.authHttpService.post(url, data).pipe(
+            map(response => typeof response != undefined ? response : null));
 
         observable
             .subscribe(d => cache.add(d), error => { });
@@ -96,7 +90,7 @@ export class DataService {
     put<T>(path: string, id: string | number, data: T, updateAll: boolean): Observable<any> {
         const cache = this.getCache(path);
         const url = this.getUrl(path, id);
-        const observable = this.authHttpService.put(url, data).map(response => response.text() ? response.json() : null);
+        const observable = this.authHttpService.put(url, data).pipe(map(response => typeof response != undefined ? response : null));
 
         observable
             .subscribe(d => {

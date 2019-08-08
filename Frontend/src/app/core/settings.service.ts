@@ -1,9 +1,11 @@
+
+import { map } from 'rxjs/operators';
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 import { Injectable } from '@angular/core';
 import { LocationStrategy } from '@angular/common';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { DataService } from './data.service';
 import { VersionInfo } from './version-info';
@@ -25,8 +27,8 @@ export class SettingsService {
 
     getSubscriptionKey(key: SubscriptionKeys): Observable<SubscriptionKey> {
         return this.dataService
-            .getNoCache<SubscriptionKey>('settings/subscriptionkeys')
-            .map(results => results[key.toString()]);
+            .getNoCache<SubscriptionKey>('settings/subscriptionkeys').pipe(
+                map(results => results[key.toString()]));
     }
 
     getVersionInfo() {

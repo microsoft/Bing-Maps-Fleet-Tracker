@@ -2,8 +2,7 @@
 // Licensed under the MIT License.
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable, Subscription } from 'rxjs';
 
 import { User } from '../../shared/user';
 import { UserService } from '../user.service';

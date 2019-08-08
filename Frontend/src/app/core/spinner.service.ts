@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class SpinnerService {
@@ -12,10 +12,10 @@ export class SpinnerService {
   constructor() { }
 
   start() {
-      this.spinning = true;
+    this.spinning = true;
   }
 
   stop() {
-      this.spinning = false;
+    this.spinning = false;
   }
 }

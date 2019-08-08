@@ -41,7 +41,7 @@ export enum OptimizeValue {
     TimeWithTraffic
 }
 
-export  enum RouteAttributes {
+export enum RouteAttributes {
     ExcludeItinerary,
     RoutePath,
     RouteSummariesOnly,

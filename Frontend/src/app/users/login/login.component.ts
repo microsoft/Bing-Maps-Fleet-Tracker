@@ -2,11 +2,10 @@
 // Licensed under the MIT License.
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable, Subscription } from 'rxjs';
 import { ToasterService } from 'angular2-toaster';
 import { Toast } from 'angular2-toaster';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 
 import { User } from '../../shared/user';
 import { Role, Roles } from '../../shared/role';
@@ -15,6 +14,8 @@ import { AuthService } from '../auth.service';
 import { ReportService } from '../../reports/report.service';
 import { SettingsService } from '../../core/settings.service';
 import { InstrumentationApprovalComponent } from '../instrumentation-approval/instrumentation-approval.component';
+
+import { skipWhile, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -38,7 +39,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.userSubscription = this.authService.loginOrGetUser()
-      .skipWhile(v => v === null)
+      .pipe(skipWhile(v => v === null))
       .subscribe(value => {
         this.loggedInUser = value;
         this.link = this.authService.getLogoutUrl();
@@ -70,18 +71,17 @@ export class LoginComponent implements OnInit, OnDestroy {
             }
             );
 
-          this.settingsService.getInstrumentationApproval()
-            .take(1).subscribe(val => {
-              if (val == null) {
-                this.dialog.open(InstrumentationApprovalComponent, {
-                  width: '70%',
-                }).afterClosed().subscribe(res => {
-                  if (res != null) {
-                    this.settingsService.setInstrumentationApproval(res);
-                  }
-                });
-              }
-            });
+          this.settingsService.getInstrumentationApproval().pipe(take(1)).subscribe(val => {
+            if (val == null) {
+              this.dialog.open(InstrumentationApprovalComponent, {
+                width: '70%',
+              }).afterClosed().subscribe(res => {
+                if (res != null) {
+                  this.settingsService.setInstrumentationApproval(res);
+                }
+              });
+            }
+          });
         }
       });
   }

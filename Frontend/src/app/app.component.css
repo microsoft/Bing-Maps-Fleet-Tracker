@@ -51,3 +51,11 @@ h1 {
   vertical-align: text-bottom;
   width: 25px;
 }
+
+.mat-raised-button{
+  margin-left: 5px!important;
+}
+
+.mat-drawer-inner-container{
+  width: 120%;
+}

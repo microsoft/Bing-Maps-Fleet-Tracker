@@ -2,7 +2,8 @@
    Licensed under the MIT License. */
 
 section {
-  padding: 10px;
+  padding: 10px!important;
+  overflow: hidden;
 }
 
 form {
@@ -22,3 +23,4 @@ form {
 h3 {
   margin: 0;
 }
+

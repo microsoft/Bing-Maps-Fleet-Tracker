@@ -3,7 +3,7 @@
 
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { DispatchingParameters } from './dispatching-parameters';
 import { DispatchingResults } from './dispatching-results';
@@ -18,7 +18,7 @@ export class DispatchingService {
 
   constructor(
     private dataService: DataService,
-    private router: Router) {}
+    private router: Router) { }
 
   callDisaptchingAPI(dispatchingParameters: DispatchingParameters) {
     this.dispatchingResults = this.dataService.post<DispatchingParameters>('dispatching', dispatchingParameters);

@@ -3,10 +3,7 @@
 
 import { Local } from 'protractor/built/driverProviders';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable, Subject, ReplaySubject, BehaviorSubject } from 'rxjs';
 
 import { Point } from '../shared/point';
 import { TrackingPoint } from '../shared/tracking-point';

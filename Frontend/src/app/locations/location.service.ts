@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { DataService } from '../core/data.service';
 import { Location } from '../shared/location';

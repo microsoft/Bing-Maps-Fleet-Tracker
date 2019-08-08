@@ -24,7 +24,7 @@ import { ReportChartComponent } from './report-chart/report-chart.component';
     ReportService
   ],
   exports: [
-      ReportChartComponent
+    ReportChartComponent
   ]
 })
 export class ReportsModule { }

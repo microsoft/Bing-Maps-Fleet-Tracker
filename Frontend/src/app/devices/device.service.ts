@@ -1,14 +1,20 @@
+
+import { map } from 'rxjs/operators';
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { DateRange } from '../shared/date-range';
 import { DataService } from '../core/data.service';
 import { Device } from './device';
 import { EnvironmentSettings, EnvironmentSettingsService } from '../core/environment-settings.service';
 import { TrackingPoint } from './../shared/tracking-point';
+
+import { interval } from 'rxjs';
+import { startWith, flatMap } from 'rxjs/operators';
+
 
 @Injectable()
 export class DeviceService {
@@ -34,23 +40,22 @@ export class DeviceService {
   }
 
   getPoints(id: string, dateRange?: DateRange): Observable<TrackingPoint[]> {
-    return this.dataService.get<TrackingPoint>(`devices/${id}/points`)
-      .map(points => {
+    return this.dataService.get<TrackingPoint>(`devices/${id}/points`).pipe(
+      map(points => {
         if (!dateRange) {
           return points;
         }
 
         return points.filter(p => p.time >= +dateRange.from && p.time <= +dateRange.to);
-      });
+      }));
   }
 
   getLatestPoints(): Observable<{ [key: string]: TrackingPoint }> {
-    return Observable
-      .interval(3 * 1000)
-      .startWith(0)
-      .flatMap(() => {
+    return interval(3 * 1000).pipe(
+      startWith(0),
+      flatMap(() => {
         return this.dataService.getSingleNoCache<{ [key: string]: TrackingPoint }>(`devices/all/positions`);
-      });
+      }));
   }
 
   updateDevice(device: Device): Observable<void> {

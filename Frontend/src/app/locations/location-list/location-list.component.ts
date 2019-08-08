@@ -2,8 +2,7 @@
 // Licensed under the MIT License.
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable, Subscription } from 'rxjs';
 
 import { Location } from '../../shared/location';
 import { LocationService } from '../location.service';
@@ -11,6 +10,7 @@ import { MapsService } from '../../maps/maps.service';
 import { Point } from '../../shared/point';
 import { Roles } from '../../shared/role';
 import { AssetService } from '../../assets/asset.service';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-location-list',
@@ -38,16 +38,14 @@ export class LocationListComponent implements OnInit, OnDestroy {
     this.isAlive = true;
     this.showFirstPageLocations();
 
-    this.assetService.getLatestPoints()
-      .takeWhile(() => this.isAlive)
+    this.assetService.getLatestPoints().pipe(takeWhile(() => this.isAlive))
       .subscribe(points => {
         this.mapsService.showAssetsPositions(points, true);
       });
   }
 
   showFirstPageLocations() {
-    this.locationService.getLocations()
-      .takeWhile(() => this.isAlive)
+    this.locationService.getLocations().pipe(takeWhile(() => this.isAlive))
       .subscribe(locations => {
         this.locations = locations;
         this.showLocationsRange(this.locations.slice(0, this.singlePageSize - 1));
@@ -80,8 +78,7 @@ export class LocationListComponent implements OnInit, OnDestroy {
 
   private getLocationInformation(location: Location) {
     this.assetsCount = null;
-    this.locationService.getLocationAssetsCount(location)
-      .takeWhile(() => this.isAlive)
+    this.locationService.getLocationAssetsCount(location).pipe(takeWhile(() => this.isAlive))
       .subscribe(assetsCount => {
         this.assetsCount = Object.keys(assetsCount).map(function (key) {
           return {

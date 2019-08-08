@@ -2,8 +2,7 @@
 // Licensed under the MIT License.
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable, Subscription } from 'rxjs';
 
 import { Geofence, FenceType } from '../../shared/geofence';
 import { Asset } from '../../assets/asset';
@@ -11,6 +10,7 @@ import { TrackingPoint } from '../../shared/tracking-point';
 import { AssetService } from '../../assets/asset.service';
 import { GeofenceService } from '../geofence.service';
 import { MapsService } from '../../maps/maps.service';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-geofence-list',
@@ -33,15 +33,13 @@ export class GeofenceListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.isAlive = true;
     this.geofences = this.geofenceService.getAll();
-    this.geofences
-      .takeWhile(() => this.isAlive)
+    this.geofences.pipe(takeWhile(() => this.isAlive))
       .subscribe(geofences => {
         this.mapsService.showGeofences(geofences);
         this.retrievedGeofences = geofences;
       });
 
-    this.assetService.getLatestPoints()
-      .takeWhile(() => this.isAlive)
+    this.assetService.getLatestPoints().pipe(takeWhile(() => this.isAlive))
       .subscribe(points => {
         this.mapsService.showAssetsPositions(points, true);
       });

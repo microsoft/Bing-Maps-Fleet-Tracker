@@ -4,12 +4,14 @@
 /* tslint:disable:no-unused-variable */
 
 import { TestBed, inject } from '@angular/core/testing';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { DataService } from '../core/data.service';
 import { Device } from './device';
 import { DeviceService } from './device.service';
 import { MockDataService } from '../../testing/mock-data.service';
+
+import { of } from 'rxjs';
 
 describe('DeviceService', () => {
   beforeEach(() => {
@@ -34,14 +36,14 @@ describe('DeviceService', () => {
 
   it('should call dataService.get("devices") in getDevices', inject([DeviceService, DataService],
     (service, dataService) => {
-      spyOn(dataService, 'get').and.returnValue(Observable.of({}));
+      spyOn(dataService, 'get').and.returnValue(of({}));
       service.getDevices().subscribe(result => { });
       expect(dataService.get).toHaveBeenCalledWith('devices');
     }));
 
   it('should call dataService.get("devices/5/points") in getPoints', inject([DeviceService, DataService],
     (service, dataService) => {
-      spyOn(dataService, 'get').and.returnValue(Observable.of({}));
+      spyOn(dataService, 'get').and.returnValue(of({}));
       service.getPoints('5').subscribe(result => { });
       expect(dataService.get).toHaveBeenCalledWith('devices/5/points');
     }));

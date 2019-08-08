@@ -2,8 +2,7 @@
 // Licensed under the MIT License.
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable, Subscription } from 'rxjs';
 import { ToasterService } from 'angular2-toaster';
 
 import { Asset } from '../asset';
@@ -15,6 +14,11 @@ import { Point } from '../../shared/point';
 import { TrackingPoint } from '../../shared/tracking-point';
 import { Trip } from '../../shared/trip';
 import { Roles } from '../../shared/role';
+
+import { takeWhile, skipWhile } from 'rxjs/operators';
+
+
+
 
 enum SelectedAssetState {
   ListSelected,
@@ -53,9 +57,9 @@ export class AssetListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.assetService.getAssets()
-      .takeWhile(() => this.isAlive)
-      .skipWhile(assets => assets.length === 0)
+    this.assetService.getAssets().pipe(
+      takeWhile(() => this.isAlive),
+      skipWhile(assets => assets.length === 0))
       .subscribe(assets => {
         this.assetsList = assets.sort((a, b) => {
           if (a.name < b.name) { return -1; }
