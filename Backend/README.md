@@ -33,7 +33,7 @@ The Restful service is a .Net Core 2 web application that targets .Net Framework
 2. Select `Build` > `Build Solution` from the menus. Your solution should build successfully.
 3. Navigate to the `appsettings.json` file under the `Trackable.Web` project. You will need to update some settings here to get your service up and running.
     * "ConnectionStrings: DefaultConnection": Should point to a Sql Server instance. By default this is set to localdb.
-    * "Authorization: ClientId, Client Secret": Should include the Application Id and Application Secret of a [AAD V2 application](https://apps.dev.microsoft.com/?deeplink=/appList). Note:- While adding app for bing map registration, make sure to add redirect url in format "http://localhost:<port_number>/signin-oidc". Where <port_number> is the port your application uses.
+    * "Authorization: ClientId, Client Secret": Should include the Application Id and Application Secret of a [AAD V2 application](https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade). Note:- While adding app for bing map registration, make sure to add redirect url in format "http://localhost:<port_number>/signin-oidc". Where <port_number> is the port your application uses.
     * "Authorization: OwnerEmail": Email of the owner of the deployment. On a fresh deployment, this is the only email that will be allowed to access the service.
     * "Authorization: SecurityKey": A string of at least 128 bits that will be used in the signing and validation of the JWT tokens.
     * "SubscriptionKeys: BingMapsKey": A valid Bing Maps Subscription Key for geocoding and frontend map controls. You can obtain a bing maps key by following this [article](https://msdn.microsoft.com/en-us/library/ff428642.aspx).
