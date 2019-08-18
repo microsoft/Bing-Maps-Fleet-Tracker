@@ -217,11 +217,11 @@ export class DispatchingEditorComponent implements OnInit, OnDestroy {
   }
 
   togglePinsList() {
-    this.showPinsList = this.showPinsList? false:true;
+    this.showPinsList = this.showPinsList ? false : true;
   }
 
-  openDispatchingInfoDialog(): void{
-    this.dialog.open(DispatchingInfoDialogComponent, {  
+  openDispatchingInfoDialog(): void {
+    this.dialog.open(DispatchingInfoDialogComponent, {
       width: '600px',
     });
   }

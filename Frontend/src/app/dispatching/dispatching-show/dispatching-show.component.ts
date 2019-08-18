@@ -70,6 +70,7 @@ export class DispatchingShowComponent implements OnInit {
           }
           this.renameDestinationsInAltDirections();
         }
+
         this.noDirectionsAvailable = this.mainRoute.directions.length === 0;
 
         this.renameDestinationsInDirections();
@@ -106,7 +107,54 @@ export class DispatchingShowComponent implements OnInit {
         var pinIndex = 1;
         for (var i = 0; i < directions.length && location.length > 0; i++) {
           var direction = directions[i];
-          if(direction.startsWith("Arrive at Stop: Y")){
+          if (direction.startsWith("Arrive at Stop: Y")) {
+            directions[i] = "Arrive at Stop " + pinIndex + ": " + location[pinIndex].address
+            pinIndex += 1;
+          }
+        }
+        this.mainRoute.directions = directions;
+      });
+  }
+
+  private renameDestinationsInAltDirections() {
+    this.dispatchingService.getDispatchingPinsResult()
+      .subscribe(location => {
+        var directions = this.altRoute.directions;
+        var pinIndex = 1;
+        for (var i = 0; i < directions.length && location.length > 0; i++) {
+          var direction = directions[i];
+          if (direction.startsWith("Arrive at Stop")) {
+            directions[i] = "Arrive at Stop " + pinIndex + ": " + location[pinIndex].address
+            pinIndex += 1;
+          }
+        }
+        this.altRoute.directions = directions;
+      });
+
+
+  }
+
+  toggleRoutes(item) {
+    if (item.tab.textLabel === "Main Route") {
+      console.log('main');
+      this.mapService.showAlternativeResults(this.altRoute.routePoint);
+      this.mapService.showDispatchingResults(this.mainRoute.routePoint, this.dispatchingService.getPinsAdded());
+
+    } else {
+      this.mapService.showAlternativeResults(this.mainRoute.routePoint);
+      this.mapService.showDispatchingResults(this.altRoute.routePoint, this.dispatchingService.getPinsAdded());
+
+    }
+  }
+
+  private renameDestinationsInDirections() {
+    this.dispatchingService.getDispatchingPinsResult()
+      .subscribe(location => {
+        var directions = this.mainRoute.directions;
+        var pinIndex = 1;
+        for (var i = 0; i < directions.length && location.length > 0; i++) {
+          var direction = directions[i];
+          if (direction.startsWith("Arrive at Stop: Y")) {
             directions[i] = "Arrive at Stop " + pinIndex + ": " + location[pinIndex].address
             pinIndex += 1;
           }
