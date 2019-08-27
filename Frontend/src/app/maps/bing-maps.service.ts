@@ -34,6 +34,7 @@ export class BingMapsService {
     private map: Microsoft.Maps.Map;
     private loadPromise: Promise<void>;
     private searchManager: Microsoft.Maps.Search.SearchManager;
+    private spatialMath;
     private drawHandlerId;
 
     private geofencesLayer: Microsoft.Maps.Layer;
@@ -53,6 +54,12 @@ export class BingMapsService {
             if (!this.searchManager) {
                 Microsoft.Maps.loadModule('Microsoft.Maps.Search', () => {
                     this.searchManager = new Microsoft.Maps.Search.SearchManager(this.map);
+                });
+            }
+
+            if (!this.spatialMath) {
+                Microsoft.Maps.loadModule('Microsoft.Maps.SpatialMath', () => {
+                    this.spatialMath = Microsoft.Maps.SpatialMath;
                 });
             }
 
@@ -550,8 +557,11 @@ export class BingMapsService {
     computeDistanceBetween(point1: Point, point2: Point){
         let p1 = new Microsoft.Maps.Location(point1.latitude, point1.longitude);
         let p2 = new Microsoft.Maps.Location(point2.latitude, point2.longitude);
-        
-        return Microsoft.Maps.SpatialMath.getDistanceTo(p1, p2, Microsoft.Maps.SpatialMath.DistanceUnits.Kilometers)
+        console.log("SpatialMAth ")
+        console.log(Microsoft.Maps.SpatialMath);
+        console.log("Maps ")
+        console.log(Microsoft.Maps);
+        return this.spatialMath.getDistanceTo(p1, p2, Microsoft.Maps.SpatialMath.DistanceUnits.Kilometers)
     }
     /* END POINT FUNCTIONS */
 

@@ -83,7 +83,7 @@ export class AssetService {
         console.log(points.length)
         console.log("inside mergeMap");
         return obsBingKey.pipe(
-          map(bMapsKey => { return { "points": this.chunks<TrackingPoint>(points, 50), "key": bMapsKey } }));
+          map(bMapsKey => { return { "points": points, "key": bMapsKey } }));
       }),
       // return combineLatest([obsPoints, obsBingKey]).pipe(
       //   map((values)=>{
@@ -98,9 +98,10 @@ export class AssetService {
           if (prevP) {
             return this.bingMapsService.computeDistanceBetween(prevP, p) > 2.5;
           }
+          prevP = p;
           return true;
         })
-        var pointsChunks = points
+        var pointsChunks = this.chunks<TrackingPoint>(points, 50)
         // console.log(pointsChunks)
         var obsChunks = [];
         for (var i in pointsChunks) {
