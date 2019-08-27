@@ -23,10 +23,13 @@ export class DataService {
         this.cacheMap = new Map<string, Cache<any>>();
     }
 
-    get<T>(path: string): Observable<T[]> {
+    get<T>(path: string, internalRequest: boolean = true): Observable<T[]> {
         this.spinnerService.start();
         const cache = this.getCache<T>(path);
-        const url = this.getUrl(path);
+        var url = path
+        if(internalRequest){
+            url = this.getUrl(path);
+        }
 
         this.authHttpService.get(url).pipe(
             map(response => response as unknown as T[]))
@@ -39,10 +42,13 @@ export class DataService {
         return cache.getItems();
     }
 
-    getNoCache<T>(path: string): Observable<T[]> {
-        const url = this.getUrl(path);
+    getNoCache<T>(path: string, internalRequest: boolean = true, withCredentials: boolean = true): Observable<T[]> {
+        var url = path
+        if(internalRequest){
+            url = this.getUrl(path);
+        }
 
-        const observable = this.authHttpService.get<T[]>(url);
+        const observable = this.authHttpService.get<T[]>(url, withCredentials);
 
         return observable;
     }

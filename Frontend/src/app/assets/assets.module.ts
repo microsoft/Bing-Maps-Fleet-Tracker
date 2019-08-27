@@ -8,6 +8,7 @@ import { AssetsRoutingModule, assetsRoutedComponents } from './assets-routing.mo
 import { AssetService } from './asset.service';
 import { MatDialogModule } from '@angular/material';
 import { AssetInfoDialogComponent } from './asset-info-dialog/asset-info-dialog.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { AssetInfoDialogComponent } from './asset-info-dialog/asset-info-dialog.
   imports: [
     AssetsRoutingModule,
     SharedModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSlideToggleModule
   ],
   entryComponents: [
     AssetInfoDialogComponent

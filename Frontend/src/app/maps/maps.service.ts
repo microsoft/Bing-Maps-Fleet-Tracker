@@ -16,7 +16,7 @@ import { Asset } from '../assets/asset';
 @Injectable()
 export class MapsService {
 
-    private points = new ReplaySubject<Point[]>();
+    private points = new ReplaySubject<{ points: Point[]; snappedPoints: boolean; }>();
     private trips = new ReplaySubject<Trip[]>();
     private trip = new ReplaySubject<Trip>();
     private geofence = new ReplaySubject<Geofence>();
@@ -56,8 +56,8 @@ export class MapsService {
         this.locationSearchResult.next(point);
     }
 
-    showPoints(points: Point[]) {
-        this.points.next(points);
+    showPoints(p: Point[], snapped = false) {
+        this.points.next({points: p, snappedPoints: snapped});
     }
 
     showGeofence(geofence: Geofence) {
@@ -142,7 +142,7 @@ export class MapsService {
         this.itineraryPoint.next(point);
     }
 
-    getPoints(): Observable<Point[]> {
+    getPoints(): Observable<{ points: Point[]; snappedPoints: boolean; }> {
         return this.points.asObservable();
     }
 

@@ -42,6 +42,7 @@ export class AssetListComponent implements OnInit, OnDestroy {
   assetsList: Asset[];
   selectedAsset: Asset;
   selectedAssetState: SelectedAssetState;
+  showSnappedP = false;
 
   private selectedDateRange: DateRange;
   private lastCalledFunction: (asset: Asset, filterSelected: Boolean) => void;
@@ -89,9 +90,9 @@ export class AssetListComponent implements OnInit, OnDestroy {
       this.selectedAssetState = SelectedAssetState.PointsSelected;
       this.toasterService.pop('info', '', 'Showing latest points of \" ' + this.selectedAsset.name + ' \"');
       this.unsubscribe();
-      this.subscription = this.assetService.getPoints(asset.id, this.selectedDateRange)
+      this.subscription = this.assetService.getPoints(asset.id, this.selectedDateRange, this.showSnappedP)
         .subscribe(points => {
-          this.mapsService.showPoints(points);
+          this.mapsService.showPoints(points, this.showSnappedP);
         });
     }
   }
@@ -153,6 +154,10 @@ export class AssetListComponent implements OnInit, OnDestroy {
       this.selectedDateRange = range;
       this.lastCalledFunction(this.selectedAsset, true);
     }
+  }
+
+  showSnappedPoints() {
+    this.showPoints(this.selectedAsset, true)
   }
 
   private unsubscribe() {

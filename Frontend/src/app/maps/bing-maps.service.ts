@@ -521,13 +521,17 @@ export class BingMapsService {
     /* END LOCATION FUNCTIONS */
 
     /* POINT FUNCTIONS */
-    showPoints(points: Point[]): void {
+    showPoints(data: { points: Point[]; snappedPoints: boolean; }): void {
+        let points = data["points"];
         this.load().then(() => {
             this.resetMap();
             this.pointsLayer.setVisible(true);
             this.pointsLayer.clear();
-
-            points.forEach(p => this.showPoint(p, this.genericColors[4]));
+            if (data["snappedPoints"]) {
+                points.forEach(p => this.showPoint(p, this.genericColors[2]));
+            } else {
+                points.forEach(p => this.showPoint(p, this.genericColors[4]));
+            }
 
             this.centerMapOnMedian(points);
         });
@@ -541,6 +545,13 @@ export class BingMapsService {
         });
 
         this.pointsLayer.add(pushpin);
+    }
+
+    computeDistanceBetween(point1: Point, point2: Point){
+        let p1 = new Microsoft.Maps.Location(point1.latitude, point1.longitude);
+        let p2 = new Microsoft.Maps.Location(point2.latitude, point2.longitude);
+        
+        return Microsoft.Maps.SpatialMath.getDistanceTo(p1, p2, Microsoft.Maps.SpatialMath.DistanceUnits.Kilometers)
     }
     /* END POINT FUNCTIONS */
 
