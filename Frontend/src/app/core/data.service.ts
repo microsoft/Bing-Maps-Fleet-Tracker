@@ -27,7 +27,7 @@ export class DataService {
         this.spinnerService.start();
         const cache = this.getCache<T>(path);
         var url = path
-        if(internalRequest){
+        if (internalRequest) {
             url = this.getUrl(path);
         }
 
@@ -37,14 +37,14 @@ export class DataService {
                 cache.set(data);
                 this.spinnerService.stop();
             },
-            error => this.spinnerService.stop());
+                error => this.spinnerService.stop());
 
         return cache.getItems();
     }
 
     getNoCache<T>(path: string, internalRequest: boolean = true, withCredentials: boolean = true): Observable<T[]> {
         var url = path
-        if(internalRequest){
+        if (internalRequest) {
             url = this.getUrl(path);
         }
 

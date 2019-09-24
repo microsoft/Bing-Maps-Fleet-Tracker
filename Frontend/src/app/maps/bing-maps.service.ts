@@ -554,13 +554,10 @@ export class BingMapsService {
         this.pointsLayer.add(pushpin);
     }
 
-    computeDistanceBetween(point1: Point, point2: Point){
+    computeDistanceBetween(point1: Point, point2: Point) {
         let p1 = new Microsoft.Maps.Location(point1.latitude, point1.longitude);
         let p2 = new Microsoft.Maps.Location(point2.latitude, point2.longitude);
-        console.log("SpatialMAth ")
-        console.log(Microsoft.Maps.SpatialMath);
-        console.log("Maps ")
-        console.log(Microsoft.Maps);
+
         return this.spatialMath.getDistanceTo(p1, p2, Microsoft.Maps.SpatialMath.DistanceUnits.Kilometers)
     }
     /* END POINT FUNCTIONS */

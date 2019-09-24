@@ -74,10 +74,10 @@ export class AssetService {
     )
 
     return combineLatest([obsPoints, obsBingKey]).pipe(
-      map((values)=>{
-        return { "points": values[0],  "key": values[1]}
+      map((values) => {
+        return { "points": values[0], "key": values[1] }
       }),
-      map((value)=>{
+      map((value) => {
         return value;
       }),
       switchMap(data => {
