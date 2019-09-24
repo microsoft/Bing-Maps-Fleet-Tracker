@@ -13,7 +13,7 @@ import { Trip } from '../shared/trip';
 import { BingMapsService } from 'app/maps/bing-maps.service';
 
 import { interval } from 'rxjs';
-import { startWith, flatMap, mergeMap, take, switchMap } from 'rxjs/operators';
+import { startWith, flatMap, mergeMap, take, switchMap, skip } from 'rxjs/operators';
 
 @Injectable()
 export class AssetService {
@@ -46,11 +46,8 @@ export class AssetService {
   }
 
   getPoints(id: string, dateRange?: DateRange, snapPoints = false): Observable<TrackingPoint[]> {
-    console.log("inside getPoints");
     var obsPoints = this.dataService.get<TrackingPoint>(`assets/${id}/points`).pipe(
       map(points => {
-        console.log("Fetch orginal points");
-        console.log(points);
         if (!dateRange) {
           return points;
         }
@@ -63,36 +60,27 @@ export class AssetService {
 
     var obsBingKey = this.dataService.get<JSON>(`settings/subscriptionkeys`).pipe(
       map(keys => {
-        console.log("Fetch Bing key");
 
         let bingMapsKey = '';
-        console.log(keys)
         for (var key of keys) {
           if (key['id'] === 'BingMaps') {
             bingMapsKey = key['keyValue'];
             break;
           }
         }
-        console.log(bingMapsKey)
         return bingMapsKey;
-      })
+      }),
+      skip(1)
     )
 
-    return obsPoints.pipe(
-      mergeMap(points => {
-        console.log(points.length)
-        console.log("inside mergeMap");
-        return obsBingKey.pipe(
-          map(bMapsKey => { return { "points": points, "key": bMapsKey } }));
+    return combineLatest([obsPoints, obsBingKey]).pipe(
+      map((values)=>{
+        return { "points": values[0],  "key": values[1]}
       }),
-      // return combineLatest([obsPoints, obsBingKey]).pipe(
-      //   map((values)=>{
-      //     console.log(values)
-      //     return { "points": this.chunks<TrackingPoint>(values[0], 40),  "key": values[1]}
-      //   }),
-      take(1),
+      map((value)=>{
+        return value;
+      }),
       switchMap(data => {
-        console.log("inside switchMap")
         let prevP = null
         let points = data["points"].filter(p => {
           if (prevP) {
@@ -102,16 +90,13 @@ export class AssetService {
           return true;
         })
         var pointsChunks = this.chunks<TrackingPoint>(points, 50)
-        // console.log(pointsChunks)
         var obsChunks = [];
         for (var i in pointsChunks) {
-          console.log("counter", i)
           obsChunks.push(this.snapChunk(i, pointsChunks[i], data["key"]))
         }
         return combineLatest(obsChunks);
       }),
       map(l => {
-        console.log("inside Map")
         return [].concat.apply([], l)
       })
     )
@@ -119,12 +104,10 @@ export class AssetService {
 
 
   snapChunk(index, chunk, key) {
-    console.log(key)
     return this.dataService.getNoCache<JSON>(`${this.snapToRoadUrl}${this.generateUrl(chunk)}&key=${key}`, false, false).pipe(
       map((response) => {
         var snappedPoints = response["resourceSets"][0]["resources"][0]["snappedPoints"]
         var result = this.snapPointsToRoad(chunk, snappedPoints);
-        // console.log(result)
         return result;
       })
     );
@@ -143,7 +126,6 @@ export class AssetService {
   }
 
   generateUrl(points: Array<TrackingPoint>) {
-    console.log("before generating URL", points.length)
     var pointsString = "points=";
     for (var i in points) {
       let p = points[i];
@@ -152,7 +134,6 @@ export class AssetService {
       pointsString += p.longitude;
       pointsString += ";";
     }
-    console.log("after generating URL", points.length)
     return pointsString.slice(0, -1);
   }
 
