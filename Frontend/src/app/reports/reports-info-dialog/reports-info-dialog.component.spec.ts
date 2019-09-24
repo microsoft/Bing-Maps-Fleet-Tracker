@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ReportsInfoDialogComponent } from './reports-info-dialog.component';
