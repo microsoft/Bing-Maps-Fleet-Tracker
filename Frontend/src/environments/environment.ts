@@ -8,7 +8,7 @@
 
 export const environment = {
   production: false,
-  backendUrl: 'http://localhost:4488/api',
+  backendUrl: 'http://localhost:13954/api',
   frontendUrl: 'http://localhost:4200/'
 };
 
