@@ -10,7 +10,7 @@ import { Logger } from 'angular2-logger/core';
 import { SettingsService, Settings } from '../providers/settings-service';
 
 declare var device;
-declare var backgroundGeolocation;
+declare var BackgroundGeolocation;
 
 @Injectable()
 export class BackgroundTrackerService {
@@ -44,6 +44,12 @@ export class BackgroundTrackerService {
     stopOnStillActivity: true //Android stop() is forced, when the STILL activity is detected (default is true)
   };
 
+  private locationOptions: any = {
+    timeout: 300000,
+    maximumAge: 10000,
+    enableHighAccuracy: true
+  };
+
   constructor(
     private platform: Platform,
     private logger: Logger,
@@ -58,7 +64,7 @@ export class BackgroundTrackerService {
     }
 
     let locationPromise = new Promise(function(resolve) {
-      backgroundGeolocation.isLocationEnabled(function (locationEnabled) {
+      BackgroundGeolocation.isLocationEnabled(function (locationEnabled) {
           resolve(locationEnabled)
       }, function (error) {
         resolve(false)
@@ -148,29 +154,41 @@ export class BackgroundTrackerService {
   }
 
   private start(configuration: any) {
-    backgroundGeolocation.configure(
-      (location) => this.successCallback(location),
-      () => this.failureCallback(),
-      configuration
+    BackgroundGeolocation.configure(
+      configuration,
+      () => this.successCallback(),
+      () => this.failureCallback()
     );
 
-    backgroundGeolocation.start();
-    backgroundGeolocation.switchMode(backgroundGeolocation.mode.FOREGROUND);
+    BackgroundGeolocation.start();
+    BackgroundGeolocation.switchMode(BackgroundGeolocation.FOREGROUND);
   }
 
   private stop() {
-    backgroundGeolocation.stop();
+    BackgroundGeolocation.stop();
   }
 
-  private successCallback(location) {
-    this.logger.info(`background location callback (${location.latitude}, ${location.longitude})`);
-
-    this.locationsSubject.next(location);
-    backgroundGeolocation.finish();
+  private successCallback() {
+    //this.logger.info(`background location callback (${location.latitude}, ${location.longitude})`);
+    BackgroundGeolocation.getCurrentLocation(
+      (location) => {
+        this.locationsSubject.next(location);
+      },
+      (error) => this.getCurrentLocationFailureCallback(error),
+      this.locationOptions
+    );
+    
+    if(this.platform.is('ios')){
+      BackgroundGeolocation.endTask();
+    }
   }
 
   private failureCallback() {
     this.logger.info('background location error');
+  }
+
+  private getCurrentLocationFailureCallback(error) {
+    this.logger.info('background location getCurrentLocation error: '+error.message);
   }
 }
 
