@@ -9,7 +9,7 @@ There are two parts to the set-up process:
 2. Set up the mobile client.
 
 #### Step 1: 
-The easiest way to set up the back-end services and administration portal is to use the [Bing Maps Fleet Tracker Deployment Portal](https://aka.ms/bingmapsfleettracker), which one-click deploys the Bing Maps Fleet Tracker solution into your Azure subscription. For a step by step walk-through of how to deploy, use the deployment portal: see [out of the box deployment](https://github.com/Microsoft/Bing-Maps-Fleet-Tracker/blob/master/DEPLOYMENT.md). **None** of the data entered on the deployment portal is stored by Bing Maps Fleet Tracker. It is only used to configure your deployment.
+The easiest way to set up the back-end services and administration portal is to use the [Bing Maps Fleet Tracker Deployment Portal](https://bingmapsfleettracker.azurewebsites.net), which one-click deploys the Bing Maps Fleet Tracker solution into your Azure subscription. For a step by step walk-through of how to deploy, use the deployment portal: see [out of the box deployment](https://github.com/Microsoft/Bing-Maps-Fleet-Tracker/blob/master/DEPLOYMENT.md). **None** of the data entered on the deployment portal is stored by Bing Maps Fleet Tracker. It is only used to configure your deployment.
 
 After deploying the back-end services and administration portal successfully, you can find the walk-through of using the Bing Maps Fleet Tracker solution [here](https://github.com/Microsoft/Bing-Maps-Fleet-Tracker/blob/master/WALKTHROUGH.md).
 
