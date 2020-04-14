@@ -29,7 +29,7 @@ ul li a.active {
     color: #fff;
 }
 
-my-date-range-picker {
+angular-mydatepicker{
     display: block;
     margin: 0 0 10px 16px;
 }

@@ -2,8 +2,7 @@
 // Licensed under the MIT License.
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { IMyOptions, IMyDate, IMyDateRange, IMyDateRangeModel } from 'mydaterangepicker';
-
+import { IMyOptions, IMyDate, IMyDateRange, IMyDateRangeModel } from 'angular-mydatepicker';
 import { DateRange } from '../date-range';
 
 @Component({
@@ -42,8 +41,8 @@ export class TimeFilterComponent implements OnInit {
     this.selectedRange = range;
 
     this.selectedDateRange = {
-      beginDate: this.convertDate(range.from),
-      endDate: this.convertDate(range.to)
+      begin: this.convertDate(range.from),
+      end: this.convertDate(range.to)
     };
 
     this.change.emit(range);

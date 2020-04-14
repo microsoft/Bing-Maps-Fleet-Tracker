@@ -13,5 +13,4 @@
     </a>
   </li>
 </ul>
-
-<my-date-range-picker [options]="myDateRangePickerOptions" [selDateRange]="selectedDateRange" (dateRangeChanged)="onDateRangeChanged($event)"></my-date-range-picker>
+<input angular-mydatepicker [(ngModel)]="model" [options]="myDateRangePickerOptions" #dp="angular-mydatepicker" (rangeDateSelection)="selectedDateRange" (dateRangeChanged)="onDateRangeChanged($event)"/>

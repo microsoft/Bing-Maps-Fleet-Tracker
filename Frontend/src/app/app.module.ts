@@ -19,8 +19,6 @@ import { SharedModule } from './shared/shared.module';
 import { ToasterModule } from 'angular2-toaster';
 import { UsersModule } from './users/users.module';
 
-import 'hammerjs';
-
 export const routing = RouterModule.forRoot([
   {
     path: '',
