@@ -18,7 +18,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Routes, RouterModule } from '@angular/router';
-import { MyDateRangePickerModule } from 'mydaterangepicker';
+import { AngularMyDatePickerModule } from 'angular-mydatepicker';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NguiDatetimePickerModule } from '@ngui/datetime-picker';
 import { ToasterService } from 'angular2-toaster';
@@ -28,8 +28,6 @@ import { TripListComponent } from './trip-list/trip-list.component';
 import { FilterListPipe } from './filter-list.pipe';
 
 import { RoleLimiterDirective } from './role-limiter.directive';
-
-import 'hammerjs';
 
 @NgModule({
   declarations: [
@@ -45,7 +43,7 @@ import 'hammerjs';
     MatSidenavModule, MatInputModule, MatIconModule, MatRadioModule, MatListModule, MatSelectModule, MatToolbarModule,
     MatOptionModule, MatCheckboxModule, MatTooltipModule, MatButtonModule, MatLineModule, MatDialogModule,
     RouterModule,
-    MyDateRangePickerModule,
+    AngularMyDatePickerModule,
     NgxPaginationModule,
     NguiDatetimePickerModule
   ],
