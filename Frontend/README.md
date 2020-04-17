@@ -21,7 +21,7 @@ cd Bing-Maps-Fleet-Tracker/Frontend
 Once you have these tools set up, from the `Frontend/` folder run the following command to install the remaining dependencies:
 
 ``` Bash
-yarn install
+npm install -P -D
 ```
 
 ## Build and Run
