@@ -10,24 +10,32 @@ import { DispatchingService } from './dispatching.service';
 import { DialogService } from './dialog.service';
 import { DispatchingShowComponent } from './dispatching-show/dispatching-show.component';
 import { LocationDialogComponent } from './location-dialog/location-dialog.component';
+import { MatMenuModule, MatTabsModule} from '@angular/material';
+import { DispatchingInfoDialogComponent } from './dispatching-info-dialog/dispatching-info-dialog.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
     routedComponenets,
     DispatchingShowComponent,
-    LocationDialogComponent
+    LocationDialogComponent,
+    DispatchingInfoDialogComponent
   ],
   imports: [
     CommonModule,
     SharedModule,
-    DispatchingRoutingModule
+    DispatchingRoutingModule,
+    MatMenuModule,
+    MatTabsModule,
+    DragDropModule
   ],
   providers: [
     DispatchingService,
     DialogService
   ],
   entryComponents: [
-    LocationDialogComponent
+    LocationDialogComponent,
+    DispatchingInfoDialogComponent
   ],
   exports: [
     LocationDialogComponent

@@ -50,6 +50,7 @@ h1 {
 .spinner {
   vertical-align: text-bottom;
   width: 25px;
+  margin-left: 10px;
 }
 
 .mat-raised-button{

@@ -3,21 +3,36 @@
 
 <mat-toolbar color="primary">
   <span>Add Route/Asset Info</span>
+  <span class="toolbar-spacer"></span>
+  <button mat-icon-button mat-tooltip="Info" (click)="openDispatchingInfoDialog()">
+    <mat-icon>info</mat-icon>
+  </button>
 </mat-toolbar>
 
 <section>
   <form (submit)="showRoute()">
-
     <div>
-      <mat-form-field class="partial-input">
-        <input matInput placeholder="Number of Points (Max 20)" [(ngModel)]="pinsAdded.length" name="waypoints" disabled>
-      </mat-form-field>
-      <button mat-icon-button mat-tooltip='Reset Points' (click)="clearPoints()" type="button">
-        <mat-icon>undo</mat-icon>
-      </button>
-      <button mat-icon-button mat-tooltip='Add Location' (click)="openDialog()" type="button" [disabled]="pinsAdded.length >= 20">
-        <mat-icon>add_circle</mat-icon>
-      </button>
+      <div style="display: flex; justify-content: space-between; width:100%;">
+        <button mat-button (click)="togglePinsList()" type="button" >Number of Points {{pinsAdded.length}} (Max 20)</button>
+        <button mat-icon-button mat-tooltip='Add Location' (click)="openDialog()" type="button" [disabled]="pinsAdded.length >= 20">
+          <mat-icon>add_circle</mat-icon>
+        </button>
+        <button mat-icon-button mat-tooltip='Reset Points' (click)="clearPoints()" type="button">
+          <mat-icon>undo</mat-icon>
+        </button>
+      </div>
+      <div cdkDropList *ngIf="this.showPinsList" class="pins-list" (cdkDropListDropped)="drop($event)">
+        <div class="pins-list-box" *ngFor="let pin of pinsAdded" cdkDrag>
+          <span>
+            {{pin.name}}
+          </span>
+          <span>
+              <a mat-icon-button style="margin-top:auto;margin-bottom:auto" mat-tooltip="Delete pin" (click)="delete_pin(pin.name)">
+                  <mat-icon>delete_forever</mat-icon>
+              </a>
+          </span>
+        </div>
+      </div>
     </div>
 
     <mat-form-field>
@@ -39,13 +54,15 @@
       </mat-list-item>
       <mat-list *ngIf="showAvoidList" class="sub-list">
         <mat-list-item *ngFor="let option of AvoidOptions">
-          <mat-checkbox (change)="onCheckChanged($event, MinimizeOptions)" [(ngModel)]="option.isChecked" [name]="option.name">{{option.name}}</mat-checkbox>
+          <mat-checkbox (change)="onCheckChanged($event, MinimizeOptions)" [(ngModel)]="option.isChecked"
+            [name]="option.name">{{option.name}}</mat-checkbox>
         </mat-list-item>
         <mat-list-item>
           <mat-checkbox [(ngModel)]="dispatchingParameters.avoidCrossWind" name="crosswinds">Cross Winds</mat-checkbox>
         </mat-list-item>
         <mat-list-item>
-          <mat-checkbox [(ngModel)]="dispatchingParameters.avoidGroundingRisk" name="groundingrisk">Grounding Risk</mat-checkbox>
+          <mat-checkbox [(ngModel)]="dispatchingParameters.avoidGroundingRisk" name="groundingrisk">Grounding Risk
+          </mat-checkbox>
         </mat-list-item>
       </mat-list>
 
@@ -57,7 +74,8 @@
       </mat-list-item>
       <mat-list *ngIf="showMinimizeList" class="sub-list">
         <mat-list-item *ngFor="let option of MinimizeOptions">
-          <mat-checkbox (change)="onCheckChanged($event, AvoidOptions)" [(ngModel)]="option.isChecked" [name]="option.name">{{option.name}}</mat-checkbox>
+          <mat-checkbox (change)="onCheckChanged($event, AvoidOptions)" [(ngModel)]="option.isChecked"
+            [name]="option.name">{{option.name}}</mat-checkbox>
         </mat-list-item>
       </mat-list>
 
@@ -67,7 +85,8 @@
           <mat-icon>{{showOptimizeList ? "keyboard_arrow_up" : "keyboard_arrow_down"}}</mat-icon>
         </button>
       </mat-list-item>
-      <mat-radio-group *ngIf="showOptimizeList" [(ngModel)]="dispatchingParameters.optimize" name="optimizeRadioGroup" class="sub-list">
+      <mat-radio-group *ngIf="showOptimizeList" [(ngModel)]="dispatchingParameters.optimize" name="optimizeRadioGroup"
+        class="sub-list">
         <mat-radio-button *ngFor="let option of OptimizeOptions; let i = index" [value]="option.value">
           {{option.name}}
         </mat-radio-button>
@@ -82,29 +101,29 @@
       <mat-list *ngIf="showLoadedAssetPropList" class="sub-list">
         <mat-list-item>
           <mat-form-field>
-            <input matInput placeholder="Loaded Asset Height (m)" [(ngModel)]="dispatchingParameters.loadedHeight" name="height" type="number"
-              step="any" min="1.0">
+            <input matInput placeholder="Loaded Asset Height (m)" [(ngModel)]="dispatchingParameters.loadedHeight"
+              name="height" type="number" step="any" min="1.0">
           </mat-form-field>
         </mat-list-item>
 
         <mat-list-item>
           <mat-form-field>
-            <input matInput placeholder="Loaded Asset Width (m)" [(ngModel)]="dispatchingParameters.loadedWidth" name="width" type="number"
-              step="any" min="1.0">
+            <input matInput placeholder="Loaded Asset Width (m)" [(ngModel)]="dispatchingParameters.loadedWidth"
+              name="width" type="number" step="any" min="1.0">
           </mat-form-field>
         </mat-list-item>
 
         <mat-list-item>
           <mat-form-field>
-            <input matInput placeholder="Loaded Asset Length (m)" [(ngModel)]="dispatchingParameters.loadedLength" name="length" type="number"
-              step="any" min="1.0">
+            <input matInput placeholder="Loaded Asset Length (m)" [(ngModel)]="dispatchingParameters.loadedLength"
+              name="length" type="number" step="any" min="1.0">
           </mat-form-field>
         </mat-list-item>
 
         <mat-list-item>
           <mat-form-field>
-            <input matInput placeholder="Loaded Asset Weight (kg)" [(ngModel)]="dispatchingParameters.loadedWeight" name="weight" type="number"
-              step="any" min="1.0">
+            <input matInput placeholder="Loaded Asset Weight (kg)" [(ngModel)]="dispatchingParameters.loadedWeight"
+              name="weight" type="number" step="any" min="1.0">
           </mat-form-field>
         </mat-list-item>
       </mat-list>
@@ -117,8 +136,8 @@
       </mat-list-item>
       <mat-list *ngIf="showTimingList" class="sub-list">
         <mat-list-item>
-          <input [(ngModel)]="dispatchingParameters.dateTime" ngui-datetime-picker name="dateTimePicker" [close-on-select]="false"
-          />
+          <input [(ngModel)]="dispatchingParameters.dateTime" ngui-datetime-picker name="dateTimePicker"
+            [close-on-select]="false" />
         </mat-list-item>
       </mat-list>
 
@@ -157,7 +176,8 @@
           <mat-checkbox [(ngModel)]="showDirections" name="show">Exclude Directions</mat-checkbox>
         </mat-list-item>
         <mat-list-item *ngIf="showTruckOptions">
-          <mat-checkbox [(ngModel)]="dispatchingParameters.getAlternativeCarRoute" name="showAlt">Show Alternative Car Route</mat-checkbox>
+          <mat-checkbox [(ngModel)]="dispatchingParameters.getAlternativeCarRoute" name="showAlt">Show Alternative Car
+            Route</mat-checkbox>
         </mat-list-item>
         <mat-list-item class="select-with-padding">
           <mat-form-field>
@@ -170,7 +190,8 @@
         </mat-list-item>
         <mat-list-item class="select-with-padding">
           <mat-form-field>
-            <mat-select placeholder="Distance Unit" [(ngModel)]="dispatchingParameters.distanceUnit" name="distanceUnit">
+            <mat-select placeholder="Distance Unit" [(ngModel)]="dispatchingParameters.distanceUnit"
+              name="distanceUnit">
               <mat-option [value]="DistanceUnit.Kilometer">Kilometer</mat-option>
               <mat-option [value]="DistanceUnit.Mile">Mile</mat-option>
             </mat-select>
@@ -188,7 +209,8 @@
 
         <mat-list-item class="select-with-padding">
           <mat-form-field>
-            <mat-select placeholder="Dimension Unit" [(ngModel)]="dispatchingParameters.dimensionUnit" name="dimensionUnit">
+            <mat-select placeholder="Dimension Unit" [(ngModel)]="dispatchingParameters.dimensionUnit"
+              name="dimensionUnit">
               <mat-option [value]="DimensionUnit.Meter">Meter</mat-option>
               <mat-option [value]="DimensionUnit.Foot">Foot</mat-option>
             </mat-select>

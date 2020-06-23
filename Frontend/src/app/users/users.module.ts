@@ -9,14 +9,19 @@ import { InstrumentationApprovalComponent } from './instrumentation-approval/ins
 import { LoginComponent } from './login/login.component';
 import { UserService } from './user.service';
 import { AuthService } from './auth.service';
+import { UsersInfoDialogComponent } from './users-info-dialog/users-info-dialog.component';
 
 @NgModule({
   declarations: [
     usersRoutedComponents,
     LoginComponent,
-    InstrumentationApprovalComponent
+    InstrumentationApprovalComponent,
+    UsersInfoDialogComponent
   ],
-  entryComponents: [InstrumentationApprovalComponent],
+  entryComponents: [
+    InstrumentationApprovalComponent,
+    UsersInfoDialogComponent
+  ],
   imports: [
     UsersRoutingModule,
     SharedModule

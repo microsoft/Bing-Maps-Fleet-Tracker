@@ -7,9 +7,9 @@
   <a mat-icon-button mat-tooltip="Add New Location" [routerLink]="['/locations/new']">
     <mat-icon>add_circle</mat-icon>
   </a>
-  <button mat-icon-button mat-tooltip="Info">
+  <button mat-icon-button mat-tooltip="Info" (click)="openLocationDialog()">
       <mat-icon>info</mat-icon>
-    </button>
+  </button>
 </mat-toolbar>
 
 <mat-form-field>
@@ -22,6 +22,9 @@
     <mat-list-item>
       <h3 mat-line (click)="showLocation(location)"> {{location.name}}</h3>
       <span mat-line class="subtle" (click)="showLocation(location)">address: {{location.address}}</span>
+      <button mat-icon-button mat-tooltip="Delete" (click)="deleteLocation(location)">
+        <mat-icon>delete_forever</mat-icon>
+     </button>
       <a [appRoleLimiter]="Roles.Administrator" mat-icon-button mat-tooltip="Edit" [routerLink]="['/locations', location.id]">
         <mat-icon>mode_edit</mat-icon>
       </a>

@@ -2,7 +2,9 @@
 // Licensed under the MIT License.
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ToasterService } from 'angular2-toaster';
 
 import { Asset } from '../asset';
@@ -16,8 +18,7 @@ import { Trip } from '../../shared/trip';
 import { Roles } from '../../shared/role';
 
 import { takeWhile, skipWhile } from 'rxjs/operators';
-
-
+import { AssetInfoDialogComponent } from '../asset-info-dialog/asset-info-dialog.component';
 
 
 enum SelectedAssetState {
@@ -41,6 +42,7 @@ export class AssetListComponent implements OnInit, OnDestroy {
   assetsList: Asset[];
   selectedAsset: Asset;
   selectedAssetState: SelectedAssetState;
+  showSnappedP = false;
 
   private selectedDateRange: DateRange;
   private lastCalledFunction: (asset: Asset, filterSelected: Boolean) => void;
@@ -52,7 +54,8 @@ export class AssetListComponent implements OnInit, OnDestroy {
     private assetService: AssetService,
     private locationService: LocationService,
     private mapsService: MapsService,
-    private toasterService: ToasterService) {
+    private toasterService: ToasterService,
+    public dialog: MatDialog) {
     this.isAlive = true;
   }
 
@@ -87,9 +90,9 @@ export class AssetListComponent implements OnInit, OnDestroy {
       this.selectedAssetState = SelectedAssetState.PointsSelected;
       this.toasterService.pop('info', '', 'Showing latest points of \" ' + this.selectedAsset.name + ' \"');
       this.unsubscribe();
-      this.subscription = this.assetService.getPoints(asset.id, this.selectedDateRange)
+      this.subscription = this.assetService.getPoints(asset.id, this.selectedDateRange, this.showSnappedP)
         .subscribe(points => {
-          this.mapsService.showPoints(points);
+          this.mapsService.showPoints(points, this.showSnappedP);
         });
     }
   }
@@ -153,6 +156,10 @@ export class AssetListComponent implements OnInit, OnDestroy {
     }
   }
 
+  showSnappedPoints() {
+    this.showPoints(this.selectedAsset, true)
+  }
+
   private unsubscribe() {
     if (this.subscription && !this.subscription.closed) {
       this.subscription.unsubscribe();
@@ -161,6 +168,12 @@ export class AssetListComponent implements OnInit, OnDestroy {
       this.mapsService.endCurrentDraw();
       this.isDrawing = false;
     }
+  }
+
+  openInfoDialog(): void {
+    this.dialog.open(AssetInfoDialogComponent, {
+      width: '600px',
+    });
   }
 
   isAssetListSeleceted() {

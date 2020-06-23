@@ -64,7 +64,8 @@ export class MapsComponent implements OnInit {
                         this.bingMapsService.showDispatchingRoute(
                             points,
                             true,
-                            this.mapsService.getRouteColor() + 1
+                            this.mapsService.getRouteColor() + 1,
+                            2
                         )
                     );
                 this.mapsService
@@ -73,7 +74,8 @@ export class MapsComponent implements OnInit {
                         this.bingMapsService.showDispatchingRoute(
                             points,
                             false,
-                            this.mapsService.getRouteColor()
+                            this.mapsService.getRouteColor(),
+                            4
                         )
                     );
                 this.mapsService

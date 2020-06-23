@@ -6,6 +6,8 @@ import { Observable, Subscription } from 'rxjs';
 
 import { User } from '../../shared/user';
 import { UserService } from '../user.service';
+import { MatDialog } from '@angular/material/dialog';
+import { UsersInfoDialogComponent } from '../users-info-dialog/users-info-dialog.component';
 
 
 @Component({
@@ -18,7 +20,9 @@ export class UserListComponent implements OnInit, OnDestroy {
   users: Observable<User[]>;
   filter: string;
 
-  constructor(private userService: UserService) { }
+  constructor(
+    private userService: UserService,
+    public dialog: MatDialog) { }
 
   ngOnInit() {
     this.users = this.userService.getAll();
@@ -31,5 +35,11 @@ export class UserListComponent implements OnInit, OnDestroy {
     if (confirm(`Are you sure you want to delete ${user.name} with email ${user.email}?`)) {
       this.userService.delete(user);
     }
+  }
+
+  openUsersDialog(): void{
+    this.dialog.open(UsersInfoDialogComponent, {  
+      width: '600px',
+    });
   }
 }

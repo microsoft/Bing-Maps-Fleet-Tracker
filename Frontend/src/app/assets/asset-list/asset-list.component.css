@@ -6,6 +6,10 @@ mat-form-field {
     margin: 10px 0 0 10px;
 }
 
+mat-slide-toggle {
+    margin: 20px;
+}
+
 .active {
     color: #ffffff;
     background-color: #56A6B6;

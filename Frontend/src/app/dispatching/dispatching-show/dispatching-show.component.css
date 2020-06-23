@@ -3,6 +3,8 @@
 
 mat-list-item {
     border-bottom: 1px solid #d9d9d9;  
+    height: auto!important;
+    padding: 5px!important;
 }
 
 .mat-list-text h3{
@@ -23,4 +25,13 @@ mat-list-item {
     font-style: italic;
     font-size: 0.9em;
     padding: 0 0 0 10px;
+}
+
+::ng-deep .mat-tab-label, ::ng-deep.mat-tab-label-active{
+    min-width: 100px!important;
+    padding: 0 10px!important;
+}
+
+::ng-deep .mat-tab-body-content {
+    overflow: hidden!important;
 }

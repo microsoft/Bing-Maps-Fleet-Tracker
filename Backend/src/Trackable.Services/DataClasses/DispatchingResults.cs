@@ -16,6 +16,6 @@ namespace Trackable.Services
 
         public IEnumerable<Point> RoutePoints { get; set; }
 
-        public IEnumerable<Point> AlternativeCarRoutePoints { get; set; }
+        public IEnumerable<DispatchingResults> AlternativeCarRoutePoints { get; set; }
     }
 }
