@@ -10,7 +10,8 @@ import { DispatchingService } from './dispatching.service';
 import { DialogService } from './dialog.service';
 import { DispatchingShowComponent } from './dispatching-show/dispatching-show.component';
 import { LocationDialogComponent } from './location-dialog/location-dialog.component';
-import { MatMenuModule, MatTabsModule} from '@angular/material';
+import { MatMenuModule} from '@angular/material/menu';
+import { MatTabsModule} from '@angular/material/tabs';
 import { DispatchingInfoDialogComponent } from './dispatching-info-dialog/dispatching-info-dialog.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
