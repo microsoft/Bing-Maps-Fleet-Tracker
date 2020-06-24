@@ -7,7 +7,7 @@
   <a [appRoleLimiter]="Roles.Administrator" mat-icon-button mat-tooltip="Add New Asset" [routerLink]="['/assets/new']">
     <mat-icon>add_circle</mat-icon>
   </a>
-  <button mat-icon-button>
+  <button mat-icon-button (click)="openInfoDialog()">
     <mat-icon>info</mat-icon>
   </button>
 </mat-toolbar>
@@ -32,5 +32,6 @@
   </mat-list-item>
 </mat-list>
 
+<mat-slide-toggle *ngIf="isAssetPointsSelected()" [(ngModel)]="showSnappedP" (change)="showSnappedPoints()">Snap Points to Road</mat-slide-toggle>
 <app-time-filter *ngIf="isAssetPointsSelected() || isAssetTripsSelected()" (change)="timeFilterChange($event)"></app-time-filter>
 <app-trip-list *ngIf="isAssetTripsSelected()" [trips]="trips" (select)="selectTrip($event)"></app-trip-list>

@@ -19,6 +19,8 @@ import { LocationService } from '../locations/location.service';
 import { TripLeg } from '../shared/trip-leg';
 import { takeWhile } from 'rxjs/operators';
 
+
+
 @Injectable()
 export class BingMapsService {
     private readonly genericColors = ['#56A6B6', '#464E50', '#56B691', '#BF8B8A', '#E95794'];
@@ -27,10 +29,12 @@ export class BingMapsService {
     private readonly greenSpeed = 13.4;
     private readonly geofenceGreenBlue = 'rgba(86,182,145,0.4)';
     private readonly geofencePink = 'rgba(233,87,148,0.4)';
+    pinCount = 1;
 
     private map: Microsoft.Maps.Map;
     private loadPromise: Promise<void>;
     private searchManager: Microsoft.Maps.Search.SearchManager;
+    private spatialMath;
     private drawHandlerId;
 
     private geofencesLayer: Microsoft.Maps.Layer;
@@ -50,6 +54,12 @@ export class BingMapsService {
             if (!this.searchManager) {
                 Microsoft.Maps.loadModule('Microsoft.Maps.Search', () => {
                     this.searchManager = new Microsoft.Maps.Search.SearchManager(this.map);
+                });
+            }
+
+            if (!this.spatialMath) {
+                Microsoft.Maps.loadModule('Microsoft.Maps.SpatialMath', () => {
+                    this.spatialMath = Microsoft.Maps.SpatialMath;
                 });
             }
 
@@ -178,7 +188,7 @@ export class BingMapsService {
             this.geofencesLayer.setVisible(true);
             this.geofencesLayer.clear();
 
-            let lastGeofencePolygon;
+            let lastGeofencePolygon = new Array<Microsoft.Maps.Location>();
             for (const geofence of geofences) {
                 lastGeofencePolygon = this.showGeofencePolygon(geofence, this.geofenceGreenBlue, this.genericColors[0]);
             }
@@ -389,6 +399,8 @@ export class BingMapsService {
         });
     }
 
+
+
     drawDispatchingRoute(subject: Subject<Location[]>, initialLocations: Location[]) {
         this.load().then(() => {
             const tempRoutePoints = initialLocations || new Array<Location>();
@@ -400,25 +412,33 @@ export class BingMapsService {
 
             if (initialLocations) {
                 this.showDispatchingRoutePins(tempRoutePoints);
+            } else {
+                this.pinCount = 1;
             }
 
             this.drawHandlerId = Microsoft.Maps.Events.addHandler(this.map, 'click', e => {
                 const event = e as Microsoft.Maps.IMouseEventArgs;
 
                 const newLocation = new Location();
-                newLocation.name = 'Pin' + '(' + (tempRoutePoints.length + 1) + ')';
+                newLocation.name = 'Pin' + '(' + (this.pinCount) + ')';
+                this.pinCount += 1;
                 newLocation.latitude = event.location.latitude;
                 newLocation.longitude = event.location.longitude;
-
-                this.showLocation(newLocation);
-                tempRoutePoints.push(newLocation);
-                subject.next(tempRoutePoints);
+                this.searchManager.reverseGeocode({
+                    location: event.location,
+                    callback: (placeResult: Microsoft.Maps.Search.IPlaceResult) => {
+                        newLocation.address = placeResult.address.formattedAddress;
+                        this.showLocation(newLocation);
+                        tempRoutePoints.push(newLocation);
+                        subject.next(tempRoutePoints);
+                    }
+                });
             }
             );
         });
     }
 
-    showDispatchingRoute(points: Point[], clearMap: boolean, colorIndex: number): void {
+    showDispatchingRoute(points: Point[], clearMap: boolean, colorIndex: number, Thickness: number): void {
         this.load().then(() => {
             if (clearMap) {
                 this.locationsLayer.clear();
@@ -434,7 +454,7 @@ export class BingMapsService {
                 const polyline = new Microsoft.Maps.Polyline(locations, {
                     strokeColor:
                         this.tripColors[colorIndex % this.tripColors.length],
-                    strokeThickness: 2
+                    strokeThickness: Thickness
                 });
 
                 this.locationsLayer.add(polyline);
@@ -508,13 +528,17 @@ export class BingMapsService {
     /* END LOCATION FUNCTIONS */
 
     /* POINT FUNCTIONS */
-    showPoints(points: Point[]): void {
+    showPoints(data: { points: Point[]; snappedPoints: boolean; }): void {
+        let points = data["points"];
         this.load().then(() => {
             this.resetMap();
             this.pointsLayer.setVisible(true);
             this.pointsLayer.clear();
-
-            points.forEach(p => this.showPoint(p, this.genericColors[4]));
+            if (data["snappedPoints"]) {
+                points.forEach(p => this.showPoint(p, this.genericColors[2]));
+            } else {
+                points.forEach(p => this.showPoint(p, this.genericColors[4]));
+            }
 
             this.centerMapOnMedian(points);
         });
@@ -528,6 +552,13 @@ export class BingMapsService {
         });
 
         this.pointsLayer.add(pushpin);
+    }
+
+    computeDistanceBetween(point1: Point, point2: Point) {
+        let p1 = new Microsoft.Maps.Location(point1.latitude, point1.longitude);
+        let p2 = new Microsoft.Maps.Location(point2.latitude, point2.longitude);
+
+        return this.spatialMath.getDistanceTo(p1, p2, Microsoft.Maps.SpatialMath.DistanceUnits.Kilometers)
     }
     /* END POINT FUNCTIONS */
 

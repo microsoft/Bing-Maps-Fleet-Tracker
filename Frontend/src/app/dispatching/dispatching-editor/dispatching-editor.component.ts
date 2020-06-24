@@ -12,7 +12,7 @@ import { DispatchingService } from '../dispatching.service';
 import { LocationService } from '../../locations/location.service';
 import { MapsService } from '../../maps/maps.service';
 import { ToasterService } from 'angular2-toaster';
-
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Location } from '../../shared/location';
 import { Asset, AssetType } from '../../assets/asset';
 
@@ -35,6 +35,7 @@ import {
   HazardousMaterialOptions,
   HazardousPermitOptions
 } from '../dispatching-editor-options';
+import { DispatchingInfoDialogComponent } from '../dispatching-info-dialog/dispatching-info-dialog.component';
 
 @Component({
   selector: 'app-dispatching-editor',
@@ -72,6 +73,7 @@ export class DispatchingEditorComponent implements OnInit, OnDestroy {
   showHazardMaterialList: boolean;
   showHazardPermitList: boolean;
   showResultsList: boolean;
+  showPinsList: boolean;
 
   private isAlive: boolean;
 
@@ -81,7 +83,8 @@ export class DispatchingEditorComponent implements OnInit, OnDestroy {
     private dispatchingService: DispatchingService,
     private locationService: LocationService,
     private mapsService: MapsService,
-    private toasterService: ToasterService) {
+    private toasterService: ToasterService,
+    public dialog: MatDialog) {
     this.resetAllData();
   }
 
@@ -202,5 +205,24 @@ export class DispatchingEditorComponent implements OnInit, OnDestroy {
     this.dispatchingParameters.wayPoints = this.pinsAdded;
     this.dispatchingService.savePinsAdded(this.pinsAdded);
     this.mapsService.setRouteColor(this.colorSelected);
+  }
+
+  delete_pin(name: string) {
+    this.pinsAdded = this.pinsAdded.filter(item => item.name !== name);
+    this.mapsService.resetDispatchingDraw(this.pinsAdded);
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.pinsAdded, event.previousIndex, event.currentIndex);
+  }
+
+  togglePinsList() {
+    this.showPinsList = this.showPinsList ? false : true;
+  }
+
+  openDispatchingInfoDialog(): void {
+    this.dialog.open(DispatchingInfoDialogComponent, {
+      width: '600px',
+    });
   }
 }

@@ -8,17 +8,22 @@ import { ChartsModule } from 'ng2-charts';
 import { ReportsRoutingModule, reportsRoutedComponents } from './reports-routing.module';
 import { ReportService } from './report.service';
 import { ReportChartComponent } from './report-chart/report-chart.component';
+import { ReportsInfoDialogComponent } from './reports-info-dialog/reports-info-dialog.component';
 
 
 @NgModule({
   declarations: [
     reportsRoutedComponents,
-    ReportChartComponent
+    ReportChartComponent,
+    ReportsInfoDialogComponent
   ],
   imports: [
     ReportsRoutingModule,
     SharedModule,
     ChartsModule
+  ],
+  entryComponents: [
+    ReportsInfoDialogComponent
   ],
   providers: [
     ReportService

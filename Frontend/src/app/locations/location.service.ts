@@ -10,25 +10,29 @@ import { Point } from '../shared/point';
 
 @Injectable()
 export class LocationService {
-  constructor(private dataSevrice: DataService) { }
+  constructor(private dataService: DataService) { }
 
   addLocation(location: Location): Observable<void> {
-    return this.dataSevrice.post<Location>('locations', location);
+    return this.dataService.post<Location>('locations', location);
   }
 
   getLocations(): Observable<Location[]> {
-    return this.dataSevrice.get<Location>('locations');
+    return this.dataService.get<Location>('locations');
   }
 
   getLocation(id: number): Observable<Location> {
-    return this.dataSevrice.getSingle<Location>('locations', id);
+    return this.dataService.getSingle<Location>('locations', id);
   }
 
   updateLocation(location: Location): Observable<void> {
-    return this.dataSevrice.put<Location>('locations', location.id, location, true);
+    return this.dataService.put<Location>('locations', location.id, location, true);
   }
 
   getLocationAssetsCount(location: Location): Observable<Map<string, number>> {
-    return this.dataSevrice.getSingleNoCache<Map<string, number>>(`locations/${location.id}/assetsCount`);
+    return this.dataService.getSingleNoCache<Map<string, number>>(`locations/${location.id}/assetsCount`);
+  }
+
+  deleteLocation(location: Location): Observable<void> {
+    return this.dataService.delete<Location>('locations', location.id);
   }
 }

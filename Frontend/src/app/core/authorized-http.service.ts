@@ -13,10 +13,10 @@ export class AuthorizedHttpService {
         private toasterService: ToasterService) {
     }
 
-    public get<T>(path: string): Observable<T> {
+    public get<T>(path: string, withCredentials: boolean = true): Observable<T> {
         const subject = new Subject<any>();
 
-        this.http.get<T>(path, { withCredentials: true })
+        this.http.get<T>(path, { withCredentials: withCredentials })
             .subscribe(
                 data => subject.next(data),
                 error => {
