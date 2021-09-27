@@ -18,18 +18,17 @@ cd Bing-Maps-Fleet-Tracker/Backend
 
 * Windows environment
 * [Git](https://git-scm.com/)
-* [Visual Studio 2017](https://www.visualstudio.com/downloads/) including the capabilities:
-  * ASP.NET and Web Development
-  * Azure Development
-  * .Net Core Development Tools (.Net Core 2)
-
+* [Visual Studio 2022](https://www.visualstudio.com/downloads/) including the capabilities:
+  * ASP.NET and web development (this includes the ASP.NET Core Runtime **6.0**)
+  * Azure development
+ 
 ## Build and Run
 
 ### Rest Service
 
-The Restful service is a .Net Core 2 web application that targets .Net Framework 4.6 for compatibility with Entity Framework 6. Entity Framework 6 is needed for its Geospatial support which Entity Framework Core (Entity Framework 7) does not yet support.
+The Restful service is a .NET 6.0 web application and is compatibility with Entity Framework **6.4**.
 
-1. Open solution `Backend/Trackable.sln` using Visual Studio 2017
+1. Open solution `Backend/Trackable.sln` using Visual Studio 2022
 2. Select `Build` > `Build Solution` from the menus. Your solution should build successfully.
 3. Navigate to the `appsettings.json` file under the `Trackable.Web` project. You will need to update some settings here to get your service up and running.
     * "ConnectionStrings: DefaultConnection": Should point to a Sql Server instance. By default this is set to localdb.
@@ -48,7 +47,7 @@ The Restful service is a .Net Core 2 web application that targets .Net Framework
 
 ### Azure Functions
 
-1. Open solution `Backend/Trackable.sln` using Visual Studio 2017
+1. Open solution `Backend/Trackable.sln` using Visual Studio 2022
 2. Select `Build` > `Build Solution` from the menus. Your solution should build successfully.
 3. Navigate to the `appsettings.json` file under the `Trackable.Func` project. You will need to update some settings here to get your service up and running.
     * "Values: DatabaseConnection": Should point to a Sql Server instance. By default this is set to localdb.
