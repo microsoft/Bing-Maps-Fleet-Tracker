@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -16,7 +16,7 @@ namespace Trackable.Common
 
             return obj;
         }
-            
+
         public static string ThrowIfNullOrEmpty(this string obj, string paramName)
         {
             if (string.IsNullOrEmpty(obj))

@@ -3,13 +3,13 @@
 
 using AutoMapper;
 using System;
-using System.Linq.Expressions;
-using Trackable.EntityFramework;
-using Trackable.Models;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+using Trackable.EntityFramework;
+using Trackable.Models;
 
 namespace Trackable.Repositories
 {

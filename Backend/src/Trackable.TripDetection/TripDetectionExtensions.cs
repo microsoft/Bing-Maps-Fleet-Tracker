@@ -3,7 +3,6 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using Trackable.Repositories;
-using Trackable.TripDetection;
 
 namespace Trackable.TripDetection
 {

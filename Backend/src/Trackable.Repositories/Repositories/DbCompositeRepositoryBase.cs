@@ -11,7 +11,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Trackable.Common;
 using Trackable.EntityFramework;
-using Trackable.Models.Helpers;
+using Trackable.Models;
 
 namespace Trackable.Repositories
 {

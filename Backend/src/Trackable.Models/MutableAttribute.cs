@@ -2,12 +2,8 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Trackable.Models.Helpers
+namespace Trackable.Models
 {
     public class MutableAttribute : Attribute
     {

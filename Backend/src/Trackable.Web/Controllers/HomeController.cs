@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 
 namespace Trackable.Web.Controllers
 {

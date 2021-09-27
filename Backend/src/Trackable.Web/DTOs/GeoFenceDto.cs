@@ -3,7 +3,6 @@
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Trackable.Models;
 

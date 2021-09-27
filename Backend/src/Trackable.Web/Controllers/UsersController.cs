@@ -7,15 +7,11 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Trackable.Common;
 using Trackable.Models;
-using Trackable.Services;
 using Trackable.Web.Auth;
 using Trackable.Web.Dtos;
+using Trackable.Services;
 
 namespace Trackable.Web.Controllers
 {

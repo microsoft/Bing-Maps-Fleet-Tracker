@@ -2,16 +2,13 @@
 // Licensed under the MIT License.
 
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Trackable.Common;
 using Trackable.TripDetection.Exceptions;
 using Trackable.Configurations;
-using Trackable.Models;
 using Trackable.TripDetection.Helpers;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Trackable.TripDetection.Components
 {

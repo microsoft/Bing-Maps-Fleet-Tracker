@@ -4,14 +4,14 @@
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Trackable.Common;
 using Trackable.Models;
-using System.Collections.Generic;
-using System.Linq;
 using Trackable.Common.Exceptions;
+using System.Collections.Generic;
+using System.Net.Http;
+using System;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace Trackable.Services
 {

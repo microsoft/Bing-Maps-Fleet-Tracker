@@ -1,18 +1,20 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using Azure;
+using Azure.Data.Tables;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Trackable.EntityFramework
 {
-    public class LogEntryEntity : TableEntity
+    public class LogEntryEntity : ITableEntity
     {
+        public string PartitionKey { get; set; }
+        public string RowKey { get; set; }
+        public string value { get; set; }
+        public DateTimeOffset? Timestamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public ETag ETag { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
         public LogEntryEntity(string PartitionKey, string RowKey)
         {
             this.PartitionKey = PartitionKey;
@@ -20,8 +22,9 @@ namespace Trackable.EntityFramework
             value = "0";
         }
 
-        public LogEntryEntity() { }
-
-        public string value { get; set;}
+        public LogEntryEntity()
+        {
+            // throw new NotImplementedException();
+        }
     }
 }

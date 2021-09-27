@@ -3,7 +3,6 @@
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Trackable.Common;
 using Trackable.Web.Filters;
 

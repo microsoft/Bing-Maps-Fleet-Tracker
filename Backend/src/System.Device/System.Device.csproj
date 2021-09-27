@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Company>Microsoft Corporation</Company>
+    <Copyright>© Microsoft Corporation.  All rights reserved.</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- These files were in reference source, but don't seem to be part of .NET Framework, and they include duplicate classes -->
+    <Compile Remove="Location\CivicAddress.cs" />
+    <Compile Remove="Location\LocationCoordinate.cs" />
+    <Compile Remove="Location\LocationProvider.cs" />
+    <Compile Remove="Location\LocationProviderInternal.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp3.0'">
+    <COMReference Include="LocationApiLib">
+      <Guid>{4486DF98-22A5-4F6B-BD5C-8CADCEC0A6DE}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+</Project>

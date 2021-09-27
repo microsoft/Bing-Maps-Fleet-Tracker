@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using Trackable.Common;
-using Trackable.Models.Helpers;
 
 namespace Trackable.Models
 {
