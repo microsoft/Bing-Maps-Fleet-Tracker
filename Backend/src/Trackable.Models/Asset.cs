@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
-using Trackable.Models.Helpers;
+using Trackable.Models;
 
 namespace Trackable.Models
 {

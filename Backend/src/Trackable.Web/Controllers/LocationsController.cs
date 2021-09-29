@@ -4,14 +4,10 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Trackable.Common;
 using Trackable.Models;
-using Trackable.Services;
 using Trackable.Web.Dtos;
+using Trackable.Services;
 
 namespace Trackable.Web.Controllers
 {

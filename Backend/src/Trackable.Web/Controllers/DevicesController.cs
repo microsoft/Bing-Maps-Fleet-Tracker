@@ -5,11 +5,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Trackable.Common;
 using Trackable.Models;
 using Trackable.Services;
@@ -175,7 +170,7 @@ namespace Trackable.Web.Controllers
 
             var response = await this.deviceService.AddOrUpdateDeviceAsync(model);
 
-            await this.deviceAdditionHubContext.Clients.All.InvokeAsync("DeviceAdded", nonce);
+            await this.deviceAdditionHubContext.Clients.All.SendAsync("DeviceAdded", nonce);
 
             return Json(await this.tokenService.GetLongLivedDeviceToken(response, false));
         }

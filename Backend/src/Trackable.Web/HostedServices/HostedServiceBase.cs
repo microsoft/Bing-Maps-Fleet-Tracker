@@ -1,10 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
-using System.Threading;
-
 namespace Trackable.Services
 {
     public abstract class HostedServiceBase : IHostedService

@@ -1,10 +1,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Trackable.EntityFramework;
-using AutoMapper;
 using Trackable.Repositories.AutoMapper;
 
 namespace Trackable.Repositories

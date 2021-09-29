@@ -5,7 +5,6 @@ using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -14,7 +13,6 @@ using Trackable.Common;
 using Trackable.Common.Exceptions;
 using Trackable.EntityFramework;
 using Trackable.Models;
-using Trackable.Models.Helpers;
 
 namespace Trackable.Repositories
 {

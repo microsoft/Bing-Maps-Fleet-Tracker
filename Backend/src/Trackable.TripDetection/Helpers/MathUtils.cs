@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Device.Location;
 using System.Linq;
 using Trackable.Common;
-using Trackable.Repositories;
 using Trackable.Models;
 
 namespace Trackable.TripDetection.Helpers

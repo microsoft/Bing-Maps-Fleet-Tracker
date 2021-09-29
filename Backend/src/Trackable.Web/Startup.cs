@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using AutoMapper;
@@ -7,27 +7,14 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using Swashbuckle.AspNetCore.Swagger;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using Microsoft.OpenApi.Models;
 using System.Text;
-using System.Threading.Tasks;
 using Trackable.Common;
 using Trackable.Services;
 using Trackable.TripDetection;
@@ -39,27 +26,23 @@ namespace Trackable.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IHostingEnvironment env)
+        public IConfiguration Configuration { get; }
+        public IWebHostEnvironment Environment { get; set; }
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
-            HostingEnvironment = env;
+            Environment = environment;
         }
 
-        public IConfiguration Configuration { get; }
-
-        public IHostingEnvironment HostingEnvironment { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             // Cors
-            services
-                 .AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()
-                                                                        .AllowAnyMethod()
-                                                                        .AllowAnyHeader()
-                                                                        .AllowCredentials()
-                                                                        .Build()));
-
+            services.AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()
+                                                                            .AllowAnyMethod()
+                                                                            .AllowAnyHeader()
+                                                                            .AllowCredentials()
+                                                                            .Build()));
             // Security Key for Jwt
             var jwtKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authorization:SecurityKey"]));
             services.AddSingleton(new SigningCredentials(jwtKey, SecurityAlgorithms.HmacSha256));
@@ -128,10 +111,9 @@ namespace Trackable.Web
                 });
 
             // Business Logic Services
-            services
-                .AddServices(
+            services.AddServices(
                     Configuration.GetConnectionString("DefaultConnection"),
-                    this.HostingEnvironment.WebRootPath)
+                    Environment.WebRootPath)
                 .AddTransient<IAuthorizationHandler, RoleRequirementHandler>()
                 .AddScoped<ExceptionHandlerFilter>()
                 .AddTripDetection(Configuration["SubscriptionKeys:BingMaps"])
@@ -155,14 +137,14 @@ namespace Trackable.Web
                 // Register the Swagger generator, defining one or more Swagger documents
                 services.AddSwaggerGen(c =>
                 {
-                    c.SwaggerDoc("v1", new Info
+                    c.SwaggerDoc("v1", new()
                     {
                         Title = "BMFT APIs",
                         Version = "v1",
                         Description = "Bing Maps Fleet Tracker is an open source fleet tracking solution. Read more at https://github.com/Microsoft/Bing-Maps-Fleet-Tracker",
-                        License = new License { Name = "MIT Licencse", Url = "https://github.com/Microsoft/Bing-Maps-Fleet-Tracker/blob/master/LICENSE" }
+                        License = new OpenApiLicense { Name = "MIT Licencse", Url = new Uri("https://github.com/Microsoft/Bing-Maps-Fleet-Tracker/blob/master/LICENSE") }
                     });
-                    c.DescribeAllEnumsAsStrings();
+
                     c.DescribeAllParametersInCamelCase();
                     c.DocInclusionPredicate((version, description) =>
                     {
@@ -182,7 +164,7 @@ namespace Trackable.Web
                     options.Filters.Add(typeof(ExceptionHandlerFilter));
 
                     // Add Https require filter if not running locally
-                    if (!this.Configuration.GetValue<bool>("Serving:IsDebug"))
+                    if (!Configuration.GetValue<bool>("Serving:IsDebug"))
                     {
                         options.Filters.Add(new RequireHttpsAttribute());
                     }
@@ -191,10 +173,12 @@ namespace Trackable.Web
             // Add socket management
             services
                 .AddSignalR();
+
+            services
+                .AddApplicationInsightsTelemetry(Configuration.GetConnectionString("ApplicationInsights"));
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider seriveProvider)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // Cors
             app.UseCors("AllowAll");
@@ -203,7 +187,6 @@ namespace Trackable.Web
             app.UseAuthentication();
 
             // Logging
-            loggerFactory.AddAzureWebAppDiagnostics();
             app.SetHeavyDebugEnabled(Configuration.GetValue<bool>("Logging:HeavyDebugLogging"));
 
             // Business Logic
@@ -211,9 +194,9 @@ namespace Trackable.Web
                 Configuration["Authorization:OwnerEmail"]);
 
             // Socket Management
-            app.UseSignalR(routes =>
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapHub<DynamicHub>("deviceAddition");
+                endpoints.MapHub<DynamicHub>("deviceAddition");
             });
 
             // Static files setup for angular website
@@ -228,7 +211,7 @@ namespace Trackable.Web
             }
 
             // Rewrite to Https if not running locally
-            if (!this.Configuration.GetValue<bool>("Serving:IsDebug"))
+            if (!Configuration.GetValue<bool>("Serving:IsDebug"))
             {
                 var options = new RewriteOptions()
                     .AddRedirectToHttpsPermanent();

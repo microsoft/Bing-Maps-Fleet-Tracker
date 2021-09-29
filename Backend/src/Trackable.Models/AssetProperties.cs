@@ -1,8 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Trackable.Models.Helpers;
-
 namespace Trackable.Models
 {
     public class AssetProperties : ModelBase<int>

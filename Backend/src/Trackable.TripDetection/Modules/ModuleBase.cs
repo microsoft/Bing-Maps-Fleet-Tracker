@@ -3,14 +3,7 @@
 
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Trackable.Common.Exceptions;
-using Trackable.Repositories;
-using Trackable.Models;
-using Trackable.TripDetection.Helpers;
 
 namespace Trackable.TripDetection.Components
 {

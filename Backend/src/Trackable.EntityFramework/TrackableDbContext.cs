@@ -4,7 +4,6 @@
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
 using System.Data.Entity.Validation;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace Trackable.EntityFramework

@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 
 using Microsoft.AspNetCore.Authorization;
-using System;
 
 namespace Trackable.Web.Auth
 {

@@ -3,11 +3,9 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Data.Entity.Validation;
 using System.Net;
-using System.Threading.Tasks;
 using Trackable.Common;
 using Trackable.Common.Exceptions;
 using Trackable.Services;

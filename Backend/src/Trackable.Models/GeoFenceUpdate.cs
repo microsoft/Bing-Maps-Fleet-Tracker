@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 
 using System;
-using Trackable.Models.Helpers;
 
 namespace Trackable.Models
 {
