@@ -1,3 +1,5 @@
+> deployment portal is deprecated, please install it using the manual steps descript in the backend readme.
+
 # One Click Deployment
 
 The [Bing Maps Fleet Tracker Deployment Portal](https://aka.ms/bingmapsfleettracker) provides a one click deployment experience. You will need to have an active Azure subscription before you can deploy using the portal.
