@@ -1,3 +1,6 @@
+| :exclamation:  This solution is deprecated and no longer maintained.  |
+|-----------------------------------------------------------------------|
+
 # Bing Maps Fleet Tracker
 
 Bing Maps Fleet Tracker is a fleet management solution based on the Bing Maps APIs. It offers functionalities that enable tracking and managing a fleet of vehicles in real time. For more details, read this [blog post](https://aka.ms/bingmapsfleettrackerblog).
